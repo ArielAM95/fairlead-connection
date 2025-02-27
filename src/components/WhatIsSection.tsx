@@ -1,3 +1,4 @@
+
 import { useEffect, useRef } from "react";
 const WhatIsSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
