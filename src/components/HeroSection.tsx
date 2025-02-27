@@ -28,7 +28,7 @@ const HeroSection = () => {
   }, []);
 
   const scrollToForm = () => {
-    const ctaSection = document.querySelector('.cta-gradient');
+    const ctaSection = document.querySelector('#signup-form');
     if (ctaSection) {
       ctaSection.scrollIntoView({ behavior: 'smooth' });
     }
@@ -48,7 +48,7 @@ const HeroSection = () => {
             className="lg:col-span-7 staggered-animation"
           >
             <div className="space-y-6 max-w-3xl">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight">
                 oFair – הצטרפו למהפכת שיתוף הלידים וניהול הפרויקטים לבעלי מקצוע!
               </h1>
               <p className="text-xl text-muted-foreground">
@@ -62,7 +62,7 @@ const HeroSection = () => {
                   className="bg-ofair-900 hover:bg-ofair-800 text-white px-8 py-6 text-lg button-pulse"
                   onClick={scrollToForm}
                 >
-                  <span>הרשמה חינם</span>
+                  <span>הירשמו כעת</span>
                   <ChevronRight className="mr-2 h-5 w-5" />
                 </Button>
                 <Button variant="outline" className="border-ofair-200 hover:bg-ofair-50 text-ofair-900 px-8 py-6 text-lg">

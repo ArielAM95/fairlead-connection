@@ -21,6 +21,13 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const scrollToForm = () => {
+    const ctaSection = document.querySelector('#signup-form');
+    if (ctaSection) {
+      ctaSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <nav
       className={cn(
@@ -65,8 +72,8 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:block">
-            <Button className="bg-ofair-900 hover:bg-ofair-800 text-white mr-4 button-pulse">
-              <span>הרשמה חינם</span>
+            <Button className="bg-ofair-900 hover:bg-ofair-800 text-white mr-4 button-pulse" onClick={scrollToForm}>
+              <span>הירשמו כעת</span>
               <ChevronRight className="mr-2 h-4 w-4" />
             </Button>
           </div>
@@ -119,8 +126,8 @@ const Navbar = () => {
               >
                 צור קשר
               </a>
-              <Button className="bg-ofair-900 hover:bg-ofair-800 text-white button-pulse w-full">
-                <span>הרשמה חינם</span>
+              <Button className="bg-ofair-900 hover:bg-ofair-800 text-white button-pulse w-full" onClick={scrollToForm}>
+                <span>הירשמו כעת</span>
                 <ChevronRight className="mr-2 h-4 w-4" />
               </Button>
             </div>

@@ -105,7 +105,7 @@ const CtaSection = () => {
   };
 
   return (
-    <section className="py-16 md:py-24 cta-gradient" ref={sectionRef}>
+    <section className="py-16 md:py-24 cta-gradient" id="signup-form" ref={sectionRef}>
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
@@ -230,7 +230,7 @@ const CtaSection = () => {
                   className="w-full bg-ofair-900 hover:bg-ofair-800 text-white py-6"
                   disabled={isSubmitting || formData.workFields.length === 0}
                 >
-                  {isSubmitting ? "מבצע רישום..." : "הצטרפו ל-oFair"}
+                  {isSubmitting ? "מבצע רישום..." : "הירשמו כעת"}
                 </Button>
                 
                 <p className="text-xs text-center text-muted-foreground mt-4">
