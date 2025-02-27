@@ -1,9 +1,11 @@
 
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import SignupModal from "./SignupModal";
 
 const HeroSection = () => {
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const elementRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -26,6 +28,14 @@ const HeroSection = () => {
 
     return () => observer.disconnect();
   }, []);
+
+  const openSignupModal = () => {
+    setIsSignupModalOpen(true);
+  };
+
+  const closeSignupModal = () => {
+    setIsSignupModalOpen(false);
+  };
 
   return (
     <div className="min-h-screen flex items-center relative overflow-hidden pt-20 hero-gradient">
@@ -51,7 +61,10 @@ const HeroSection = () => {
                 📢 הגיע הזמן לעבוד חכם יותר ולהרוויח יותר!
               </p>
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <Button className="bg-ofair-900 hover:bg-ofair-800 text-white px-8 py-6 text-lg button-pulse">
+                <Button 
+                  className="bg-ofair-900 hover:bg-ofair-800 text-white px-8 py-6 text-lg button-pulse"
+                  onClick={openSignupModal}
+                >
                   <span>הרשמה חינם</span>
                   <ChevronRight className="mr-2 h-5 w-5" />
                 </Button>
@@ -90,6 +103,8 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
+      
+      <SignupModal isOpen={isSignupModalOpen} onClose={closeSignupModal} />
     </div>
   );
 };
