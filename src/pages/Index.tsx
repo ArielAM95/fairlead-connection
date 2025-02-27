@@ -1,12 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useEffect } from "react";
+import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/HeroSection";
+import WhatIsSection from "@/components/WhatIsSection";
+import BenefitsSection from "@/components/BenefitsSection";
+import ProblemsSection from "@/components/ProblemsSection";
+import HowItWorksSection from "@/components/HowItWorksSection";
+import CtaSection from "@/components/CtaSection";
+import ContactSection from "@/components/ContactSection";
+import Footer from "@/components/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const Index = () => {
+  useEffect(() => {
+    document.title = "oFair - מהפכת שיתוף הלידים לבעלי מקצוע";
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="overflow-x-hidden">
+      <Navbar />
+      <HeroSection />
+      <WhatIsSection />
+      <BenefitsSection />
+      <ProblemsSection />
+      <HowItWorksSection />
+      <CtaSection />
+      <ContactSection />
+      <Footer />
+      <ScrollToTop />
     </div>
   );
 };
