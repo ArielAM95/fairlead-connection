@@ -1,5 +1,7 @@
 
 import { useEffect, useRef } from "react";
+import { UserPlus } from "lucide-react";
+
 const WhatIsSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -25,7 +27,7 @@ const WhatIsSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="feature-card scroll-fade">
             <div className="feature-icon">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -62,8 +64,21 @@ const WhatIsSection = () => {
             <p className="text-muted-foreground">כל העבודות הפניות שצרכנים/בעלי מקצוע העלו - נכנסים ללוח מודעות חכם
 אתם רואים,מציעים, עובדים !</p>
           </div>
+          
+          <div className="feature-card scroll-fade" style={{
+          transitionDelay: "450ms"
+        }}>
+            <div className="feature-icon">
+              <UserPlus className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-bold mb-3 text-ofair-900">מציאת עובדים בקלות</h3>
+            <p className="text-muted-foreground">
+              אתרו עובדים מקצועיים לפרויקטים שלכם בקלות וביעילות, נהלו את צוות העבודה ובנו רשת מקצועית איכותית.
+            </p>
+          </div>
         </div>
       </div>
     </section>;
 };
 export default WhatIsSection;
+
