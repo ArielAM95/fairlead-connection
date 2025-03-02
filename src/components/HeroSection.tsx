@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useRef } from "react";
+
 const HeroSection = () => {
   const elementRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -88,4 +89,5 @@ const HeroSection = () => {
       </div>
     </div>;
 };
+
 export default HeroSection;

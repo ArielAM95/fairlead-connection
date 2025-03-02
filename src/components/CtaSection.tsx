@@ -1,7 +1,6 @@
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
-import { useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -22,6 +21,16 @@ const workFields = [
   { id: "landscaping", label: "גינון ונוף" },
   { id: "hvac", label: "מיזוג אוויר" },
   { id: "roofing", label: "גגות" },
+  { id: "concrete", label: "עבודות בטון" },
+  { id: "locksmith", label: "מנעולן" },
+  { id: "glass", label: "זגגות" },
+  { id: "welding", label: "עבודות מסגרות" },
+  { id: "soundproofing", label: "בידוד אקוסטי" },
+  { id: "waterproofing", label: "איטום" },
+  { id: "demolition", label: "הריסה" },
+  { id: "stonework", label: "עבודות אבן" },
+  { id: "security", label: "מערכות אבטחה" },
+  { id: "engineering", label: "הנדסה" },
 ];
 
 const experienceOptions = [
@@ -38,8 +47,11 @@ const CtaSection = () => {
     lastName: "",
     companyName: "",
     workFields: [] as string[],
+    otherWorkField: "",
+    showOtherWorkField: false,
     experience: "",
     email: "",
+    phone: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -59,18 +71,25 @@ const CtaSection = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
   const handleWorkFieldToggle = (id: string) => {
     setFormData((prev) => {
-      const fields = prev.workFields.includes(id)
+      let fields = prev.workFields.includes(id)
         ? prev.workFields.filter((field) => field !== id)
         : [...prev.workFields, id];
       
-      return { ...prev, workFields: fields };
+      // Handle the "other" option specially
+      const showOtherField = id === "other" && !prev.workFields.includes("other");
+      
+      return { 
+        ...prev, 
+        workFields: fields,
+        showOtherWorkField: prev.showOtherWorkField || showOtherField
+      };
     });
   };
 
@@ -78,30 +97,60 @@ const CtaSection = () => {
     setFormData({ ...formData, experience: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Here you would normally send the data to your backend
-    console.log("Form submitted:", formData);
+    // Prepare form data for submission
+    const dataToSubmit = {
+      ...formData,
+      post_type: "main_signup_form", // Hidden field to identify the form
+      workFields: formData.workFields.join(", "),
+      otherWorkField: formData.showOtherWorkField ? formData.otherWorkField : ""
+    };
     
-    // Simulating API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      // Send data to the webhook
+      const response = await fetch("https://hook.eu2.make.com/ec33yqbomj1l3klhbrc4wtyix0y30pwi", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSubmit),
+      });
+      
+      if (!response.ok) {
+        throw new Error("שגיאה בשליחת הנתונים");
+      }
+      
+      // Success handling
       toast({
         title: "הרשמה בוצעה בהצלחה",
         description: "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה.",
       });
+      
       // Reset form
       setFormData({
         firstName: "",
         lastName: "",
         companyName: "",
         workFields: [],
+        otherWorkField: "",
+        showOtherWorkField: false,
         experience: "",
         email: "",
+        phone: "",
       });
-    }, 1500);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "שגיאה בהרשמה",
+        description: "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -151,6 +200,23 @@ const CtaSection = () => {
               </div>
               
               <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                  מספר טלפון *
+                </label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  className="bg-gray-50 border-gray-200"
+                  dir="ltr"
+                  placeholder="05X-XXXXXXX"
+                />
+              </div>
+              
+              <div>
                 <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">
                   שם חברה (אופציונלי)
                 </label>
@@ -183,7 +249,32 @@ const CtaSection = () => {
                       </label>
                     </div>
                   ))}
+                  <div className="flex items-center space-x-2 space-x-reverse">
+                    <Checkbox 
+                      id="field-other"
+                      checked={formData.workFields.includes("other")}
+                      onCheckedChange={() => handleWorkFieldToggle("other")}
+                    />
+                    <label 
+                      htmlFor="field-other"
+                      className="text-sm leading-none cursor-pointer"
+                    >
+                      אחר
+                    </label>
+                  </div>
                 </div>
+                {formData.showOtherWorkField && (
+                  <div className="mt-2">
+                    <Input
+                      id="otherWorkField"
+                      name="otherWorkField"
+                      value={formData.otherWorkField}
+                      onChange={handleChange}
+                      placeholder="נא פרט תחום עבודה אחר"
+                      className="bg-gray-50 border-gray-200"
+                    />
+                  </div>
+                )}
                 {formData.workFields.length === 0 && (
                   <p className="text-xs text-red-500 mt-1">יש לבחור לפחות תחום אחד</p>
                 )}
@@ -235,9 +326,9 @@ const CtaSection = () => {
                 
                 <p className="text-xs text-center text-muted-foreground mt-4">
                   בלחיצה על הכפתור אני מאשר/ת את 
-                  <a href="#" className="text-ofair-900 hover:underline mx-1">תנאי השימוש</a>
+                  <a href="/terms" className="text-ofair-900 hover:underline mx-1">תנאי השימוש</a>
                   ואת
-                  <a href="#" className="text-ofair-900 hover:underline mx-1">מדיניות הפרטיות</a>
+                  <a href="/terms" className="text-ofair-900 hover:underline mx-1">מדיניות הפרטיות</a>
                 </p>
               </div>
             </form>
