@@ -1,9 +1,11 @@
+
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 const HeroSection = () => {
   const elementRef = useRef<HTMLDivElement>(null);
+  
   useEffect(() => {
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -21,6 +23,7 @@ const HeroSection = () => {
     });
     return () => observer.disconnect();
   }, []);
+  
   const scrollToForm = () => {
     const ctaSection = document.querySelector('#signup-form');
     if (ctaSection) {
@@ -29,6 +32,16 @@ const HeroSection = () => {
       });
     }
   };
+  
+  const scrollToWhatIs = () => {
+    const whatIsSection = document.querySelector('#what-is');
+    if (whatIsSection) {
+      whatIsSection.scrollIntoView({
+        behavior: 'smooth'
+      });
+    }
+  };
+  
   return <div className="min-h-screen flex items-center relative overflow-hidden pt-20 hero-gradient">
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="absolute -bottom-56 -left-56 w-96 h-96 bg-ofair-100 rounded-full opacity-20 blur-3xl"></div>
@@ -51,7 +64,7 @@ const HeroSection = () => {
                   <span>הירשמו כעת</span>
                   <ChevronRight className="mr-2 h-5 w-5" />
                 </Button>
-                <Button variant="outline" className="border-ofair-200 hover:bg-ofair-50 text-ofair-900 px-8 py-6 text-lg">
+                <Button variant="outline" className="border-ofair-200 hover:bg-ofair-50 text-ofair-900 px-8 py-6 text-lg" onClick={scrollToWhatIs}>
                   <span>קרא עוד</span>
                 </Button>
               </div>
