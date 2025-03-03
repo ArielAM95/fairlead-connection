@@ -11,8 +11,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
           {/* Logo and tagline */}
           <div className="md:col-span-5">
-            <a href="#" className="flex items-center space-x-2 space-x-reverse mb-5">
-              <span className="text-2xl font-bold text-ofair-900">oFair</span>
+            <a href="#" className="flex items-center mb-5">
+              <img 
+                src="/lovable-uploads/e688f278-f2cb-412b-b59b-3ef90b984707.png" 
+                alt="oFair Logo" 
+                className="h-14 w-auto" 
+              />
             </a>
             <p className="text-gray-600 text-lg mb-3">🔹 oFair – מהפכת שיתוף הלידים והעבודה החכמה כבר כאן!</p>
             <p className="text-gray-500 text-sm">הפלטפורמה שתחבר בין בעלי מקצוע, מאפשרת שיתוף לידים ומציגה הצעות מחיר בזמן אמת</p>

@@ -11,6 +11,7 @@ const ContactSection = () => {
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
     message: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,6 +56,7 @@ const ContactSection = () => {
         firstName: "",
         lastName: "",
         email: "",
+        phone: "",
         message: ""
       });
     } catch (error) {
@@ -117,20 +119,39 @@ const ContactSection = () => {
                 </div>
               </div>
               
-              <div>
-                <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-1">
-                  אימייל
-                </label>
-                <Input
-                  id="contact-email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="bg-gray-50 border-gray-200"
-                  dir="ltr"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-1">
+                    אימייל
+                  </label>
+                  <Input
+                    id="contact-email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="bg-gray-50 border-gray-200"
+                    dir="ltr"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="contact-phone" className="block text-sm font-medium text-gray-700 mb-1">
+                    מספר טלפון
+                  </label>
+                  <Input
+                    id="contact-phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    className="bg-gray-50 border-gray-200"
+                    dir="ltr"
+                    placeholder="05X-XXXXXXX"
+                  />
+                </div>
               </div>
               
               <div>

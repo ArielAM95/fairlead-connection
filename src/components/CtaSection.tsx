@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -39,6 +40,17 @@ const experienceOptions = [
   { id: "10+", label: "מעל 10 שנים" },
 ];
 
+const workRegions = [
+  { id: "north", label: "צפון" },
+  { id: "south", label: "דרום" },
+  { id: "center", label: "מרכז" },
+  { id: "samaria", label: "שומרון" },
+  { id: "jerusalem", label: "ירושלים והסביבה" },
+  { id: "eilat", label: "אילת" },
+  { id: "shfela", label: "שפלה" },
+  { id: "sharon", label: "השרון" },
+];
+
 const CtaSection = () => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
@@ -51,6 +63,8 @@ const CtaSection = () => {
     experience: "",
     email: "",
     phone: "",
+    city: "",
+    workRegions: [] as string[],
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -81,6 +95,7 @@ const CtaSection = () => {
         ? prev.workFields.filter((field) => field !== id)
         : [...prev.workFields, id];
       
+      // Check if "other" is selected or deselected
       const isOtherSelected = id === "other" 
         ? !prev.workFields.includes("other") 
         : newWorkFields.includes("other");
@@ -89,7 +104,21 @@ const CtaSection = () => {
         ...prev, 
         workFields: newWorkFields,
         showOtherWorkField: isOtherSelected,
+        // Clear the otherWorkField if "other" is deselected
         otherWorkField: isOtherSelected ? prev.otherWorkField : ""
+      };
+    });
+  };
+
+  const handleWorkRegionToggle = (id: string) => {
+    setFormData((prev) => {
+      const newWorkRegions = prev.workRegions.includes(id)
+        ? prev.workRegions.filter((region) => region !== id)
+        : [...prev.workRegions, id];
+      
+      return { 
+        ...prev, 
+        workRegions: newWorkRegions
       };
     });
   };
@@ -102,16 +131,24 @@ const CtaSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
+    // Convert work fields to Hebrew
     const workFieldsInHebrew = formData.workFields.map(fieldId => {
       if (fieldId === "other") return "אחר";
       const field = workFields.find(f => f.id === fieldId);
       return field ? field.label : fieldId;
     }).join(", ");
     
+    // Convert work regions to Hebrew
+    const workRegionsInHebrew = formData.workRegions.map(regionId => {
+      const region = workRegions.find(r => r.id === regionId);
+      return region ? region.label : regionId;
+    }).join(", ");
+    
     const dataToSubmit = {
       ...formData,
       post_type: "main_signup_form",
       workFields: workFieldsInHebrew,
+      workRegions: workRegionsInHebrew,
       otherWorkField: formData.showOtherWorkField ? formData.otherWorkField : ""
     };
     
@@ -143,6 +180,8 @@ const CtaSection = () => {
         experience: "",
         email: "",
         phone: "",
+        city: "",
+        workRegions: [],
       });
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -220,6 +259,21 @@ const CtaSection = () => {
               </div>
               
               <div>
+                <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
+                  עיר *
+                </label>
+                <Input
+                  id="city"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  required
+                  className="bg-gray-50 border-gray-200"
+                  placeholder="שם העיר"
+                />
+              </div>
+              
+              <div>
                 <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">
                   שם חברה (אופציונלי)
                 </label>
@@ -284,6 +338,32 @@ const CtaSection = () => {
               </div>
               
               <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  באיזה אזורים אתה מעוניין לעבוד *
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-gray-50 p-3 rounded-md border border-gray-200">
+                  {workRegions.map((region) => (
+                    <div key={region.id} className="flex items-center space-x-2 space-x-reverse">
+                      <Checkbox 
+                        id={`region-${region.id}`}
+                        checked={formData.workRegions.includes(region.id)}
+                        onCheckedChange={() => handleWorkRegionToggle(region.id)}
+                      />
+                      <label 
+                        htmlFor={`region-${region.id}`}
+                        className="text-sm leading-none cursor-pointer"
+                      >
+                        {region.label}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                {formData.workRegions.length === 0 && (
+                  <p className="text-xs text-red-500 mt-1">יש לבחור לפחות אזור אחד</p>
+                )}
+              </div>
+              
+              <div>
                 <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-1">
                   ותק *
                 </label>
@@ -322,7 +402,7 @@ const CtaSection = () => {
                 <Button 
                   type="submit" 
                   className="w-full bg-ofair-900 hover:bg-ofair-800 text-white py-6"
-                  disabled={isSubmitting || formData.workFields.length === 0}
+                  disabled={isSubmitting || formData.workFields.length === 0 || formData.workRegions.length === 0}
                 >
                   {isSubmitting ? "מבצע רישום..." : "הירשמו כעת"}
                 </Button>
