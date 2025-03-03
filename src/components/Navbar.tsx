@@ -39,6 +39,11 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <a href="#" className="flex items-center space-x-2 space-x-reverse">
+              <img 
+                src="/lovable-uploads/3a9eb4ab-9d17-4216-a5f9-2d7d05a1ca60.png" 
+                alt="oFair Logo" 
+                className="h-10 w-auto mr-2" 
+              />
               <span className="text-2xl font-bold text-ofair-900">oFair</span>
             </a>
           </div>

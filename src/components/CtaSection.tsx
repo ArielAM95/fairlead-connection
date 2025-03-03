@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -78,17 +77,19 @@ const CtaSection = () => {
 
   const handleWorkFieldToggle = (id: string) => {
     setFormData((prev) => {
-      let fields = prev.workFields.includes(id)
+      const newWorkFields = prev.workFields.includes(id)
         ? prev.workFields.filter((field) => field !== id)
         : [...prev.workFields, id];
       
-      // Handle the "other" option specially
-      const showOtherField = id === "other" && !prev.workFields.includes("other");
+      const isOtherSelected = id === "other" 
+        ? !prev.workFields.includes("other") 
+        : newWorkFields.includes("other");
       
       return { 
         ...prev, 
-        workFields: fields,
-        showOtherWorkField: prev.showOtherWorkField || showOtherField
+        workFields: newWorkFields,
+        showOtherWorkField: isOtherSelected,
+        otherWorkField: isOtherSelected ? prev.otherWorkField : ""
       };
     });
   };
@@ -101,16 +102,20 @@ const CtaSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Prepare form data for submission
+    const workFieldsInHebrew = formData.workFields.map(fieldId => {
+      if (fieldId === "other") return "אחר";
+      const field = workFields.find(f => f.id === fieldId);
+      return field ? field.label : fieldId;
+    }).join(", ");
+    
     const dataToSubmit = {
       ...formData,
-      post_type: "main_signup_form", // Hidden field to identify the form
-      workFields: formData.workFields.join(", "),
+      post_type: "main_signup_form",
+      workFields: workFieldsInHebrew,
       otherWorkField: formData.showOtherWorkField ? formData.otherWorkField : ""
     };
     
     try {
-      // Send data to the webhook
       const response = await fetch("https://hook.eu2.make.com/ec33yqbomj1l3klhbrc4wtyix0y30pwi", {
         method: "POST",
         headers: {
@@ -123,13 +128,11 @@ const CtaSection = () => {
         throw new Error("שגיאה בשליחת הנתונים");
       }
       
-      // Success handling
       toast({
         title: "הרשמה בוצעה בהצלחה",
         description: "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה.",
       });
       
-      // Reset form
       setFormData({
         firstName: "",
         lastName: "",
