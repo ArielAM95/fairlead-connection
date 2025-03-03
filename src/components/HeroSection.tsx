@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useRef } from "react";
@@ -52,7 +53,7 @@ const HeroSection = () => {
           <div ref={elementRef} className="lg:col-span-7 staggered-animation">
             <div className="space-y-6 max-w-3xl">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight">
-                oFair – הצטרפו למהפכת שיתוף הלידים וניהול הפרויקטים לבעלי מקצוע!
+                oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
               </h1>
               <p className="text-xl text-muted-foreground">פלטפורמת oFair מחברת בין בעלי מקצוע בתחומי הבנייה, השיפוצים וההנדסה, ומאפשרת לכם לקבל לידים איכותיים ומפורטים, לשתף לידים שלא מתאימים לכם ולהתחבר לפרויקטים רלוונטיים – הכול במקום אחד!</p>
               <p className="text-xl font-semibold text-ofair-900">

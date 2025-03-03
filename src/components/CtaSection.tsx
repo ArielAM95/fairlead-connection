@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -6,6 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useLoadScript } from "@react-google-maps/api";
+
+const libraries = ["places"];
+
 const workFields = [{
   id: "construction",
   label: "בנייה"
@@ -73,6 +78,7 @@ const workFields = [{
   id: "engineering",
   label: "הנדסה"
 }];
+
 const experienceOptions = [{
   id: "0-2",
   label: "0-2 שנים"
@@ -86,14 +92,14 @@ const experienceOptions = [{
   id: "10+",
   label: "מעל 10 שנים"
 }];
+
 const CtaSection = () => {
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     companyName: "",
+    city: "",
     workFields: [] as string[],
     otherWorkField: "",
     showOtherWorkField: false,
@@ -101,8 +107,44 @@ const CtaSection = () => {
     email: "",
     phone: ""
   });
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const cityInputRef = useRef<HTMLInputElement>(null);
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+
+  // Load Google Maps API
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: "AIzaSyC1qSoqLJbRpR-j6svUFCZ1RYaEOoBjmU8",
+    libraries: libraries as any,
+  });
+
+  useEffect(() => {
+    if (isLoaded && !loadError && cityInputRef.current) {
+      const options = {
+        componentRestrictions: { country: 'il' },
+        types: ['(cities)'],
+      };
+      
+      autocompleteRef.current = new window.google.maps.places.Autocomplete(
+        cityInputRef.current,
+        options
+      );
+      
+      autocompleteRef.current.addListener('place_changed', () => {
+        if (autocompleteRef.current) {
+          const place = autocompleteRef.current.getPlace();
+          if (place.name) {
+            setFormData(prev => ({
+              ...prev,
+              city: place.name
+            }));
+          }
+        }
+      });
+    }
+  }, [isLoaded, loadError]);
+
   useEffect(() => {
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -117,20 +159,25 @@ const CtaSection = () => {
     elements?.forEach(el => observer.observe(el));
     return () => observer.disconnect();
   }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const {
-      name,
-      value
-    } = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value
     });
   };
+
   const handleWorkFieldToggle = (id: string) => {
     setFormData(prev => {
-      const newWorkFields = prev.workFields.includes(id) ? prev.workFields.filter(field => field !== id) : [...prev.workFields, id];
-      const isOtherSelected = id === "other" ? !prev.workFields.includes("other") : newWorkFields.includes("other");
+      const newWorkFields = prev.workFields.includes(id) 
+        ? prev.workFields.filter(field => field !== id) 
+        : [...prev.workFields, id];
+      
+      const isOtherSelected = id === "other" 
+        ? !prev.workFields.includes("other") 
+        : newWorkFields.includes("other");
+      
       return {
         ...prev,
         workFields: newWorkFields,
@@ -139,26 +186,31 @@ const CtaSection = () => {
       };
     });
   };
+
   const handleExperienceChange = (value: string) => {
     setFormData({
       ...formData,
       experience: value
     });
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    
     const workFieldsInHebrew = formData.workFields.map(fieldId => {
       if (fieldId === "other") return "אחר";
       const field = workFields.find(f => f.id === fieldId);
       return field ? field.label : fieldId;
     }).join(", ");
+    
     const dataToSubmit = {
       ...formData,
       post_type: "main_signup_form",
       workFields: workFieldsInHebrew,
       otherWorkField: formData.showOtherWorkField ? formData.otherWorkField : ""
     };
+    
     try {
       const response = await fetch("https://hook.eu2.make.com/ec33yqbomj1l3klhbrc4wtyix0y30pwi", {
         method: "POST",
@@ -167,17 +219,21 @@ const CtaSection = () => {
         },
         body: JSON.stringify(dataToSubmit)
       });
+      
       if (!response.ok) {
         throw new Error("שגיאה בשליחת הנתונים");
       }
+      
       toast({
         title: "הרשמה בוצעה בהצלחה",
         description: "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה."
       });
+      
       setFormData({
         firstName: "",
         lastName: "",
         companyName: "",
+        city: "",
         workFields: [],
         otherWorkField: "",
         showOtherWorkField: false,
@@ -196,6 +252,7 @@ const CtaSection = () => {
       setIsSubmitting(false);
     }
   };
+
   return <section className="py-16 md:py-24 cta-gradient" id="signup-form" ref={sectionRef}>
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
@@ -230,6 +287,29 @@ const CtaSection = () => {
                   מספר טלפון *
                 </label>
                 <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleChange} required className="bg-gray-50 border-gray-200" dir="ltr" placeholder="05X-XXXXXXX" />
+              </div>
+              
+              <div>
+                <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
+                  עיר *
+                </label>
+                <Input 
+                  id="city" 
+                  name="city" 
+                  value={formData.city} 
+                  onChange={handleChange} 
+                  ref={cityInputRef}
+                  required 
+                  className="bg-gray-50 border-gray-200" 
+                  placeholder="הזן את שם העיר" 
+                  disabled={!isLoaded}
+                />
+                {loadError && (
+                  <p className="text-xs text-red-500 mt-1">שגיאה בטעינת שירות האיתור</p>
+                )}
+                {!isLoaded && !loadError && (
+                  <p className="text-xs text-gray-500 mt-1">טוען שירות איתור...</p>
+                )}
               </div>
               
               <div>
@@ -304,4 +384,5 @@ const CtaSection = () => {
       </div>
     </section>;
 };
+
 export default CtaSection;
