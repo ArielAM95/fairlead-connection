@@ -14,6 +14,17 @@ import ScrollToTop from "@/components/ScrollToTop";
 const Index = () => {
   useEffect(() => {
     document.title = "oFair - מהפכת שיתוף הלידים לבעלי מקצוע";
+    
+    // Log UTM parameters for debugging
+    const urlParams = new URLSearchParams(window.location.search);
+    const utmParams: Record<string, string> = {};
+    
+    for (const [key, value] of urlParams.entries()) {
+      if (key.startsWith('utm_')) {
+        utmParams[key] = value;
+        console.log(`UTM param found: ${key}=${value}`);
+      }
+    }
   }, []);
 
   return (

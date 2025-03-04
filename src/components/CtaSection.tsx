@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -67,9 +66,21 @@ const CtaSection = () => {
     workRegions: [] as string[],
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [utmParams, setUtmParams] = useState<Record<string, string>>({});
   const sectionRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const utmObject: Record<string, string> = {};
+    
+    for (const [key, value] of queryParams.entries()) {
+      if (key.startsWith('utm_')) {
+        utmObject[key] = value;
+      }
+    }
+    
+    setUtmParams(utmObject);
+    
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -95,7 +106,6 @@ const CtaSection = () => {
         ? prev.workFields.filter((field) => field !== id)
         : [...prev.workFields, id];
       
-      // Check if "other" is selected or deselected
       const isOtherSelected = id === "other" 
         ? !prev.workFields.includes("other") 
         : newWorkFields.includes("other");
@@ -104,7 +114,6 @@ const CtaSection = () => {
         ...prev, 
         workFields: newWorkFields,
         showOtherWorkField: isOtherSelected,
-        // Clear the otherWorkField if "other" is deselected
         otherWorkField: isOtherSelected ? prev.otherWorkField : ""
       };
     });
@@ -131,14 +140,12 @@ const CtaSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Convert work fields to Hebrew
     const workFieldsInHebrew = formData.workFields.map(fieldId => {
       if (fieldId === "other") return "אחר";
       const field = workFields.find(f => f.id === fieldId);
       return field ? field.label : fieldId;
     }).join(", ");
     
-    // Convert work regions to Hebrew
     const workRegionsInHebrew = formData.workRegions.map(regionId => {
       const region = workRegions.find(r => r.id === regionId);
       return region ? region.label : regionId;
@@ -149,7 +156,8 @@ const CtaSection = () => {
       post_type: "main_signup_form",
       workFields: workFieldsInHebrew,
       workRegions: workRegionsInHebrew,
-      otherWorkField: formData.showOtherWorkField ? formData.otherWorkField : ""
+      otherWorkField: formData.showOtherWorkField ? formData.otherWorkField : "",
+      ...utmParams
     };
     
     try {

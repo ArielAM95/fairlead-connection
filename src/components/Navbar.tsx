@@ -40,9 +40,9 @@ const Navbar = () => {
           <div className="flex-1">
             <a href="#" className="flex items-center">
               <img 
-                src="/lovable-uploads/e688f278-f2cb-412b-b59b-3ef90b984707.png" 
+                src="/lovable-uploads/379bfbb5-eff9-4deb-ad62-b54bdde5b96c.png" 
                 alt="oFair Logo" 
-                className="h-14 w-auto" 
+                className="h-16 w-auto" 
               />
             </a>
           </div>
