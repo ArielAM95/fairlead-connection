@@ -42,7 +42,7 @@ const Navbar = () => {
               <img 
                 src="/lovable-uploads/379bfbb5-eff9-4deb-ad62-b54bdde5b96c.png" 
                 alt="oFair Logo" 
-                className="h-16 w-auto" 
+                className="h-20 w-auto" 
               />
             </a>
           </div>

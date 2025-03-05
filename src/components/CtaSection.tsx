@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -65,6 +66,10 @@ const CtaSection = () => {
     city: "",
     workRegions: [] as string[],
   });
+  const [errors, setErrors] = useState({
+    email: "",
+    phone: "",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [utmParams, setUtmParams] = useState<Record<string, string>>({});
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -95,9 +100,38 @@ const CtaSection = () => {
     return () => observer.disconnect();
   }, []);
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone: string) => {
+    // Simple Israeli phone number validation
+    const phoneRegex = /^0[2-9]\d{7,8}$/;
+    return phoneRegex.test(phone.replace(/-/g, ''));
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    
+    // Validate email on change
+    if (name === 'email') {
+      if (!validateEmail(value) && value) {
+        setErrors(prev => ({ ...prev, email: "נא להזין כתובת אימייל תקינה" }));
+      } else {
+        setErrors(prev => ({ ...prev, email: "" }));
+      }
+    }
+    
+    // Validate phone on change
+    if (name === 'phone') {
+      if (!validatePhone(value) && value) {
+        setErrors(prev => ({ ...prev, phone: "נא להזין מספר טלפון תקין" }));
+      } else {
+        setErrors(prev => ({ ...prev, phone: "" }));
+      }
+    }
   };
 
   const handleWorkFieldToggle = (id: string) => {
@@ -138,6 +172,18 @@ const CtaSection = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Final validation before submission
+    if (!validateEmail(formData.email)) {
+      setErrors(prev => ({ ...prev, email: "נא להזין כתובת אימייל תקינה" }));
+      return;
+    }
+    
+    if (!validatePhone(formData.phone)) {
+      setErrors(prev => ({ ...prev, phone: "נא להזין מספר טלפון תקין" }));
+      return;
+    }
+    
     setIsSubmitting(true);
     
     const workFieldsInHebrew = formData.workFields.map(fieldId => {
@@ -190,6 +236,11 @@ const CtaSection = () => {
         phone: "",
         city: "",
         workRegions: [],
+      });
+      
+      setErrors({
+        email: "",
+        phone: "",
       });
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -263,6 +314,8 @@ const CtaSection = () => {
                   className="bg-gray-50 border-gray-200"
                   dir="ltr"
                   placeholder="05X-XXXXXXX"
+                  error={!!errors.phone}
+                  errorMessage={errors.phone}
                 />
               </div>
               
@@ -403,6 +456,8 @@ const CtaSection = () => {
                   className="bg-gray-50 border-gray-200"
                   dir="ltr"
                   placeholder="your@email.com"
+                  error={!!errors.email}
+                  errorMessage={errors.email}
                 />
               </div>
               
@@ -410,7 +465,7 @@ const CtaSection = () => {
                 <Button 
                   type="submit" 
                   className="w-full bg-ofair-900 hover:bg-ofair-800 text-white py-6"
-                  disabled={isSubmitting || formData.workFields.length === 0 || formData.workRegions.length === 0}
+                  disabled={isSubmitting || formData.workFields.length === 0 || formData.workRegions.length === 0 || !!errors.email || !!errors.phone}
                 >
                   {isSubmitting ? "מבצע רישום..." : "הירשמו כעת"}
                 </Button>

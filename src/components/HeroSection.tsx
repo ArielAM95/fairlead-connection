@@ -51,15 +51,17 @@ const HeroSection = () => {
       <div className="container mx-auto px-4 md:px-6 pb-16 z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div ref={elementRef} className="lg:col-span-7 staggered-animation">
-            <div className="space-y-6 max-w-3xl">
+            <div className="space-y-6 max-w-3xl mx-auto text-center lg:text-right">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight">
                 oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
               </h1>
-              <p className="text-xl text-muted-foreground">פלטפורמת oFair מחברת בין בעלי מקצוע בתחומי הבנייה, השיפוצים וההנדסה, ומאפשרת לכם לקבל לידים איכותיים ומפורטים, לשתף לידים שלא מתאימים לכם ולהתחבר לפרויקטים רלוונטיים – הכול במקום אחד!</p>
+              <p className="text-xl text-muted-foreground">
+                פלטפורמת oFair מחברת בין בעלי מקצוע מכל התחומים, ומאפשרת לכם לקבל לידים איכותיים ומפורטים, לשתף לידים שלא מתאימים לכם ולהתחבר לפרויקטים רלוונטיים – הכול במקום אחד!
+              </p>
               <p className="text-xl font-semibold text-ofair-900">
                 📢 הגיע הזמן לעבוד חכם יותר ולהרוויח יותר!
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">
                 <Button className="bg-ofair-900 hover:bg-ofair-800 text-white px-8 py-6 text-lg button-pulse" onClick={scrollToForm}>
                   <span>הירשמו כעת</span>
                   <ChevronRight className="mr-2 h-5 w-5" />
@@ -70,7 +72,7 @@ const HeroSection = () => {
               </div>
               
               <div className="pt-6">
-                <p className="text-muted-foreground flex items-center">
+                <p className="text-muted-foreground flex items-center justify-center lg:justify-start">
                   <span className="inline-block ml-2 text-ofair-900 font-semibold">🚀</span>
                   בלעדי למצטרפים הראשונים – דמי הצטרפות מוזלים!
                 </p>

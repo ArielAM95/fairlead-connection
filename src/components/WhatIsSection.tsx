@@ -23,7 +23,7 @@ const WhatIsSection = () => {
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-ofair-900 scroll-fade">מה זה oFair?</h2>
           <p className="text-lg md:text-xl text-muted-foreground scroll-fade">
-            פלטפורמת oFair מחברת בין בעלי מקצוע בתחומי הבנייה, השיפוצים וההנדסה, ומאפשרת לכם לקבל לידים איכותיים, לשתף לידים שלא מתאימים לכם ולהתחבר לפרויקטים רלוונטיים – הכול במקום אחד!
+            פלטפורמת oFair מחברת בין בעלי מקצוע מכל התחומים, ומאפשרת לכם לקבל לידים איכותיים, לשתף לידים שלא מתאימים לכם ולהתחבר לפרויקטים רלוונטיים – הכול במקום אחד!
           </p>
         </div>
 
@@ -81,4 +81,3 @@ const WhatIsSection = () => {
     </section>;
 };
 export default WhatIsSection;
-
