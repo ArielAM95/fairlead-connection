@@ -101,7 +101,8 @@ const CtaSection = () => {
   }, []);
 
   const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // More comprehensive email validation regex that only allows standard email format
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
 
@@ -113,23 +114,27 @@ const CtaSection = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
     
-    // Validate email on change
+    // For email fields, strip non-Latin characters before updating state
     if (name === 'email') {
-      if (!validateEmail(value) && value) {
+      const sanitizedValue = value.replace(/[^\x00-\x7F]/g, "");
+      setFormData({ ...formData, [name]: sanitizedValue });
+      
+      if (!validateEmail(sanitizedValue) && sanitizedValue) {
         setErrors(prev => ({ ...prev, email: "נא להזין כתובת אימייל תקינה" }));
       } else {
         setErrors(prev => ({ ...prev, email: "" }));
       }
-    }
-    
-    // Validate phone on change
-    if (name === 'phone') {
-      if (!validatePhone(value) && value) {
-        setErrors(prev => ({ ...prev, phone: "נא להזין מספר טלפון תקין" }));
-      } else {
-        setErrors(prev => ({ ...prev, phone: "" }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+      
+      // Validate phone if that field is being updated
+      if (name === 'phone') {
+        if (!validatePhone(value) && value) {
+          setErrors(prev => ({ ...prev, phone: "נא להזין מספר טלפון תקין" }));
+        } else {
+          setErrors(prev => ({ ...prev, phone: "" }));
+        }
       }
     }
   };

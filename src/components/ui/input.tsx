@@ -10,6 +10,15 @@ export interface InputProps extends React.ComponentPropsWithoutRef<"input"> {
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, error, errorMessage, ...props }, ref) => {
+    // Special handling for email inputs to validate and restrict input
+    const handleEmailInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (type === "email") {
+        // Remove any non-Latin characters, spaces, or invalid characters for email
+        const value = e.target.value.replace(/[^\x00-\x7F]/g, "");
+        e.target.value = value;
+      }
+    };
+
     return (
       <div className="w-full">
         <input
@@ -20,6 +29,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className
           )}
           ref={ref}
+          onInput={type === "email" ? handleEmailInput : undefined}
           {...props}
         />
         {error && errorMessage && (

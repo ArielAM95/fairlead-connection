@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,14 +14,64 @@ const ContactSection = () => {
     message: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({
+    email: "",
+    phone: ""
+  });
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone: string) => {
+    // Simple Israeli phone number validation
+    const phoneRegex = /^0[2-9]\d{7,8}$/;
+    return phoneRegex.test(phone.replace(/-/g, ''));
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // For email fields, strip non-Latin characters
+    if (name === 'email') {
+      const sanitizedValue = value.replace(/[^\x00-\x7F]/g, "");
+      setFormData({ ...formData, [name]: sanitizedValue });
+      
+      if (!validateEmail(sanitizedValue) && sanitizedValue) {
+        setErrors(prev => ({ ...prev, email: "נא להזין כתובת אימייל תקינה" }));
+      } else {
+        setErrors(prev => ({ ...prev, email: "" }));
+      }
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+      
+      // Validate phone if that field is being updated
+      if (name === 'phone') {
+        if (!validatePhone(value) && value) {
+          setErrors(prev => ({ ...prev, phone: "נא להזין מספר טלפון תקין" }));
+        } else {
+          setErrors(prev => ({ ...prev, phone: "" }));
+        }
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate email before submission
+    if (!validateEmail(formData.email)) {
+      setErrors(prev => ({ ...prev, email: "נא להזין כתובת אימייל תקינה" }));
+      return;
+    }
+    
+    // Validate phone before submission
+    if (!validatePhone(formData.phone)) {
+      setErrors(prev => ({ ...prev, phone: "נא להזין מספר טלפון תקין" }));
+      return;
+    }
+    
     setIsSubmitting(true);
     
     try {
@@ -133,6 +182,8 @@ const ContactSection = () => {
                     required
                     className="bg-gray-50 border-gray-200"
                     dir="ltr"
+                    error={!!errors.email}
+                    errorMessage={errors.email}
                   />
                 </div>
                 
@@ -150,6 +201,8 @@ const ContactSection = () => {
                     className="bg-gray-50 border-gray-200"
                     dir="ltr"
                     placeholder="05X-XXXXXXX"
+                    error={!!errors.phone}
+                    errorMessage={errors.phone}
                   />
                 </div>
               </div>
