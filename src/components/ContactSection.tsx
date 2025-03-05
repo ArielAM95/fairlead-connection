@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -121,7 +122,7 @@ const ContactSection = () => {
   };
 
   return (
-    <section className="py-16 md:py-24 bg-gray-50" id="contact">
+    <section className="py-24 md:py-32 bg-gray-50" id="contact">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10">

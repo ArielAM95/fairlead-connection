@@ -74,7 +74,7 @@ const HeroSection = () => {
               <div className="pt-6">
                 <p className="text-muted-foreground flex items-center justify-center lg:justify-start">
                   <span className="inline-block ml-2 text-ofair-900 font-semibold">🚀</span>
-                  בלעדי למצטרפים הראשונים – דמי הצטרפות מוזלים!
+                  הטבה ייחודית בדמי ההקמה למצטרפים כעת!
                 </p>
               </div>
             </div>

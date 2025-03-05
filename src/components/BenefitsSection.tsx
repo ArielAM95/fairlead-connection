@@ -28,8 +28,8 @@ const BenefitsSection = () => {
     "שתפו לידים שלא מתאימים לכם – במקום לבזבז זמן על לקוחות לא רלוונטיים, תנו אותם למישהו שצריך!",
     "פחות בזבוז זמן – יותר עסקאות – לא מתעסקים עם לקוחות שמחפשים רק הצעות מחיר בלי כוונה אמיתית.",
     "השבחת לידים חכמה – הלקוחות בפלטפורמה מקבלים הצעות מחיר ישירות, מה שמבטיח לידים איכותיים ורלוונטיים יותר.",
-    "מערכת שקופה וללא התחייבות – משלמים רק כשמתחילים לעבוד!",
-    "הצטרפות מוקדמת בהטבה מיוחדת – הרשמה עכשיו ב-300 ש״ח בלבד במקום 630 ש״ח!",
+    "משלמים רק כשסוגרים עסקה - 10% מהעסקה בלבד! ללא תשלום על פניות שלא מבשילות לכדי עסקה.",
+    "הצטרפות מוקדמת בהטבה מיוחדת – הרשמה עכשיו עם הטבה ייחודית בדמי ההקמה!",
   ];
 
   return (
@@ -44,16 +44,16 @@ const BenefitsSection = () => {
           {benefits.map((benefit, index) => (
             <div 
               key={index}
-              className="flex items-start bg-white rounded-xl p-5 shadow-subtle hover:shadow-card transition-all duration-300 scroll-fade"
+              className={`flex items-start bg-white rounded-xl p-5 shadow-subtle hover:shadow-card transition-all duration-300 scroll-fade ${index === 4 ? 'border-2 border-ofair-900' : ''}`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
               <div className="shrink-0 mt-1">
-                <div className="w-6 h-6 rounded-full bg-ofair-100 flex items-center justify-center">
-                  <Check className="h-3.5 w-3.5 text-ofair-900" />
+                <div className={`w-6 h-6 rounded-full ${index === 4 ? 'bg-ofair-900' : 'bg-ofair-100'} flex items-center justify-center`}>
+                  <Check className={`h-3.5 w-3.5 ${index === 4 ? 'text-white' : 'text-ofair-900'}`} />
                 </div>
               </div>
               <div className="mr-4">
-                <p className="text-foreground">{benefit}</p>
+                <p className={`${index === 4 ? 'font-bold' : ''} text-foreground`}>{benefit}</p>
               </div>
             </div>
           ))}
