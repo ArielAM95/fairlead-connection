@@ -132,9 +132,12 @@ const ContactSection = () => {
             <p className="text-lg text-muted-foreground mb-2">
               יש לכם שאלות? אנחנו כאן בשבילכם.
             </p>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground mb-4">
               מלאו את הטופס ונחזור אליכם בהקדם האפשרי.
             </p>
+            <div className="inline-block bg-ofair-100 text-ofair-900 px-4 py-2 rounded-md font-medium border border-ofair-200 mb-6">
+              שימו לב: זהו טופס צור קשר בלבד ואינו מהווה טופס הרשמה לשירות
+            </div>
           </div>
           
           <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
@@ -230,6 +233,10 @@ const ContactSection = () => {
                 >
                   {isSubmitting ? "שולח..." : "שלח הודעה"}
                 </Button>
+              </div>
+              
+              <div className="text-center mt-4 text-sm text-muted-foreground">
+                <p>* טופס זה אינו מהווה הרשמה לשירות, רק יצירת קשר עם הצוות שלנו</p>
               </div>
             </form>
           </div>
