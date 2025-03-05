@@ -21,7 +21,7 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
 
    # If you need to build your project, add build steps here
-    For example, if it's a Node.js project:
+   # For example, if it's a Node.js project:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
