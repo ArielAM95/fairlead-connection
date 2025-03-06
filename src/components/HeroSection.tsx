@@ -79,7 +79,9 @@ const HeroSection = () => {
                 <div className="glass-morphism rounded-2xl p-8 max-w-md">
                   <h3 className="text-2xl font-bold text-ofair-900 mb-4">זה רק FAIR</h3>
                   <p className="text-foreground mb-4 font-semibold">קבלו גישה ללקוחות איכותיים, שמחפשים הצעות בצורה פשוטה וכשמתקשרים - זה כדי לסגור. שתפו לידים לא רלוונטיים עם בעלי מקצוע אחרים, הרוויחו וצרו רשת עסקית חזקה.
-אתם משלמים רק על עבודות שבוצעו !</p>
+
+
+💰 אתם משלמים רק על עבודות שבוצעו !</p>
                   <div className="flex items-center text-sm">
                     <div className="flex space-x-1 space-x-reverse">
                       <span className="w-2 h-2 rounded-full bg-green-500"></span>
