@@ -31,11 +31,11 @@ const Index = () => {
     <div className="overflow-x-hidden">
       <Navbar />
       <HeroSection />
-      <WhatIsSection />
-      <BenefitsSection />
       <ProblemsSection />
+      <WhatIsSection />
       <HowItWorksSection />
       <CtaSection />
+      <BenefitsSection />
       <ContactSection />
       <Footer />
       <ScrollToTop />
