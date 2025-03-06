@@ -1,11 +1,8 @@
-
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useRef } from "react";
-
 const HeroSection = () => {
   const elementRef = useRef<HTMLDivElement>(null);
-  
   useEffect(() => {
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -23,7 +20,6 @@ const HeroSection = () => {
     });
     return () => observer.disconnect();
   }, []);
-  
   const scrollToForm = () => {
     const ctaSection = document.querySelector('#signup-form');
     if (ctaSection) {
@@ -32,7 +28,6 @@ const HeroSection = () => {
       });
     }
   };
-  
   const scrollToWhatIs = () => {
     const whatIsSection = document.querySelector('#what-is');
     if (whatIsSection) {
@@ -41,7 +36,6 @@ const HeroSection = () => {
       });
     }
   };
-  
   return <div className="min-h-screen flex items-center relative overflow-hidden pt-20 hero-gradient">
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="absolute -bottom-56 -left-56 w-96 h-96 bg-ofair-100 rounded-full opacity-20 blur-3xl"></div>
@@ -55,9 +49,7 @@ const HeroSection = () => {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight">
                 oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
               </h1>
-              <p className="text-xl text-muted-foreground">
-                פלטפורמת oFair מחברת בין בעלי מקצוע מכל התחומים, ומאפשרת לכם לקבל לידים איכותיים ומפורטים, לשתף לידים שלא מתאימים לכם ולהתחבר לפרויקטים רלוונטיים – הכול במקום אחד!
-              </p>
+              <p className="text-xl text-muted-foreground">פלטפורמת oFair מחברת בין בעלי מקצוע מכל התחומים, ומאפשרת לכם לקבל לידים איכותיים ומפורטים, לשתף לידים שלא מתאימים לכם ולהרוויח מהם – הכול במקום אחד!</p>
               <p className="text-xl font-semibold text-ofair-900">
                 📢 הגיע הזמן לעבוד חכם יותר ולהרוויח יותר!
               </p>
@@ -86,8 +78,8 @@ const HeroSection = () => {
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="glass-morphism rounded-2xl p-8 max-w-md">
                   <h3 className="text-2xl font-bold text-ofair-900 mb-4">זה רק FAIR</h3>
-                  <p className="text-foreground mb-4">קבלו גישה ללקוחות איכותיים, שמחפשים הצעות בצורה פשוטה וכשמתקשרים - זה כדי לסגור.
-שתפו לידים לא רלוונטיים עם בעלי מקצוע אחרים, הרוויחו וצרו רשת עסקית חזקה.</p>
+                  <p className="text-foreground mb-4 font-semibold">קבלו גישה ללקוחות איכותיים, שמחפשים הצעות בצורה פשוטה וכשמתקשרים - זה כדי לסגור. שתפו לידים לא רלוונטיים עם בעלי מקצוע אחרים, הרוויחו וצרו רשת עסקית חזקה.
+אתם משלמים רק על עבודות שבוצעו !</p>
                   <div className="flex items-center text-sm">
                     <div className="flex space-x-1 space-x-reverse">
                       <span className="w-2 h-2 rounded-full bg-green-500"></span>
@@ -104,5 +96,4 @@ const HeroSection = () => {
       </div>
     </div>;
 };
-
 export default HeroSection;

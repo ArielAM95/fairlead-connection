@@ -1,7 +1,5 @@
-
 import { useEffect, useRef } from "react";
 import { UserPlus } from "lucide-react";
-
 const WhatIsSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -22,9 +20,7 @@ const WhatIsSection = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-ofair-900 scroll-fade">מה זה oFair?</h2>
-          <p className="text-lg md:text-xl text-muted-foreground scroll-fade">
-            פלטפורמת oFair מחברת בין בעלי מקצוע מכל התחומים, ומאפשרת לכם לקבל לידים איכותיים, לשתף לידים שלא מתאימים לכם ולהתחבר לפרויקטים רלוונטיים – הכול במקום אחד!
-          </p>
+          <p className="text-lg md:text-xl text-muted-foreground scroll-fade">פלטפורמת oFair מחברת בין בעלי מקצוע מכל התחומים, ומאפשרת לכם לקבל לידים איכותיים, לשתף לידים שלא מתאימים לכם ולהרוויח – הכול במקום אחד!</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -47,9 +43,7 @@ const WhatIsSection = () => {
               </svg>
             </div>
             <h3 className="text-xl font-bold mb-3 text-ofair-900">שיתוף לידים</h3>
-            <p className="text-muted-foreground">
-              העבירו לידים שלא מתאימים לכם לבעלי מקצוע אחרים וקבלו לידים שמתאימים לתחום המומחיות שלכם.
-            </p>
+            <p className="text-muted-foreground">העבירו לידים שלא מתאימים לכם לבעלי מקצוע אחרים והרוויחו מהם עמלה.</p>
           </div>
 
           <div className="feature-card scroll-fade" style={{
