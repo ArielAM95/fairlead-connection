@@ -10,6 +10,11 @@ const Terms = () => {
   useEffect(() => {
     document.title = "תקנון ותנאי שימוש - oFair";
     window.scrollTo(0, 0);
+    
+    // Track page view with Meta Pixel
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'PageView');
+    }
   }, []);
 
   return (
