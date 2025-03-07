@@ -16,8 +16,8 @@ const Index = () => {
     document.title = "oFair - מהפכת שיתוף הלידים לבעלי מקצוע";
     
     // Track page view with Meta Pixel
-    if (typeof fbq !== 'undefined') {
-      fbq('track', 'PageView');
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'PageView');
     }
     
     // Log UTM parameters for debugging

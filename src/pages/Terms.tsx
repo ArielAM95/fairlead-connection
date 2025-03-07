@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -12,8 +13,8 @@ const Terms = () => {
     window.scrollTo(0, 0);
     
     // Track page view with Meta Pixel
-    if (typeof fbq !== 'undefined') {
-      fbq('track', 'PageView');
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'PageView');
     }
   }, []);
 

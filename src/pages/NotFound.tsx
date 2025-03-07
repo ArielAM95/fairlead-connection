@@ -14,8 +14,8 @@ const NotFound = () => {
     );
     
     // Track 404 pageview with Meta Pixel
-    if (typeof fbq !== 'undefined') {
-      fbq('track', 'PageView');
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'PageView');
     }
   }, [location.pathname]);
 
