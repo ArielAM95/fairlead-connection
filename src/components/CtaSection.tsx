@@ -5,7 +5,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+
+interface CtaSectionProps {
+  showNotification?: (title: string, description: string) => void;
+}
+
 const workFields = [{
   id: "construction",
   label: "בנייה"
@@ -73,6 +77,7 @@ const workFields = [{
   id: "engineering",
   label: "הנדסה"
 }];
+
 const experienceOptions = [{
   id: "0-2",
   label: "0-2 שנים"
@@ -86,6 +91,7 @@ const experienceOptions = [{
   id: "10+",
   label: "מעל 10 שנים"
 }];
+
 const workRegions = [{
   id: "north",
   label: "צפון"
@@ -111,7 +117,8 @@ const workRegions = [{
   id: "sharon",
   label: "השרון"
 }];
-const CtaSection = () => {
+
+const CtaSection = ({ showNotification }: CtaSectionProps) => {
   const {
     toast
   } = useToast();
@@ -135,6 +142,7 @@ const CtaSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [utmParams, setUtmParams] = useState<Record<string, string>>({});
   const sectionRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const utmObject: Record<string, string> = {};
@@ -157,23 +165,23 @@ const CtaSection = () => {
     elements?.forEach(el => observer.observe(el));
     return () => observer.disconnect();
   }, []);
+
   const validateEmail = (email: string) => {
-    // More comprehensive email validation regex that only allows standard email format
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
+
   const validatePhone = (phone: string) => {
-    // Simple Israeli phone number validation
     const phoneRegex = /^0[2-9]\d{7,8}$/;
     return phoneRegex.test(phone.replace(/-/g, ''));
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {
       name,
       value
     } = e.target;
 
-    // For email fields, strip non-Latin characters before updating state
     if (name === 'email') {
       const sanitizedValue = value.replace(/[^\x00-\x7F]/g, "");
       setFormData({
@@ -197,7 +205,6 @@ const CtaSection = () => {
         [name]: value
       }));
 
-      // Validate phone if that field is being updated
       if (name === 'phone') {
         if (!validatePhone(value) && value) {
           setErrors(prev => ({
@@ -213,6 +220,7 @@ const CtaSection = () => {
       }
     }
   };
+
   const handleWorkFieldToggle = (id: string) => {
     setFormData(prev => {
       const newWorkFields = prev.workFields.includes(id) ? prev.workFields.filter(field => field !== id) : [...prev.workFields, id];
@@ -225,6 +233,7 @@ const CtaSection = () => {
       };
     });
   };
+
   const handleWorkRegionToggle = (id: string) => {
     setFormData(prev => {
       const newWorkRegions = prev.workRegions.includes(id) ? prev.workRegions.filter(region => region !== id) : [...prev.workRegions, id];
@@ -234,16 +243,17 @@ const CtaSection = () => {
       };
     });
   };
+
   const handleExperienceChange = (value: string) => {
     setFormData({
       ...formData,
       experience: value
     });
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Final validation before submission
     if (!validateEmail(formData.email)) {
       setErrors(prev => ({
         ...prev,
@@ -259,6 +269,7 @@ const CtaSection = () => {
       return;
     }
     setIsSubmitting(true);
+
     const workFieldsInHebrew = formData.workFields.map(fieldId => {
       if (fieldId === "other") return "אחר";
       const field = workFields.find(f => f.id === fieldId);
@@ -276,6 +287,7 @@ const CtaSection = () => {
       otherWorkField: formData.showOtherWorkField ? formData.otherWorkField : "",
       ...utmParams
     };
+
     try {
       const response = await fetch("https://hook.eu2.make.com/ec33yqbomj1l3klhbrc4wtyix0y30pwi", {
         method: "POST",
@@ -287,10 +299,14 @@ const CtaSection = () => {
       if (!response.ok) {
         throw new Error("שגיאה בשליחת הנתונים");
       }
-      toast({
-        title: "הרשמה בוצעה בהצלחה",
-        description: "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה."
-      });
+      
+      if (showNotification) {
+        showNotification(
+          "הרשמה בוצעה בהצלחה",
+          "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה."
+        );
+      }
+      
       setFormData({
         firstName: "",
         lastName: "",
@@ -310,15 +326,18 @@ const CtaSection = () => {
       });
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast({
-        title: "שגיאה בהרשמה",
-        description: "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר.",
-        variant: "destructive"
-      });
+      
+      if (showNotification) {
+        showNotification(
+          "שגיאה בהרשמה",
+          "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר."
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
+
   return <section className="py-16 md:py-24 cta-gradient" id="signup-form" ref={sectionRef}>
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
@@ -453,4 +472,5 @@ const CtaSection = () => {
       </div>
     </section>;
 };
+
 export default CtaSection;

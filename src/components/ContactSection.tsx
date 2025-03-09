@@ -1,11 +1,13 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 
-const ContactSection = () => {
+interface ContactSectionProps {
+  showNotification?: (title: string, description: string) => void;
+}
+
+const ContactSection = ({ showNotification }: ContactSectionProps) => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     firstName: "",
@@ -95,11 +97,13 @@ const ContactSection = () => {
         throw new Error("שגיאה בשליחת הטופס");
       }
       
-      // Show success message
-      toast({
-        title: "ההודעה נשלחה בהצלחה",
-        description: "תודה על פנייתך! נחזור אליך בהקדם.",
-      });
+      // Show success notification
+      if (showNotification) {
+        showNotification(
+          "ההודעה נשלחה בהצלחה",
+          "תודה על פנייתך! נחזור אליך בהקדם."
+        );
+      }
       
       // Reset form
       setFormData({
@@ -111,11 +115,14 @@ const ContactSection = () => {
       });
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast({
-        title: "שגיאה בשליחה",
-        description: "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר.",
-        variant: "destructive",
-      });
+      
+      // Show error notification
+      if (showNotification) {
+        showNotification(
+          "שגיאה בשליחה",
+          "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר."
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
