@@ -8,7 +8,6 @@ interface ContactSectionProps {
 }
 
 const ContactSection = ({ showNotification }: ContactSectionProps) => {
-  const { toast } = useToast();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",

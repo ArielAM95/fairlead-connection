@@ -119,9 +119,6 @@ const workRegions = [{
 }];
 
 const CtaSection = ({ showNotification }: CtaSectionProps) => {
-  const {
-    toast
-  } = useToast();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
