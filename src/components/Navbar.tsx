@@ -24,17 +24,17 @@ const Navbar = () => {
       });
     }
   };
-  return <nav className="">
-      <div className="container mx-auto px-4 md:px-6">
+  return <nav className="py-[14px]">
+      <div className="container mx-auto md:px-6 px-[11px]">
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <a href="#" className="flex items-center">
-              <img src="/lovable-uploads/379bfbb5-eff9-4deb-ad62-b54bdde5b96c.png" alt="oFair Logo" className="h-20 w-auto" />
+            <a href="#" className="flex items-center px-0">
+              <img alt="oFair Logo" src="/lovable-uploads/2bc5f38c-6146-47fa-b542-6931e17357c0.png" className="h-30 w-30 object-contain" />
             </a>
           </div>
 
           {/* Desktop navigation */}
-          <div className="hidden md:flex md:space-x-8 md:space-x-reverse">
+          <div className="md:flex md:space-x-8 md:space-x-reverse px-[33px] mx-[19px]">
             <a href="#what-is" className="text-foreground/80 hover:text-ofair-900 transition-colors">
               מה זה oFair?
             </a>
@@ -49,7 +49,7 @@ const Navbar = () => {
             </a>
           </div>
 
-          <div className="hidden md:block">
+          <div className="md:block px-[2px]">
             <Button className="bg-ofair-900 hover:bg-ofair-800 text-white mr-4 button-pulse" onClick={scrollToForm}>
               <span>הירשמו כעת</span>
               <ChevronRight className="mr-2 h-4 w-4" />
