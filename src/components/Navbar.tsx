@@ -1,10 +1,13 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -16,6 +19,7 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   const scrollToForm = () => {
     const ctaSection = document.querySelector('#signup-form');
     if (ctaSection) {
@@ -24,12 +28,13 @@ const Navbar = () => {
       });
     }
   };
-  return <nav className="py-[14px]">
+
+  return <nav className="py-4">
       <div className="container mx-auto md:px-6 px-[11px]">
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <a href="#" className="flex items-center px-0">
-              <img alt="oFair Logo" src="/lovable-uploads/2bc5f38c-6146-47fa-b542-6931e17357c0.png" className="h-30 w-30 object-contain" />
+              <img alt="oFair Logo" src="/lovable-uploads/2bc5f38c-6146-47fa-b542-6931e17357c0.png" className="h-12 w-auto object-contain" />
             </a>
           </div>
 
@@ -88,4 +93,5 @@ const Navbar = () => {
       </div>
     </nav>;
 };
+
 export default Navbar;
