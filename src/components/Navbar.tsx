@@ -34,7 +34,7 @@ const Navbar = () => {
     }
   };
 
-  return <nav className={cn("py-4", scrolled ? "shadow-sm bg-white/95 backdrop-blur-sm" : "")}>
+  return <nav className={cn("py-4 sticky top-0 z-50", scrolled ? "shadow-sm bg-white/95 backdrop-blur-sm" : "bg-white")}>
       <div className="container mx-auto md:px-6 px-[11px]">
         <div className="flex items-center justify-between">
           <div className="flex-1">
@@ -75,7 +75,7 @@ const Navbar = () => {
         </div>
 
         {/* Mobile menu - Only visible when toggled on mobile */}
-        {isOpen && <div className="md:hidden absolute top-full right-0 left-0 bg-white border-t border-gray-100 shadow-md p-4 animate-fade-in z-50">
+        {isOpen && <div className="md:hidden fixed top-[60px] right-0 left-0 bg-white border-t border-gray-100 shadow-md p-4 animate-fade-in z-50">
             <div className="flex flex-col space-y-4">
               <a href="#what-is" className="text-foreground/80 hover:text-ofair-900 py-2 transition-colors" onClick={() => setIsOpen(false)}>
                 מה זה oFair?
