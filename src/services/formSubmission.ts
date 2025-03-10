@@ -2,7 +2,7 @@
 import { ContactFormData } from "@/components/contact/ContactForm";
 import { SignupFormData } from "@/components/cta/SignupForm";
 
-const WEBHOOK_URL = "https://hook.eu2.make.com/ec33yqbomj1l3klhbrc4wtyix0y30pwi";
+const WEBHOOK_URL = "https://hook.eu2.make.com/4flq1xywuqf165vnw7v61hjn8ap6airq";
 
 export const submitContactForm = async (formData: ContactFormData): Promise<void> => {
   const dataToSubmit = {

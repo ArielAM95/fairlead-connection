@@ -286,7 +286,7 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
     };
 
     try {
-      const response = await fetch("https://hook.eu2.make.com/ec33yqbomj1l3klhbrc4wtyix0y30pwi", {
+      const response = await fetch("https://hook.eu2.make.com/4flq1xywuqf165vnw7v61hjn8ap6airq", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

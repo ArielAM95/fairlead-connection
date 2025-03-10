@@ -83,8 +83,8 @@ const ContactSection = ({ showNotification }: ContactSectionProps) => {
         post_type: "contact_form" // Hidden field to identify the form type
       };
       
-      // Send data to webhook
-      const response = await fetch("https://hook.eu2.make.com/ec33yqbomj1l3klhbrc4wtyix0y30pwi", {
+      // Send data to webhook - UPDATED WEBHOOK URL
+      const response = await fetch("https://hook.eu2.make.com/4flq1xywuqf165vnw7v61hjn8ap6airq", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
