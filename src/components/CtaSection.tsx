@@ -464,7 +464,7 @@ const CtaSection = ({ showNotification: propsShowNotification }: CtaSectionProps
               
               <div className="pt-4">
                 <Button type="submit" className="w-full bg-ofair-900 hover:bg-ofair-800 text-white py-6" disabled={isSubmitting || formData.workFields.length === 0 || formData.workRegions.length === 0 || !!errors.email || !!errors.phone}>
-                  {isSubmitting ? "מבצע רישום..." : "הירשמו כעת"}
+                  {isSubmitting ? "מבצע רישום..." : "להרשמה"}
                 </Button>
                 
                 <p className="text-xs text-center text-muted-foreground mt-4">
