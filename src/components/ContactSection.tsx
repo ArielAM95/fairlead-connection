@@ -2,12 +2,13 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { showNotification } from "@/utils/notification";
 
 interface ContactSectionProps {
   showNotification?: (title: string, description: string) => void;
 }
 
-const ContactSection = ({ showNotification }: ContactSectionProps) => {
+const ContactSection = ({ showNotification: propsShowNotification }: ContactSectionProps) => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -97,7 +98,12 @@ const ContactSection = ({ showNotification }: ContactSectionProps) => {
       }
       
       // Show success notification
-      if (showNotification) {
+      if (propsShowNotification) {
+        propsShowNotification(
+          "ההודעה נשלחה בהצלחה",
+          "תודה על פנייתך! נחזור אליך בהקדם."
+        );
+      } else {
         showNotification(
           "ההודעה נשלחה בהצלחה",
           "תודה על פנייתך! נחזור אליך בהקדם."
@@ -116,7 +122,12 @@ const ContactSection = ({ showNotification }: ContactSectionProps) => {
       console.error("Error submitting form:", error);
       
       // Show error notification
-      if (showNotification) {
+      if (propsShowNotification) {
+        propsShowNotification(
+          "שגיאה בשליחה",
+          "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר."
+        );
+      } else {
         showNotification(
           "שגיאה בשליחה",
           "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר."

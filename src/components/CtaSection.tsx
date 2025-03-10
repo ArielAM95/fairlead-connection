@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { showNotification } from "@/utils/notification";
 
 interface CtaSectionProps {
   showNotification?: (title: string, description: string) => void;
@@ -118,7 +119,7 @@ const workRegions = [{
   label: "השרון"
 }];
 
-const CtaSection = ({ showNotification }: CtaSectionProps) => {
+const CtaSection = ({ showNotification: propsShowNotification }: CtaSectionProps) => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -297,7 +298,12 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
         throw new Error("שגיאה בשליחת הנתונים");
       }
       
-      if (showNotification) {
+      if (propsShowNotification) {
+        propsShowNotification(
+          "הרשמה בוצעה בהצלחה",
+          "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה."
+        );
+      } else {
         showNotification(
           "הרשמה בוצעה בהצלחה",
           "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה."
@@ -324,7 +330,12 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
     } catch (error) {
       console.error("Error submitting form:", error);
       
-      if (showNotification) {
+      if (propsShowNotification) {
+        propsShowNotification(
+          "שגיאה בהרשמה",
+          "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר."
+        );
+      } else {
         showNotification(
           "שגיאה בהרשמה",
           "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר."
