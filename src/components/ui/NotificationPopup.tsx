@@ -49,10 +49,10 @@ const NotificationPopup = ({
         </div>
         <div className="text-gray-700 mb-4">{description}</div>
         
-        <div className="mt-3 pt-3 border-t border-gray-200">
+        <div className="mt-3 pt-3 border-t border-gray-200 text-center">
           <p className="text-sm font-medium mb-2">ממש יעזור אם תעקבו אחרינו ברשתות החברתיות</p>
           <p className="text-sm mb-3">אנחנו איתכם ואתם איתנו - ככה בעז״ה נעשה ונצליח</p>
-          <div className="flex gap-2 mt-2">
+          <div className="flex gap-2 mt-2 justify-center">
             <a 
               href="https://facebook.com/ofairisrael" 
               target="_blank" 
