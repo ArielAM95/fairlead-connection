@@ -15,6 +15,7 @@ export const showSuccessNotification = (title: string, description: string) => {
     <div>
       <h3 className="font-medium text-base">{title}</h3>
       <p className="text-sm text-muted-foreground">{description}</p>
+      <p className="text-sm text-muted-foreground mt-1">נשלח מייל עם הנחיות להמשך התהליך (אם לא מוצאים ממליצים לבדוק גם בספאם)</p>
       <div className="mt-3 pt-3 border-t border-gray-200 text-center">
         <p className="text-sm font-medium mb-2">ממש יעזור אם תעקבו אחרינו ברשתות החברתיות</p>
         <p className="text-sm mb-2">אנחנו איתכם ואתם איתנו - ככה בעז״ה נעשה ונצליח</p>
