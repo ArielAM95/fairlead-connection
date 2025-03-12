@@ -1,4 +1,5 @@
 
+import React from "react";
 import { toast } from "sonner";
 import { Facebook, Instagram } from "lucide-react";
 
