@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { showNotification } from "@/utils/notification";
+import { showNotification, showSuccessNotification } from "@/utils/notification";
 
 interface CtaSectionProps {
   showNotification?: (title: string, description: string) => void;
@@ -304,7 +304,7 @@ const CtaSection = ({ showNotification: propsShowNotification }: CtaSectionProps
           "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה."
         );
       } else {
-        showNotification(
+        showSuccessNotification(
           "הרשמה בוצעה בהצלחה",
           "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה."
         );

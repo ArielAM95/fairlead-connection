@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { showNotification } from "@/utils/notification";
+import { showNotification, showSuccessNotification } from "@/utils/notification";
 
 interface ContactSectionProps {
   showNotification?: (title: string, description: string) => void;
@@ -104,7 +105,7 @@ const ContactSection = ({ showNotification: propsShowNotification }: ContactSect
           "תודה על פנייתך! נחזור אליך בהקדם."
         );
       } else {
-        showNotification(
+        showSuccessNotification(
           "ההודעה נשלחה בהצלחה",
           "תודה על פנייתך! נחזור אליך בהקדם."
         );
