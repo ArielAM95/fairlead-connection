@@ -48,6 +48,7 @@ const NotificationPopup = ({
           </button>
         </div>
         <div className="text-gray-700 mb-4">{description}</div>
+        <p className="text-sm text-muted-foreground mt-1">נשלח מייל עם הנחיות להמשך התהליך (אם לא מוצאים ממליצים לבדוק גם בספאם)</p>
         
         <div className="mt-3 pt-3 border-t border-gray-200 text-center">
           <p className="text-sm font-medium mb-2">ממש יעזור אם תעקבו אחרינו ברשתות החברתיות</p>
