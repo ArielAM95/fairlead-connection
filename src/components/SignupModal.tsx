@@ -7,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
+import { useUtmParams } from "@/hooks/useUtmParams";
+import { submitSignupForm } from "@/services/formSubmission";
 
 interface SignupModalProps {
   isOpen: boolean;
@@ -35,16 +37,34 @@ const experienceOptions = [
   { id: "10+", label: "מעל 10 שנים" },
 ];
 
+// Define work regions that we need for the submitSignupForm function
+const workRegions = [
+  { id: "north", label: "צפון" },
+  { id: "south", label: "דרום" },
+  { id: "center", label: "מרכז" },
+  { id: "samaria", label: "שומרון" },
+  { id: "jerusalem", label: "ירושלים והסביבה" },
+  { id: "eilat", label: "אילת" },
+  { id: "shfela", label: "שפלה" },
+  { id: "sharon", label: "השרון" },
+];
+
 const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
   const { toast } = useToast();
+  const utmParams = useUtmParams();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     companyName: "",
     workFields: [] as string[],
+    otherWorkField: "",
+    showOtherWorkField: false,
     experience: "",
     email: "",
     password: "",
+    phone: "",
+    city: "",
+    workRegions: ["center"] // Default to center region
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -61,7 +81,16 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
         ? prev.workFields.filter((field) => field !== id)
         : [...prev.workFields, id];
       
-      return { ...prev, workFields: fields };
+      const showOther = id === "other" 
+        ? !prev.workFields.includes("other") 
+        : fields.includes("other");
+      
+      return { 
+        ...prev, 
+        workFields: fields,
+        showOtherWorkField: showOther,
+        otherWorkField: showOther ? prev.otherWorkField : ""
+      };
     });
   };
 
@@ -69,22 +98,48 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
     setFormData({ ...formData, experience: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (formData.workFields.length === 0) {
+      toast({
+        title: "שגיאה",
+        description: "יש לבחור לפחות תחום עבודה אחד",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setIsSubmitting(true);
     
-    // Here you would normally send the data to your backend
-    console.log("Form submitted:", formData);
-    
-    // Simulating API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await submitSignupForm(
+        {
+          ...formData,
+          // These fields are needed for the SignupFormData interface
+          workRegions: formData.workRegions,
+          phone: formData.phone || "00-0000000", // Default value if not provided
+          city: formData.city || "לא צוין", // Default value if not provided
+        }, 
+        workFields, 
+        workRegions, 
+        utmParams
+      );
+      
       toast({
         title: "הרשמה בוצעה בהצלחה",
         description: "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה.",
       });
       onClose();
-    }, 1500);
+    } catch (error) {
+      toast({
+        title: "שגיאה בהרשמה",
+        description: "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -171,7 +226,32 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                   </label>
                 </div>
               ))}
+              <div className="flex items-center space-x-2 space-x-reverse">
+                <Checkbox 
+                  id="field-other"
+                  checked={formData.workFields.includes("other")}
+                  onCheckedChange={() => handleWorkFieldToggle("other")}
+                />
+                <label 
+                  htmlFor="field-other"
+                  className="text-sm leading-none cursor-pointer"
+                >
+                  אחר
+                </label>
+              </div>
             </div>
+            {formData.showOtherWorkField && (
+              <div className="mt-2">
+                <Input
+                  id="otherWorkField"
+                  name="otherWorkField"
+                  value={formData.otherWorkField}
+                  onChange={handleChange}
+                  placeholder="נא פרט תחום עבודה אחר"
+                  className="bg-gray-50 border-gray-200"
+                />
+              </div>
+            )}
             {formData.workFields.length === 0 && (
               <p className="text-xs text-red-500 mt-1">יש לבחור לפחות תחום אחד</p>
             )}
@@ -193,6 +273,38 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+              מספר טלפון *
+            </label>
+            <Input
+              id="phone"
+              name="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+              className="bg-gray-50 border-gray-200"
+              dir="ltr"
+              placeholder="05X-XXXXXXX"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
+              עיר *
+            </label>
+            <Input
+              id="city"
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              required
+              className="bg-gray-50 border-gray-200"
+              placeholder="שם העיר"
+            />
           </div>
           
           <div>

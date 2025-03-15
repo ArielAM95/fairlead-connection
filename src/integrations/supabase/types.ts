@@ -9,7 +9,66 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      users_signup: {
+        Row: {
+          city: string
+          company_name: string | null
+          created_at: string
+          email: string
+          experience: string
+          first_name: string
+          id: string
+          last_name: string
+          other_work_field: string | null
+          phone: string
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+          work_fields: string[]
+          work_regions: string[]
+        }
+        Insert: {
+          city: string
+          company_name?: string | null
+          created_at?: string
+          email: string
+          experience: string
+          first_name: string
+          id?: string
+          last_name: string
+          other_work_field?: string | null
+          phone: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          work_fields: string[]
+          work_regions: string[]
+        }
+        Update: {
+          city?: string
+          company_name?: string | null
+          created_at?: string
+          email?: string
+          experience?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          other_work_field?: string | null
+          phone?: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          work_fields?: string[]
+          work_regions?: string[]
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
