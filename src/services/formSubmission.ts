@@ -1,3 +1,4 @@
+
 import { ContactFormData } from "@/components/contact/ContactForm";
 import { SignupFormData } from "@/components/cta/SignupForm";
 import { supabase } from "@/integrations/supabase/client";
@@ -60,6 +61,7 @@ export const submitSignupForm = async (
   });
   
   if (!response.ok) {
+    console.error("Error submitting to webhook:", response.status, response.statusText);
     throw new Error("שגיאה בשליחת הנתונים");
   }
 
@@ -71,10 +73,9 @@ export const submitSignupForm = async (
     '10+': 11
   };
 
-  // 3. Now store in Supabase professionals table
-  const { error } = await supabase
-    .from('professionals')
-    .insert({
+  try {
+    // 3. Now store in Supabase professionals table with detailed error logging
+    console.log("Inserting into professionals table:", {
       name: `${formData.firstName} ${formData.lastName}`,
       profession: formData.workFields[0], // Primary work field
       specialties: formData.workFields, // All selected work fields as array
@@ -87,9 +88,33 @@ export const submitSignupForm = async (
       is_verified: false,
       status: 'pending'
     });
+
+    const { data, error } = await supabase
+      .from('professionals')
+      .insert({
+        name: `${formData.firstName} ${formData.lastName}`,
+        profession: formData.workFields[0], // Primary work field
+        specialties: formData.workFields, // All selected work fields as array
+        location: formData.city,
+        areas: workRegionsInHebrew,
+        email: formData.email,
+        phone_number: formData.phone,
+        company_name: formData.companyName || null,
+        experience_years: experienceYearsMap[formData.experience] || null,
+        is_verified: false,
+        status: 'pending'
+      })
+      .select();
       
-  if (error) {
-    console.error("Error storing signup in Supabase:", error);
-    throw new Error("שגיאה בשמירת הנתונים");
+    if (error) {
+      console.error("Error storing signup in Supabase:", error);
+      throw new Error(`שגיאה בשמירת הנתונים: ${error.message}`);
+    }
+
+    console.log("Successfully stored in Supabase:", data);
+  } catch (err) {
+    console.error("Exception during Supabase insert:", err);
+    // Still throw the error to be handled by the caller
+    throw err;
   }
 };

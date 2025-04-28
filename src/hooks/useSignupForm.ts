@@ -19,6 +19,7 @@ export interface SignupFormData {
 export interface SignupFormErrors {
   email: string;
   phone: string;
+  experience?: string;
 }
 
 export const useSignupForm = (onSubmit: (data: SignupFormData) => Promise<void>) => {
@@ -38,7 +39,8 @@ export const useSignupForm = (onSubmit: (data: SignupFormData) => Promise<void>)
 
   const [errors, setErrors] = useState<SignupFormErrors>({
     email: "",
-    phone: ""
+    phone: "",
+    experience: ""
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -122,17 +124,27 @@ export const useSignupForm = (onSubmit: (data: SignupFormData) => Promise<void>)
       ...prev,
       experience: value
     }));
+    
+    // Clear any experience error when a value is selected
+    if (value) {
+      setErrors(prev => ({
+        ...prev,
+        experience: ""
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    let hasError = false;
 
     if (!validateEmail(formData.email)) {
       setErrors(prev => ({
         ...prev,
         email: "נא להזין כתובת אימייל תקינה"
       }));
-      return;
+      hasError = true;
     }
 
     if (!validatePhone(formData.phone)) {
@@ -140,12 +152,25 @@ export const useSignupForm = (onSubmit: (data: SignupFormData) => Promise<void>)
         ...prev,
         phone: "נא להזין מספר טלפון תקין"
       }));
+      hasError = true;
+    }
+    
+    if (!formData.experience) {
+      setErrors(prev => ({
+        ...prev,
+        experience: "נא לבחור ותק"
+      }));
+      hasError = true;
+    }
+
+    if (hasError) {
       return;
     }
 
     setIsSubmitting(true);
 
     try {
+      console.log("Submitting form data:", formData);
       await onSubmit(formData);
       
       // Reset form
@@ -165,7 +190,8 @@ export const useSignupForm = (onSubmit: (data: SignupFormData) => Promise<void>)
       
       setErrors({
         email: "",
-        phone: ""
+        phone: "",
+        experience: ""
       });
     } catch (error) {
       console.error("Error submitting form:", error);
