@@ -1,0 +1,30 @@
+
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { experienceOptions } from "../data/workFields";
+
+interface ExperienceSectionProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export const ExperienceSection = ({ value, onChange }: ExperienceSectionProps) => {
+  return (
+    <div>
+      <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-1">
+        ותק *
+      </label>
+      <Select onValueChange={onChange} value={value} required>
+        <SelectTrigger className="bg-gray-50 border-gray-200">
+          <SelectValue placeholder="בחר ותק" />
+        </SelectTrigger>
+        <SelectContent>
+          {experienceOptions.map(option => (
+            <SelectItem key={option.id} value={option.id}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+};
