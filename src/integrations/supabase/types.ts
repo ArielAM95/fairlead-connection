@@ -9,63 +9,630 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      users_signup: {
+      accepted_quotes: {
         Row: {
-          city: string
-          company_name: string | null
           created_at: string
-          email: string
-          experience: string
-          first_name: string
+          date: string
+          description: string
           id: string
-          last_name: string
-          other_work_field: string | null
-          phone: string
-          utm_campaign: string | null
-          utm_content: string | null
-          utm_medium: string | null
-          utm_source: string | null
-          utm_term: string | null
-          work_fields: string[]
-          work_regions: string[]
+          price: string
+          professional_id: string
+          professional_name: string
+          quote_id: string
+          request_id: string
+          status: string
+          user_id: string
         }
         Insert: {
-          city: string
-          company_name?: string | null
           created_at?: string
-          email: string
-          experience: string
-          first_name: string
+          date: string
+          description: string
           id?: string
-          last_name: string
-          other_work_field?: string | null
-          phone: string
-          utm_campaign?: string | null
-          utm_content?: string | null
-          utm_medium?: string | null
-          utm_source?: string | null
-          utm_term?: string | null
-          work_fields: string[]
-          work_regions: string[]
+          price: string
+          professional_id: string
+          professional_name: string
+          quote_id: string
+          request_id: string
+          status: string
+          user_id: string
         }
         Update: {
-          city?: string
+          created_at?: string
+          date?: string
+          description?: string
+          id?: string
+          price?: string
+          professional_id?: string
+          professional_name?: string
+          quote_id?: string
+          request_id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      admin_users: {
+        Row: {
+          created_at: string
+          id: string
+          is_super_admin: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_super_admin?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_super_admin?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      articles: {
+        Row: {
+          author: string | null
+          category: string | null
+          content: string
+          created_at: string | null
+          id: string
+          image: string | null
+          published: boolean | null
+          summary: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          image?: string | null
+          published?: boolean | null
+          summary?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          image?: string | null
+          published?: boolean | null
+          summary?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      leads: {
+        Row: {
+          budget: number
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          location: string
+          professional_id: string | null
+          share_percentage: number
+          status: string
+          title: string
+        }
+        Insert: {
+          budget: number
+          created_at?: string
+          description: string
+          id?: string
+          image_url?: string | null
+          location: string
+          professional_id?: string | null
+          share_percentage?: number
+          status?: string
+          title: string
+        }
+        Update: {
+          budget?: number
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          location?: string
+          professional_id?: string | null
+          share_percentage?: number
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          is_read: boolean
+          professional_id: string
+          related_id: string | null
+          related_type: string | null
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          is_read?: boolean
+          professional_id: string
+          related_id?: string | null
+          related_type?: string | null
+          title: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_read?: boolean
+          professional_id?: string
+          related_id?: string | null
+          related_type?: string | null
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      professional_ratings: {
+        Row: {
+          company_name: string | null
+          created_at: string
+          customer_name: string
+          customer_phone: string
+          id: string
+          professional_name: string
+          professional_phone: string
+          rating_cleanliness: number
+          rating_communication: number
+          rating_overall: number
+          rating_quality: number
+          rating_recommendation: number
+          rating_timing: number
+          rating_value: number
+          recommendation: string | null
+          weighted_average: number
+        }
+        Insert: {
           company_name?: string | null
           created_at?: string
-          email?: string
-          experience?: string
-          first_name?: string
+          customer_name: string
+          customer_phone: string
           id?: string
-          last_name?: string
-          other_work_field?: string | null
-          phone?: string
-          utm_campaign?: string | null
-          utm_content?: string | null
-          utm_medium?: string | null
-          utm_source?: string | null
-          utm_term?: string | null
-          work_fields?: string[]
-          work_regions?: string[]
+          professional_name: string
+          professional_phone: string
+          rating_cleanliness: number
+          rating_communication: number
+          rating_overall: number
+          rating_quality: number
+          rating_recommendation: number
+          rating_timing: number
+          rating_value: number
+          recommendation?: string | null
+          weighted_average: number
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string
+          customer_name?: string
+          customer_phone?: string
+          id?: string
+          professional_name?: string
+          professional_phone?: string
+          rating_cleanliness?: number
+          rating_communication?: number
+          rating_overall?: number
+          rating_quality?: number
+          rating_recommendation?: number
+          rating_timing?: number
+          rating_value?: number
+          recommendation?: string | null
+          weighted_average?: number
+        }
+        Relationships: []
+      }
+      professionals: {
+        Row: {
+          about: string | null
+          areas: string | null
+          certifications: string[] | null
+          company_name: string | null
+          created_at: string | null
+          email: string | null
+          experience_years: number | null
+          id: string
+          image: string | null
+          is_verified: boolean | null
+          location: string
+          name: string
+          phone_number: string | null
+          profession: string
+          rating: number | null
+          review_count: number | null
+          specialties: string[] | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+          work_hours: string | null
+          working_hours: string | null
+        }
+        Insert: {
+          about?: string | null
+          areas?: string | null
+          certifications?: string[] | null
+          company_name?: string | null
+          created_at?: string | null
+          email?: string | null
+          experience_years?: number | null
+          id?: string
+          image?: string | null
+          is_verified?: boolean | null
+          location: string
+          name: string
+          phone_number?: string | null
+          profession: string
+          rating?: number | null
+          review_count?: number | null
+          specialties?: string[] | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          work_hours?: string | null
+          working_hours?: string | null
+        }
+        Update: {
+          about?: string | null
+          areas?: string | null
+          certifications?: string[] | null
+          company_name?: string | null
+          created_at?: string | null
+          email?: string | null
+          experience_years?: number | null
+          id?: string
+          image?: string | null
+          is_verified?: boolean | null
+          location?: string
+          name?: string
+          phone_number?: string | null
+          profession?: string
+          rating?: number | null
+          review_count?: number | null
+          specialties?: string[] | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          work_hours?: string | null
+          working_hours?: string | null
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          client: string
+          created_at: string | null
+          end_date: string
+          id: string
+          price: number
+          professional_id: string
+          progress: number
+          start_date: string
+          status: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          client: string
+          created_at?: string | null
+          end_date: string
+          id?: string
+          price: number
+          professional_id: string
+          progress: number
+          start_date: string
+          status: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          client?: string
+          created_at?: string | null
+          end_date?: string
+          id?: string
+          price?: number
+          professional_id?: string
+          progress?: number
+          start_date?: string
+          status?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      proposals: {
+        Row: {
+          created_at: string
+          description: string
+          estimated_completion: string | null
+          id: string
+          lead_id: string | null
+          price: number
+          professional_id: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          estimated_completion?: string | null
+          id?: string
+          lead_id?: string | null
+          price: number
+          professional_id?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          estimated_completion?: string | null
+          id?: string
+          lead_id?: string | null
+          price?: number
+          professional_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposals_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "proposals_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quotes: {
+        Row: {
+          created_at: string
+          description: string
+          estimated_time: string | null
+          id: string
+          price: string
+          professional_id: string
+          request_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          estimated_time?: string | null
+          id?: string
+          price: string
+          professional_id: string
+          request_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          estimated_time?: string | null
+          id?: string
+          price?: string
+          professional_id?: string
+          request_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotes_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotes_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          completed_work: boolean | null
+          created_at: string | null
+          date: string | null
+          id: string
+          phone_number: string
+          profession: string | null
+          professional_id: string | null
+          professional_name: string
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          completed_work?: boolean | null
+          created_at?: string | null
+          date?: string | null
+          id?: string
+          phone_number: string
+          profession?: string | null
+          professional_id?: string | null
+          professional_name: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          completed_work?: boolean | null
+          created_at?: string | null
+          date?: string | null
+          id?: string
+          phone_number?: string
+          profession?: string | null
+          professional_id?: string | null
+          professional_name?: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      requests: {
+        Row: {
+          created_at: string
+          date: string
+          description: string
+          id: string
+          location: string
+          status: string
+          timing: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          description: string
+          id?: string
+          location: string
+          status?: string
+          timing?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          description?: string
+          id?: string
+          location?: string
+          status?: string
+          timing?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          read: boolean
+          recipient_email: string | null
+          recipient_id: string | null
+          sender_id: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          recipient_email?: string | null
+          recipient_id?: string | null
+          sender_id: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          recipient_email?: string | null
+          recipient_id?: string | null
+          sender_id?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_profiles: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          name: string | null
+          phone: string | null
+          profile_image: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          email?: string | null
+          id: string
+          name?: string | null
+          phone?: string | null
+          profile_image?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+          profile_image?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -74,7 +641,69 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      check_is_admin_user: {
+        Args: { user_id_param: string }
+        Returns: boolean
+      }
+      check_is_super_admin: {
+        Args: Record<PropertyKey, never> | { user_id_param: string }
+        Returns: boolean
+      }
+      check_is_super_admin_user: {
+        Args: { user_id_param: string }
+        Returns: boolean
+      }
+      create_first_super_admin: {
+        Args: { admin_email: string }
+        Returns: string
+      }
+      create_super_admin: {
+        Args: { admin_email_param: string }
+        Returns: string
+      }
+      get_professional_by_identifier: {
+        Args: { identifier_param: string; is_email_param: boolean }
+        Returns: {
+          id: string
+          user_id: string
+          name: string
+          phone_number: string
+          email: string
+          profession: string
+          location: string
+          specialties: string[]
+          image: string
+          about: string
+        }[]
+      }
+      get_projects_for_professional: {
+        Args: { professional_id_param: string }
+        Returns: {
+          client: string
+          created_at: string | null
+          end_date: string
+          id: string
+          price: number
+          professional_id: string
+          progress: number
+          start_date: string
+          status: string
+          title: string
+          updated_at: string | null
+        }[]
+      }
+      insert_project: {
+        Args: { project_data: Json }
+        Returns: string
+      }
+      is_super_admin_safe: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      update_project: {
+        Args: { project_id_param: string; project_data: Json }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
@@ -85,27 +714,29 @@ export type Database = {
   }
 }
 
-type PublicSchema = Database[Extract<keyof Database, "public">]
+type DefaultSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
-  PublicTableNameOrOptions extends
-    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-        Database[PublicTableNameOrOptions["schema"]]["Views"])
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-        PublicSchema["Views"])
-    ? (PublicSchema["Tables"] &
-        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -113,20 +744,22 @@ export type Tables<
     : never
 
 export type TablesInsert<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -134,20 +767,22 @@ export type TablesInsert<
     : never
 
 export type TablesUpdate<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -155,21 +790,23 @@ export type TablesUpdate<
     : never
 
 export type Enums<
-  PublicEnumNameOrOptions extends
-    | keyof PublicSchema["Enums"]
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
     | { schema: keyof Database },
-  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = PublicEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
-    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof PublicSchema["CompositeTypes"]
+    | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof Database
@@ -178,6 +815,12 @@ export type CompositeTypes<
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
   ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
-    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const

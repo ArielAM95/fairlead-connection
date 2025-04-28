@@ -1,4 +1,3 @@
-
 import { ContactFormData } from "@/components/contact/ContactForm";
 import { SignupFormData } from "@/components/cta/SignupForm";
 import { supabase } from "@/integrations/supabase/client";
@@ -64,45 +63,33 @@ export const submitSignupForm = async (
     throw new Error("שגיאה בשליחת הנתונים");
   }
 
-  // 2. Now also store in Supabase
-  try {
-    // Extract UTM parameters from the utmParams object
-    const { 
-      utm_source = null, 
-      utm_medium = null, 
-      utm_campaign = null, 
-      utm_term = null, 
-      utm_content = null 
-    } = utmParams;
+  // 2. Parse experience years from selection
+  const experienceYearsMap: Record<string, number> = {
+    '0-2': 1,
+    '3-5': 4,
+    '6-10': 8,
+    '10+': 11
+  };
 
-    // Insert into users_signup table
-    const { error } = await supabase
-      .from('users_signup')
-      .insert({
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        company_name: formData.companyName,
-        work_fields: formData.workFields,
-        other_work_field: formData.showOtherWorkField ? formData.otherWorkField : null,
-        experience: formData.experience,
-        email: formData.email,
-        phone: formData.phone,
-        city: formData.city,
-        work_regions: formData.workRegions,
-        utm_source,
-        utm_medium,
-        utm_campaign,
-        utm_term,
-        utm_content
-      });
+  // 3. Now store in Supabase professionals table
+  const { error } = await supabase
+    .from('professionals')
+    .insert({
+      name: `${formData.firstName} ${formData.lastName}`,
+      profession: formData.workFields[0], // Primary work field
+      specialties: formData.workFields, // All selected work fields as array
+      location: formData.city,
+      areas: workRegionsInHebrew,
+      email: formData.email,
+      phone_number: formData.phone,
+      company_name: formData.companyName || null,
+      experience_years: experienceYearsMap[formData.experience] || null,
+      is_verified: false,
+      status: 'pending'
+    });
       
-    if (error) {
-      console.error("Error storing signup in Supabase:", error);
-      // Don't throw here - we already submitted to webhook, so the signup process
-      // should be considered successful even if Supabase storage fails
-    }
-  } catch (error) {
-    console.error("Error saving to Supabase:", error);
-    // Again, don't throw - the signup process is still successful
+  if (error) {
+    console.error("Error storing signup in Supabase:", error);
+    throw new Error("שגיאה בשמירת הנתונים");
   }
 };
