@@ -116,7 +116,10 @@ export type Database = {
       }
       leads: {
         Row: {
-          budget: number
+          budget: number | null
+          client_address: string | null
+          client_name: string | null
+          client_phone: string | null
           created_at: string
           description: string
           id: string
@@ -126,9 +129,14 @@ export type Database = {
           share_percentage: number
           status: string
           title: string
+          work_date: string | null
+          work_time: string | null
         }
         Insert: {
-          budget: number
+          budget?: number | null
+          client_address?: string | null
+          client_name?: string | null
+          client_phone?: string | null
           created_at?: string
           description: string
           id?: string
@@ -138,9 +146,14 @@ export type Database = {
           share_percentage?: number
           status?: string
           title: string
+          work_date?: string | null
+          work_time?: string | null
         }
         Update: {
-          budget?: number
+          budget?: number | null
+          client_address?: string | null
+          client_name?: string | null
+          client_phone?: string | null
           created_at?: string
           description?: string
           id?: string
@@ -150,6 +163,8 @@ export type Database = {
           share_percentage?: number
           status?: string
           title?: string
+          work_date?: string | null
+          work_time?: string | null
         }
         Relationships: [
           {
@@ -267,6 +282,7 @@ export type Database = {
           about: string | null
           areas: string | null
           certifications: string[] | null
+          city: string | null
           company_name: string | null
           created_at: string | null
           email: string | null
@@ -291,6 +307,7 @@ export type Database = {
           about?: string | null
           areas?: string | null
           certifications?: string[] | null
+          city?: string | null
           company_name?: string | null
           created_at?: string | null
           email?: string | null
@@ -315,6 +332,7 @@ export type Database = {
           about?: string | null
           areas?: string | null
           certifications?: string[] | null
+          city?: string | null
           company_name?: string | null
           created_at?: string | null
           email?: string | null
@@ -641,6 +659,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_admin_status: {
+        Args: { user_id_param: string }
+        Returns: boolean
+      }
       check_is_admin_user: {
         Args: { user_id_param: string }
         Returns: boolean
@@ -650,6 +672,10 @@ export type Database = {
         Returns: boolean
       }
       check_is_super_admin_user: {
+        Args: { user_id_param: string }
+        Returns: boolean
+      }
+      check_super_admin_status: {
         Args: { user_id_param: string }
         Returns: boolean
       }
@@ -695,6 +721,14 @@ export type Database = {
       insert_project: {
         Args: { project_data: Json }
         Returns: string
+      }
+      is_admin_check: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      is_super_admin_check: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
       }
       is_super_admin_safe: {
         Args: Record<PropertyKey, never>
