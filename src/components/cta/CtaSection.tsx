@@ -35,6 +35,15 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
   const handleSubmit = async (formData: SignupFormData): Promise<void> => {
     try {
       console.log("CtaSection: Starting form submission with data:", formData);
+      
+      // Validate required fields
+      if (!formData.firstName || !formData.lastName) {
+        if (showNotification) {
+          showNotification("שגיאה בהרשמה", "נא למלא את שדות השם הפרטי ושם המשפחה");
+        }
+        return Promise.reject(new Error("חסרים שדות חובה"));
+      }
+      
       await submitSignupForm(formData, workFields, workRegions, utmParams);
       
       if (showNotification) {

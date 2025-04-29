@@ -35,7 +35,7 @@ export const submitSignupForm = async (
     
     // Transform work fields and regions to Hebrew for the webhook
     const workFieldsInHebrew = formData.workFields.map(fieldId => {
-      if (fieldId === "other") return "אחר";
+      if (fieldId === "other") return formData.otherWorkField || "אחר";
       const field = workFields.find(f => f.id === fieldId);
       return field ? field.label : fieldId;
     }).join(", ");
@@ -86,18 +86,33 @@ export const submitSignupForm = async (
     };
 
     // Check for required fields
-    if (!formData.experience) {
-      console.error("Missing required experience field");
-      throw new Error("שגיאה: ערך ותק חסר");
+    if (!formData.firstName || !formData.lastName) {
+      console.error("Missing required name fields");
+      throw new Error("שגיאה: שדות שם פרטי ושם משפחה חסרים");
     }
 
-    // 3. Now store in Supabase professionals table with detailed error logging
+    if (!formData.email) {
+      console.error("Missing required email field");
+      throw new Error("שגיאה: שדה אימייל חסר");
+    }
+
+    if (!formData.experience) {
+      console.error("Missing required experience field");
+      throw new Error("שגיאה: שדה ותק חסר");
+    }
+
+    if (formData.workFields.length === 0) {
+      console.error("No work fields selected");
+      throw new Error("שגיאה: לא נבחרו תחומי עבודה");
+    }
+
+    // 3. Now store in Supabase professionals table
     const professionalData = {
       name: `${formData.firstName} ${formData.lastName}`,
       profession: formData.workFields[0] || "לא צוין", // Ensure primary work field is never null
       specialties: formData.workFields.length > 0 ? formData.workFields : ["לא צוין"], // Ensure specialties is never empty
       location: formData.city || "לא צוין", // Ensure location is never null
-      areas: formData.workRegions.length > 0 ? workRegionsInHebrew : "לא צוין",
+      areas: formData.workRegions.length > 0 ? formData.workRegions.join(", ") : "לא צוין",
       email: formData.email,
       phone_number: formData.phone,
       company_name: formData.companyName || null,
@@ -118,6 +133,7 @@ export const submitSignupForm = async (
 
     if (searchError) {
       console.error("Error searching for existing professional:", searchError);
+      throw new Error(`שגיאה בחיפוש במסד הנתונים: ${searchError.message}`);
     }
 
     let result;
