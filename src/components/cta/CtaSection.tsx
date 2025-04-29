@@ -34,6 +34,7 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
 
   const handleSubmit = async (formData: SignupFormData): Promise<void> => {
     try {
+      console.log("CtaSection: Starting form submission with data:", formData);
       await submitSignupForm(formData, workFields, workRegions, utmParams);
       
       if (showNotification) {

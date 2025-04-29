@@ -57,20 +57,25 @@ export const submitSignupForm = async (
     console.log("Submitting to webhook:", dataToSubmit);
 
     // 1. First, submit to webhook
-    const response = await fetch(WEBHOOK_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(dataToSubmit)
-    });
-    
-    if (!response.ok) {
-      console.error("Error submitting to webhook:", response.status, response.statusText);
-      throw new Error("שגיאה בשליחת הנתונים לווב-הוק");
-    }
+    try {
+      const response = await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataToSubmit)
+      });
+      
+      if (!response.ok) {
+        console.error("Error submitting to webhook:", response.status, response.statusText);
+        throw new Error("שגיאה בשליחת הנתונים לווב-הוק");
+      }
 
-    console.log("Webhook submission successful");
+      console.log("Webhook submission successful");
+    } catch (webhookError) {
+      console.error("Webhook submission failed:", webhookError);
+      // Continue with Supabase insertion even if webhook fails
+    }
 
     // 2. Parse experience years from selection
     const experienceYearsMap: Record<string, number> = {
@@ -89,8 +94,8 @@ export const submitSignupForm = async (
     // 3. Now store in Supabase professionals table with detailed error logging
     const professionalData = {
       name: `${formData.firstName} ${formData.lastName}`,
-      profession: formData.workFields[0], // Primary work field
-      specialties: formData.workFields, // All selected work fields as array
+      profession: formData.workFields[0] || "לא צוין", // Ensure primary work field is never null
+      specialties: formData.workFields.length > 0 ? formData.workFields : ["לא צוין"], // Ensure specialties is never empty
       location: formData.city || "לא צוין", // Ensure location is never null
       areas: formData.workRegions.length > 0 ? workRegionsInHebrew : "לא צוין",
       email: formData.email,
@@ -104,17 +109,41 @@ export const submitSignupForm = async (
     
     console.log("Inserting into professionals table with data:", professionalData);
 
-    const { data, error } = await supabase
+    // First check if email already exists in professionals table
+    const { data: existingPro, error: searchError } = await supabase
       .from('professionals')
-      .insert(professionalData)
-      .select();
-      
-    if (error) {
-      console.error("Error storing signup in Supabase:", error);
-      throw new Error(`שגיאה בשמירת הנתונים בדטה-בייס: ${error.message}`);
+      .select('id, email')
+      .eq('email', formData.email)
+      .maybeSingle();
+
+    if (searchError) {
+      console.error("Error searching for existing professional:", searchError);
     }
 
-    console.log("Successfully stored in Supabase:", data);
+    let result;
+    
+    if (existingPro?.id) {
+      console.log("Professional with this email already exists, updating:", existingPro.id);
+      result = await supabase
+        .from('professionals')
+        .update(professionalData)
+        .eq('id', existingPro.id)
+        .select();
+    } else {
+      console.log("Creating new professional record");
+      result = await supabase
+        .from('professionals')
+        .insert(professionalData)
+        .select();
+    }
+      
+    if (result.error) {
+      console.error("Error storing signup in Supabase:", result.error);
+      console.error("Failed with data:", professionalData);
+      throw new Error(`שגיאה בשמירת הנתונים בדטה-בייס: ${result.error.message}`);
+    }
+
+    console.log("Successfully stored in Supabase:", result.data);
     return Promise.resolve();
   } catch (err) {
     console.error("Exception during form submission process:", err);

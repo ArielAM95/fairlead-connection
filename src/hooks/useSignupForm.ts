@@ -163,6 +163,16 @@ export const useSignupForm = (onSubmit: (data: SignupFormData) => Promise<void>)
       hasError = true;
     }
 
+    if (formData.workFields.length === 0) {
+      console.error("No work fields selected");
+      hasError = true;
+    }
+
+    if (formData.workRegions.length === 0) {
+      console.error("No work regions selected");
+      hasError = true;
+    }
+
     if (hasError) {
       console.log("Form has validation errors:", errors);
       return;
