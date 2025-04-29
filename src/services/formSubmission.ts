@@ -30,52 +30,58 @@ export const submitSignupForm = async (
   workRegions: { id: string; label: string }[],
   utmParams: Record<string, string>
 ): Promise<void> => {
-  // Transform work fields and regions to Hebrew for the webhook
-  const workFieldsInHebrew = formData.workFields.map(fieldId => {
-    if (fieldId === "other") return "אחר";
-    const field = workFields.find(f => f.id === fieldId);
-    return field ? field.label : fieldId;
-  }).join(", ");
-  
-  const workRegionsInHebrew = formData.workRegions.map(regionId => {
-    const region = workRegions.find(r => r.id === regionId);
-    return region ? region.label : regionId;
-  }).join(", ");
-  
-  const dataToSubmit = {
-    ...formData,
-    post_type: "main_signup_form",
-    workFields: workFieldsInHebrew,
-    workRegions: workRegionsInHebrew,
-    otherWorkField: formData.showOtherWorkField ? formData.otherWorkField : "",
-    ...utmParams
-  };
-
-  // 1. First, submit to webhook as before
-  const response = await fetch(WEBHOOK_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(dataToSubmit)
-  });
-  
-  if (!response.ok) {
-    console.error("Error submitting to webhook:", response.status, response.statusText);
-    throw new Error("שגיאה בשליחת הנתונים");
-  }
-
-  // 2. Parse experience years from selection
-  const experienceYearsMap: Record<string, number> = {
-    '0-2': 1,
-    '3-5': 4,
-    '6-10': 8,
-    '10+': 11
-  };
-
   try {
+    console.log("Starting form submission process with data:", formData);
+    
+    // Transform work fields and regions to Hebrew for the webhook
+    const workFieldsInHebrew = formData.workFields.map(fieldId => {
+      if (fieldId === "other") return "אחר";
+      const field = workFields.find(f => f.id === fieldId);
+      return field ? field.label : fieldId;
+    }).join(", ");
+    
+    const workRegionsInHebrew = formData.workRegions.map(regionId => {
+      const region = workRegions.find(r => r.id === regionId);
+      return region ? region.label : regionId;
+    }).join(", ");
+    
+    const dataToSubmit = {
+      ...formData,
+      post_type: "main_signup_form",
+      workFields: workFieldsInHebrew,
+      workRegions: workRegionsInHebrew,
+      otherWorkField: formData.showOtherWorkField ? formData.otherWorkField : "",
+      ...utmParams
+    };
+
+    console.log("Submitting to webhook:", dataToSubmit);
+
+    // 1. First, submit to webhook
+    const response = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(dataToSubmit)
+    });
+    
+    if (!response.ok) {
+      console.error("Error submitting to webhook:", response.status, response.statusText);
+      throw new Error("שגיאה בשליחת הנתונים לווב-הוק");
+    }
+
+    console.log("Webhook submission successful");
+
+    // 2. Parse experience years from selection
+    const experienceYearsMap: Record<string, number> = {
+      '0-2': 1,
+      '3-5': 4,
+      '6-10': 8,
+      '10+': 11
+    };
+
     // 3. Now store in Supabase professionals table with detailed error logging
-    console.log("Inserting into professionals table:", {
+    const professionalData = {
       name: `${formData.firstName} ${formData.lastName}`,
       profession: formData.workFields[0], // Primary work field
       specialties: formData.workFields, // All selected work fields as array
@@ -85,35 +91,26 @@ export const submitSignupForm = async (
       phone_number: formData.phone,
       company_name: formData.companyName || null,
       experience_years: experienceYearsMap[formData.experience] || null,
+      city: formData.city,
       is_verified: false,
       status: 'pending'
-    });
+    };
+    
+    console.log("Inserting into professionals table:", professionalData);
 
     const { data, error } = await supabase
       .from('professionals')
-      .insert({
-        name: `${formData.firstName} ${formData.lastName}`,
-        profession: formData.workFields[0], // Primary work field
-        specialties: formData.workFields, // All selected work fields as array
-        location: formData.city,
-        areas: workRegionsInHebrew,
-        email: formData.email,
-        phone_number: formData.phone,
-        company_name: formData.companyName || null,
-        experience_years: experienceYearsMap[formData.experience] || null,
-        is_verified: false,
-        status: 'pending'
-      })
+      .insert(professionalData)
       .select();
       
     if (error) {
       console.error("Error storing signup in Supabase:", error);
-      throw new Error(`שגיאה בשמירת הנתונים: ${error.message}`);
+      throw new Error(`שגיאה בשמירת הנתונים בדטה-בייס: ${error.message}`);
     }
 
     console.log("Successfully stored in Supabase:", data);
   } catch (err) {
-    console.error("Exception during Supabase insert:", err);
+    console.error("Exception during form submission process:", err);
     // Still throw the error to be handled by the caller
     throw err;
   }

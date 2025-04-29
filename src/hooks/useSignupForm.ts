@@ -164,6 +164,7 @@ export const useSignupForm = (onSubmit: (data: SignupFormData) => Promise<void>)
     }
 
     if (hasError) {
+      console.log("Form has validation errors:", errors);
       return;
     }
 
