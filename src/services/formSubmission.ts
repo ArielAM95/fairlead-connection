@@ -80,23 +80,29 @@ export const submitSignupForm = async (
       '10+': 11
     };
 
+    // Check for required fields
+    if (!formData.experience) {
+      console.error("Missing required experience field");
+      throw new Error("שגיאה: ערך ותק חסר");
+    }
+
     // 3. Now store in Supabase professionals table with detailed error logging
     const professionalData = {
       name: `${formData.firstName} ${formData.lastName}`,
       profession: formData.workFields[0], // Primary work field
       specialties: formData.workFields, // All selected work fields as array
-      location: formData.city,
-      areas: workRegionsInHebrew,
+      location: formData.city || "לא צוין", // Ensure location is never null
+      areas: formData.workRegions.length > 0 ? workRegionsInHebrew : "לא צוין",
       email: formData.email,
       phone_number: formData.phone,
       company_name: formData.companyName || null,
-      experience_years: experienceYearsMap[formData.experience] || null,
-      city: formData.city,
+      experience_years: experienceYearsMap[formData.experience] || 1,
+      city: formData.city || "לא צוין",
       is_verified: false,
       status: 'pending'
     };
     
-    console.log("Inserting into professionals table:", professionalData);
+    console.log("Inserting into professionals table with data:", professionalData);
 
     const { data, error } = await supabase
       .from('professionals')
@@ -109,6 +115,7 @@ export const submitSignupForm = async (
     }
 
     console.log("Successfully stored in Supabase:", data);
+    return Promise.resolve();
   } catch (err) {
     console.error("Exception during form submission process:", err);
     // Still throw the error to be handled by the caller

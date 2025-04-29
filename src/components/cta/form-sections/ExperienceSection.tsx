@@ -1,6 +1,6 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { experienceOptions } from "../data/workFields";
+import { experienceOptions } from "@/components/cta/data/workFields";
 
 interface ExperienceSectionProps {
   value: string;

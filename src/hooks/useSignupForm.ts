@@ -196,6 +196,7 @@ export const useSignupForm = (onSubmit: (data: SignupFormData) => Promise<void>)
       });
     } catch (error) {
       console.error("Error submitting form:", error);
+      // Don't clear the form on error so user can try again
     } finally {
       setIsSubmitting(false);
     }

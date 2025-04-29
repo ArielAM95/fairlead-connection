@@ -65,6 +65,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
       <ExperienceSection
         value={formData.experience}
         onChange={handleExperienceChange}
+        error={errors.experience}
       />
 
       <div>
@@ -94,6 +95,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
             isSubmitting ||
             formData.workFields.length === 0 ||
             formData.workRegions.length === 0 ||
+            !formData.experience ||
             !!errors.email ||
             !!errors.phone
           }
