@@ -6,6 +6,7 @@ import CtaHeader from "./CtaHeader";
 import { workFields, workRegions } from "./data/workFields";
 import { useUtmParams } from "@/hooks/useUtmParams";
 import { submitSignupForm } from "@/services/formSubmission";
+import { toast } from "sonner";
 
 interface CtaSectionProps {
   showNotification?: (title: string, description: string) => void;
@@ -38,36 +39,51 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
       
       // Validate required fields
       if (!formData.firstName || !formData.lastName) {
+        const errorMsg = "נא למלא את שדות השם הפרטי ושם המשפחה";
         if (showNotification) {
-          showNotification("שגיאה בהרשמה", "נא למלא את שדות השם הפרטי ושם המשפחה");
+          showNotification("שגיאה בהרשמה", errorMsg);
+        } else {
+          toast.error(errorMsg);
         }
         return Promise.reject(new Error("חסרים שדות חובה"));
       }
       
       if (!formData.email) {
+        const errorMsg = "נא למלא את שדה האימייל";
         if (showNotification) {
-          showNotification("שגיאה בהרשמה", "נא למלא את שדה האימייל");
+          showNotification("שגיאה בהרשמה", errorMsg);
+        } else {
+          toast.error(errorMsg);
         }
         return Promise.reject(new Error("חסר שדה אימייל"));
       }
       
       if (formData.workFields.length === 0) {
+        const errorMsg = "נא לבחור לפחות תחום עבודה אחד";
         if (showNotification) {
-          showNotification("שגיאה בהרשמה", "נא לבחור לפחות תחום עבודה אחד");
+          showNotification("שגיאה בהרשמה", errorMsg);
+        } else {
+          toast.error(errorMsg);
         }
         return Promise.reject(new Error("חסרים תחומי עבודה"));
       }
       
       if (formData.workRegions.length === 0) {
+        const errorMsg = "נא לבחור לפחות אזור עבודה אחד";
         if (showNotification) {
-          showNotification("שגיאה בהרשמה", "נא לבחור לפחות אזור עבודה אחד");
+          showNotification("שגיאה בהרשמה", errorMsg);
+        } else {
+          toast.error(errorMsg);
         }
         return Promise.reject(new Error("חסרים אזורי עבודה"));
       }
       
       if (!formData.experience) {
+        const errorMsg = "נא לבחור ותק";
         if (showNotification) {
-          showNotification("שגיאה בהרשמה", "נא לבחור ותק");
+          showNotification("שגיאה בהרשמה", errorMsg);
+        } else {
+          toast.error(errorMsg);
         }
         return Promise.reject(new Error("חסר ותק"));
       }
@@ -75,11 +91,14 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
       console.log("CtaSection: Validation passed, submitting form");
       await submitSignupForm(formData, workFields, workRegions, utmParams);
       
+      const successMsg = "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה.";
       if (showNotification) {
         showNotification(
           "הרשמה בוצעה בהצלחה",
-          "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה."
+          successMsg
         );
+      } else {
+        toast.success(successMsg);
       }
       
       console.log("CtaSection: Form submission successful");
@@ -87,11 +106,17 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
     } catch (error) {
       console.error("Error submitting form:", error);
       
+      const errorMsg = error instanceof Error 
+        ? error.message 
+        : "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר.";
+      
       if (showNotification) {
         showNotification(
           "שגיאה בהרשמה",
-          "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר."
+          errorMsg
         );
+      } else {
+        toast.error(errorMsg);
       }
       
       return Promise.reject(error);

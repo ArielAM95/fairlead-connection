@@ -107,40 +107,26 @@ export const submitSignupForm = async (
       throw new Error("שגיאה: לא נבחרו תחומי עבודה");
     }
 
-    // 3. Now store in Supabase professionals table
+    // 3. Prepare data for Supabase professionals table
     const professionalData = {
-      // Combine firstName and lastName into a single name field as requested
-      name: `${formData.firstName} ${formData.lastName}`,
-      // Map other fields correctly to the professionals table
+      // Combine firstName and lastName into a single name field
+      name: `${formData.firstName} ${formData.lastName}`.trim(),
       profession: formData.workFields[0] || "לא צוין",
       specialties: formData.workFields,
       location: formData.city || "לא צוין",
       areas: formData.workRegions.join(", "),
       email: formData.email,
-      phone_number: formData.phone,
+      phone_number: formData.phone || null,
       company_name: formData.companyName || null,
       experience_years: experienceYearsMap[formData.experience] || 1,
       city: formData.city || "לא צוין",
-      // Explicitly set is_verified to false as requested
       is_verified: false,
       status: 'pending'
     };
     
-    console.log("Inserting into professionals table with data:", professionalData);
+    console.log("Prepared professional data for Supabase:", professionalData);
     
-    // Test the database connection
-    const { data: connectionTest, error: connectionError } = await supabase
-      .from('professionals')
-      .select('count(*)', { count: 'exact', head: true });
-      
-    if (connectionError) {
-      console.error("Database connection test failed:", connectionError);
-      throw new Error(`שגיאה בהתחברות למסד הנתונים: ${connectionError.message}`);
-    }
-    
-    console.log("Database connection test successful:", connectionTest);
-
-    // First check if email already exists in professionals table
+    // 4. Check if email already exists - to prevent duplicate records
     const { data: existingPro, error: searchError } = await supabase
       .from('professionals')
       .select('id, email')
@@ -152,8 +138,11 @@ export const submitSignupForm = async (
       throw new Error(`שגיאה בחיפוש במסד הנתונים: ${searchError.message}`);
     }
 
+    console.log("Existing professional check result:", existingPro);
+    
     let result;
     
+    // 5. Insert or update based on whether the email already exists
     if (existingPro?.id) {
       console.log("Professional with this email already exists, updating:", existingPro.id);
       result = await supabase
@@ -168,12 +157,26 @@ export const submitSignupForm = async (
         .insert(professionalData)
         .select();
     }
-      
+    
+    // 6. Enhanced error handling for Supabase operations  
     if (result.error) {
       console.error("Error storing signup in Supabase:", result.error);
-      console.error("Failed data:", professionalData);
       console.error("Error details:", result.error.message, result.error.details);
-      throw new Error(`שגיאה בשמירת הנתונים בדטה-בייס: ${result.error.message}`);
+      console.error("Error code:", result.error.code);
+      
+      // Check for specific error types
+      if (result.error.message.includes("permission denied")) {
+        console.error("Permission denied error - possible RLS policy issue");
+        throw new Error("שגיאת הרשאות: אין אפשרות לשמור את הנתונים");
+      }
+      
+      if (result.error.message.includes("violates not-null constraint")) {
+        console.error("Not-null constraint violation");
+        throw new Error("שגיאה: חסרים שדות חובה");
+      }
+      
+      // Generic error if no specific case matched
+      throw new Error(`שגיאה בשמירת הנתונים: ${result.error.message}`);
     }
 
     console.log("Successfully stored in Supabase:", result.data);
