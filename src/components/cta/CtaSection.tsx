@@ -44,6 +44,35 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
         return Promise.reject(new Error("חסרים שדות חובה"));
       }
       
+      if (!formData.email) {
+        if (showNotification) {
+          showNotification("שגיאה בהרשמה", "נא למלא את שדה האימייל");
+        }
+        return Promise.reject(new Error("חסר שדה אימייל"));
+      }
+      
+      if (formData.workFields.length === 0) {
+        if (showNotification) {
+          showNotification("שגיאה בהרשמה", "נא לבחור לפחות תחום עבודה אחד");
+        }
+        return Promise.reject(new Error("חסרים תחומי עבודה"));
+      }
+      
+      if (formData.workRegions.length === 0) {
+        if (showNotification) {
+          showNotification("שגיאה בהרשמה", "נא לבחור לפחות אזור עבודה אחד");
+        }
+        return Promise.reject(new Error("חסרים אזורי עבודה"));
+      }
+      
+      if (!formData.experience) {
+        if (showNotification) {
+          showNotification("שגיאה בהרשמה", "נא לבחור ותק");
+        }
+        return Promise.reject(new Error("חסר ותק"));
+      }
+      
+      console.log("CtaSection: Validation passed, submitting form");
       await submitSignupForm(formData, workFields, workRegions, utmParams);
       
       if (showNotification) {
@@ -53,6 +82,7 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
         );
       }
       
+      console.log("CtaSection: Form submission successful");
       return Promise.resolve();
     } catch (error) {
       console.error("Error submitting form:", error);

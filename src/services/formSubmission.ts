@@ -68,6 +68,7 @@ export const submitSignupForm = async (
       
       if (!response.ok) {
         console.error("Error submitting to webhook:", response.status, response.statusText);
+        console.error("Response body:", await response.text());
         throw new Error("שגיאה בשליחת הנתונים לווב-הוק");
       }
 
@@ -108,21 +109,36 @@ export const submitSignupForm = async (
 
     // 3. Now store in Supabase professionals table
     const professionalData = {
+      // Combine firstName and lastName into a single name field as requested
       name: `${formData.firstName} ${formData.lastName}`,
-      profession: formData.workFields[0] || "לא צוין", // Ensure primary work field is never null
-      specialties: formData.workFields.length > 0 ? formData.workFields : ["לא צוין"], // Ensure specialties is never empty
-      location: formData.city || "לא צוין", // Ensure location is never null
-      areas: formData.workRegions.length > 0 ? formData.workRegions.join(", ") : "לא צוין",
+      // Map other fields correctly to the professionals table
+      profession: formData.workFields[0] || "לא צוין",
+      specialties: formData.workFields,
+      location: formData.city || "לא צוין",
+      areas: formData.workRegions.join(", "),
       email: formData.email,
       phone_number: formData.phone,
       company_name: formData.companyName || null,
       experience_years: experienceYearsMap[formData.experience] || 1,
       city: formData.city || "לא צוין",
+      // Explicitly set is_verified to false as requested
       is_verified: false,
       status: 'pending'
     };
     
     console.log("Inserting into professionals table with data:", professionalData);
+    
+    // Test the database connection
+    const { data: connectionTest, error: connectionError } = await supabase
+      .from('professionals')
+      .select('count(*)', { count: 'exact', head: true });
+      
+    if (connectionError) {
+      console.error("Database connection test failed:", connectionError);
+      throw new Error(`שגיאה בהתחברות למסד הנתונים: ${connectionError.message}`);
+    }
+    
+    console.log("Database connection test successful:", connectionTest);
 
     // First check if email already exists in professionals table
     const { data: existingPro, error: searchError } = await supabase
@@ -155,7 +171,8 @@ export const submitSignupForm = async (
       
     if (result.error) {
       console.error("Error storing signup in Supabase:", result.error);
-      console.error("Failed with data:", professionalData);
+      console.error("Failed data:", professionalData);
+      console.error("Error details:", result.error.message, result.error.details);
       throw new Error(`שגיאה בשמירת הנתונים בדטה-בייס: ${result.error.message}`);
     }
 

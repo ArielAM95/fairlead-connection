@@ -125,6 +125,7 @@ export type Database = {
           id: string
           image_url: string | null
           location: string
+          notes: string | null
           professional_id: string | null
           share_percentage: number
           status: string
@@ -142,6 +143,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           location: string
+          notes?: string | null
           professional_id?: string | null
           share_percentage?: number
           status?: string
@@ -159,6 +161,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           location?: string
+          notes?: string | null
           professional_id?: string | null
           share_percentage?: number
           status?: string
@@ -289,6 +292,7 @@ export type Database = {
           experience_years: number | null
           id: string
           image: string | null
+          image_url: string | null
           is_verified: boolean | null
           location: string
           name: string
@@ -314,6 +318,7 @@ export type Database = {
           experience_years?: number | null
           id?: string
           image?: string | null
+          image_url?: string | null
           is_verified?: boolean | null
           location: string
           name: string
@@ -339,6 +344,7 @@ export type Database = {
           experience_years?: number | null
           id?: string
           image?: string | null
+          image_url?: string | null
           is_verified?: boolean | null
           location?: string
           name?: string
@@ -404,8 +410,11 @@ export type Database = {
           estimated_completion: string | null
           id: string
           lead_id: string | null
+          lower_price_value: number | null
+          lower_price_willing: boolean | null
           price: number
           professional_id: string | null
+          sample_image_url: string | null
           status: string
         }
         Insert: {
@@ -414,8 +423,11 @@ export type Database = {
           estimated_completion?: string | null
           id?: string
           lead_id?: string | null
+          lower_price_value?: number | null
+          lower_price_willing?: boolean | null
           price: number
           professional_id?: string | null
+          sample_image_url?: string | null
           status?: string
         }
         Update: {
@@ -424,8 +436,11 @@ export type Database = {
           estimated_completion?: string | null
           id?: string
           lead_id?: string | null
+          lower_price_value?: number | null
+          lower_price_willing?: boolean | null
           price?: number
           professional_id?: string | null
+          sample_image_url?: string | null
           status?: string
         }
         Relationships: [
@@ -454,6 +469,7 @@ export type Database = {
           price: string
           professional_id: string
           request_id: string
+          sample_image_url: string | null
           status: string
           updated_at: string
         }
@@ -465,6 +481,7 @@ export type Database = {
           price: string
           professional_id: string
           request_id: string
+          sample_image_url?: string | null
           status?: string
           updated_at?: string
         }
@@ -476,6 +493,7 @@ export type Database = {
           price?: string
           professional_id?: string
           request_id?: string
+          sample_image_url?: string | null
           status?: string
           updated_at?: string
         }
@@ -675,7 +693,19 @@ export type Database = {
         Args: { user_id_param: string }
         Returns: boolean
       }
+      check_professional_ownership: {
+        Args: { professional_id_param: string; user_id_param: string }
+        Returns: boolean
+      }
       check_super_admin_status: {
+        Args: { user_id_param: string }
+        Returns: boolean
+      }
+      check_user_is_admin: {
+        Args: { user_id_param: string }
+        Returns: boolean
+      }
+      check_user_is_super_admin: {
         Args: { user_id_param: string }
         Returns: boolean
       }
@@ -723,6 +753,10 @@ export type Database = {
         Returns: string
       }
       is_admin_check: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      is_admin_safe: {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
