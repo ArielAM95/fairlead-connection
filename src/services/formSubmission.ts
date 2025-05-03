@@ -107,7 +107,7 @@ export const submitSignupForm = async (
       throw new Error("שגיאה: לא נבחרו תחומי עבודה");
     }
 
-    // 3. Prepare data for Supabase professionals table
+    // 3. Prepare data for Supabase professionals table - with modified approach and improved logging
     const professionalData = {
       // Combine firstName and lastName into a single name field
       name: `${formData.firstName} ${formData.lastName}`.trim(),
@@ -120,66 +120,59 @@ export const submitSignupForm = async (
       company_name: formData.companyName || null,
       experience_years: experienceYearsMap[formData.experience] || 1,
       city: formData.city || "לא צוין",
+      // Ensure these don't overwrite the defaults in the database
       is_verified: false,
       status: 'pending'
     };
     
     console.log("Prepared professional data for Supabase:", professionalData);
     
-    // 4. Check if email already exists - to prevent duplicate records
-    const { data: existingPro, error: searchError } = await supabase
+    // 4. Direct insert approach - skip checking for existing email to simplify the process
+    console.log("Attempting direct insert to professionals table");
+    
+    const { data: insertedData, error: insertError } = await supabase
       .from('professionals')
-      .select('id, email')
-      .eq('email', formData.email)
-      .maybeSingle();
-
-    if (searchError) {
-      console.error("Error searching for existing professional:", searchError);
-      throw new Error(`שגיאה בחיפוש במסד הנתונים: ${searchError.message}`);
-    }
-
-    console.log("Existing professional check result:", existingPro);
-    
-    let result;
-    
-    // 5. Insert or update based on whether the email already exists
-    if (existingPro?.id) {
-      console.log("Professional with this email already exists, updating:", existingPro.id);
-      result = await supabase
-        .from('professionals')
-        .update(professionalData)
-        .eq('id', existingPro.id)
-        .select();
-    } else {
-      console.log("Creating new professional record");
-      result = await supabase
-        .from('professionals')
-        .insert(professionalData)
-        .select();
-    }
-    
-    // 6. Enhanced error handling for Supabase operations  
-    if (result.error) {
-      console.error("Error storing signup in Supabase:", result.error);
-      console.error("Error details:", result.error.message, result.error.details);
-      console.error("Error code:", result.error.code);
+      .insert(professionalData)
+      .select('id');
       
-      // Check for specific error types
-      if (result.error.message.includes("permission denied")) {
-        console.error("Permission denied error - possible RLS policy issue");
-        throw new Error("שגיאת הרשאות: אין אפשרות לשמור את הנתונים");
+    if (insertError) {
+      console.error("CRITICAL ERROR: Failed to insert professional data:", insertError);
+      console.error("Error code:", insertError.code);
+      console.error("Error details:", insertError.message, insertError.details);
+      
+      // More detailed error reporting for debugging
+      if (insertError.message.includes("permission denied")) {
+        throw new Error("שגיאת הרשאות: אין אפשרות לשמור את הנתונים (קוד RLS)");
       }
       
-      if (result.error.message.includes("violates not-null constraint")) {
-        console.error("Not-null constraint violation");
-        throw new Error("שגיאה: חסרים שדות חובה");
+      if (insertError.message.includes("violates not-null constraint")) {
+        const missingField = insertError.message.match(/column "(.*?)"/)?.[1] || "unknown";
+        throw new Error(`שגיאה: שדה חובה חסר - ${missingField}`);
+      }
+      
+      if (insertError.message.includes("duplicate key")) {
+        // Try update instead
+        console.log("Email already exists, trying to update the record instead");
+        
+        const { error: updateError } = await supabase
+          .from('professionals')
+          .update(professionalData)
+          .eq('email', formData.email);
+          
+        if (updateError) {
+          console.error("Update failed after duplicate key error:", updateError);
+          throw new Error(`שגיאה בעדכון הנתונים: ${updateError.message}`);
+        } else {
+          console.log("Successfully updated existing professional record");
+          return Promise.resolve();
+        }
       }
       
       // Generic error if no specific case matched
-      throw new Error(`שגיאה בשמירת הנתונים: ${result.error.message}`);
+      throw new Error(`שגיאה בשמירת הנתונים: ${insertError.message}`);
     }
 
-    console.log("Successfully stored in Supabase:", result.data);
+    console.log("Successfully stored in Supabase:", insertedData);
     return Promise.resolve();
   } catch (err) {
     console.error("Exception during form submission process:", err);

@@ -15,6 +15,7 @@ interface CtaSectionProps {
 const CtaSection = ({ showNotification }: CtaSectionProps) => {
   const utmParams = useUtmParams();
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(entries => {
@@ -36,8 +37,9 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
   const handleSubmit = async (formData: SignupFormData): Promise<void> => {
     try {
       console.log("CtaSection: Starting form submission with data:", formData);
+      setFormError(null);
       
-      // Validate required fields
+      // Client-side validation for required fields
       if (!formData.firstName || !formData.lastName) {
         const errorMsg = "נא למלא את שדות השם הפרטי ושם המשפחה";
         if (showNotification) {
@@ -45,6 +47,7 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
         } else {
           toast.error(errorMsg);
         }
+        setFormError(errorMsg);
         return Promise.reject(new Error("חסרים שדות חובה"));
       }
       
@@ -55,6 +58,7 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
         } else {
           toast.error(errorMsg);
         }
+        setFormError(errorMsg);
         return Promise.reject(new Error("חסר שדה אימייל"));
       }
       
@@ -65,6 +69,7 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
         } else {
           toast.error(errorMsg);
         }
+        setFormError(errorMsg);
         return Promise.reject(new Error("חסרים תחומי עבודה"));
       }
       
@@ -75,6 +80,7 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
         } else {
           toast.error(errorMsg);
         }
+        setFormError(errorMsg);
         return Promise.reject(new Error("חסרים אזורי עבודה"));
       }
       
@@ -85,10 +91,11 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
         } else {
           toast.error(errorMsg);
         }
+        setFormError(errorMsg);
         return Promise.reject(new Error("חסר ותק"));
       }
       
-      console.log("CtaSection: Validation passed, submitting form");
+      console.log("CtaSection: Validation passed, submitting form with UTM params:", utmParams);
       await submitSignupForm(formData, workFields, workRegions, utmParams);
       
       const successMsg = "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה.";
@@ -119,6 +126,7 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
         toast.error(errorMsg);
       }
       
+      setFormError(errorMsg);
       return Promise.reject(error);
     }
   };
@@ -130,6 +138,11 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
           <CtaHeader />
           
           <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg scroll-fade max-w-2xl mx-auto">
+            {formError && (
+              <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md text-sm">
+                {formError}
+              </div>
+            )}
             <SignupForm onSubmit={handleSubmit} />
           </div>
         </div>
