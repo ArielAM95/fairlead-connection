@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { showNotification, showSuccessNotification } from "@/utils/notification";
+import { supabase } from "@/integrations/supabase/client";
 
 interface CtaSectionProps {
   showNotification?: (title: string, description: string) => void;
@@ -296,6 +297,71 @@ const CtaSection = ({ showNotification: propsShowNotification }: CtaSectionProps
       });
       if (!response.ok) {
         throw new Error("שגיאה בשליחת הנתונים");
+      }
+      
+      try {
+        const professionalFormData = {
+          name: `${formData.firstName} ${formData.lastName}`,
+          profession: workFieldsInHebrew.split(", ")[0],
+          phone_number: formData.phone,
+          email: formData.email,
+          location: formData.city,
+          city: formData.city,
+          specialties: formData.workFields.filter(field => field !== "other"),
+          experience_range: formData.experience,
+          company_name: formData.companyName || null,
+          areas: workRegionsInHebrew,
+          status: "pending",
+          is_verified: false,
+        };
+
+        const { data: insertedProfessional, error: professionalError } = await supabase
+          .from('professionals')
+          .insert([professionalFormData])
+          .select();
+
+        if (professionalError) {
+          console.error("Error saving to Supabase professionals table:", professionalError);
+        } else {
+          console.log("Saved to Supabase professionals table successfully:", insertedProfessional);
+          
+          const tempPassword = "TemporaryPass123!";
+          
+          const { data: authData, error: authError } = await supabase.auth.signUp({
+            email: formData.email,
+            password: tempPassword,
+            options: {
+              emailRedirectTo: undefined,
+              data: {
+                full_name: `${formData.firstName} ${formData.lastName}`,
+                phone: formData.phone,
+                professional_id: insertedProfessional?.[0]?.id,
+                experience_range: formData.experience
+              }
+            }
+          });
+          
+          if (authError) {
+            console.error("Error creating user in Auth:", authError);
+          } else {
+            console.log("User created in Auth successfully:", authData);
+            
+            if (insertedProfessional?.[0]?.id && authData?.user?.id) {
+              const { error: updateError } = await supabase
+                .from('professionals')
+                .update({ user_id: authData.user.id })
+                .eq('id', insertedProfessional[0].id);
+                
+              if (updateError) {
+                console.error("Error updating user_id in professionals table:", updateError);
+              } else {
+                console.log("Updated user_id in professionals table successfully");
+              }
+            }
+          }
+        }
+      } catch (supabaseError) {
+        console.error("Supabase operation failed:", supabaseError);
       }
       
       if (propsShowNotification) {
