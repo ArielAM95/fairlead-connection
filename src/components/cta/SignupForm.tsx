@@ -6,20 +6,7 @@ import { WorkFieldsSection } from "./form-sections/WorkFieldsSection";
 import { WorkRegionsSection } from "./form-sections/WorkRegionsSection";
 import { ExperienceSection } from "./form-sections/ExperienceSection";
 import { useSignupForm } from "@/hooks/useSignupForm";
-
-export interface SignupFormData {
-  firstName: string;
-  lastName: string;
-  companyName: string;
-  workFields: string[];
-  otherWorkField: string;
-  showOtherWorkField: boolean;
-  experience: string;
-  email: string;
-  phone: string;
-  city: string;
-  workRegions: string[];
-}
+import { SignupFormData } from "@/types/signupForm";
 
 interface SignupFormProps {
   onSubmit: (formData: SignupFormData) => Promise<void>;
