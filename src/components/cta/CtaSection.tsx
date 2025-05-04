@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
 import SignupForm from "./SignupForm";
@@ -97,20 +96,27 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
       }
       
       console.log("CtaSection: Validation passed, submitting form with UTM params:", utmParams);
-      await submitSignupForm(formData, workFields, workRegions, utmParams);
       
-      const successMsg = "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה.";
-      if (showNotification) {
-        showNotification(
-          "הרשמה בוצעה בהצלחה",
-          successMsg
-        );
-      } else {
-        toast.success(successMsg);
+      try {
+        await submitSignupForm(formData, workFields, workRegions, utmParams);
+        
+        const successMsg = "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה.";
+        if (showNotification) {
+          showNotification(
+            "הרשמה בוצעה בהצלחה",
+            successMsg
+          );
+        } else {
+          toast.success(successMsg);
+        }
+        
+        console.log("CtaSection: Form submission successful");
+        return Promise.resolve();
+      } catch (submitError) {
+        console.error("Error in submitSignupForm:", submitError);
+        throw submitError; // Re-throw for outer catch block
       }
       
-      console.log("CtaSection: Form submission successful");
-      return Promise.resolve();
     } catch (error) {
       console.error("Error submitting form:", error);
       

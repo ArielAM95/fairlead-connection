@@ -1,6 +1,6 @@
 
 import { ContactFormData } from "@/components/contact/ContactForm";
-import { SignupFormData } from "@/types/signupForm"; // Fixed import
+import { SignupFormData } from "@/types/signupForm";
 import { supabase } from "@/integrations/supabase/client";
 
 const WEBHOOK_URL = "https://hook.eu2.make.com/4flq1xywuqf165vnw7v61hjn8ap6airq";
@@ -86,28 +86,7 @@ export const submitSignupForm = async (
       '10+': 11
     };
 
-    // Check for required fields
-    if (!formData.firstName || !formData.lastName) {
-      console.error("Missing required name fields");
-      throw new Error("שגיאה: שדות שם פרטי ושם משפחה חסרים");
-    }
-
-    if (!formData.email) {
-      console.error("Missing required email field");
-      throw new Error("שגיאה: שדה אימייל חסר");
-    }
-
-    if (!formData.experience) {
-      console.error("Missing required experience field");
-      throw new Error("שגיאה: שדה ותק חסר");
-    }
-
-    if (formData.workFields.length === 0) {
-      console.error("No work fields selected");
-      throw new Error("שגיאה: לא נבחרו תחומי עבודה");
-    }
-
-    // 3. Prepare data for Supabase professionals table - with modified approach and improved logging
+    // Prepare data for Supabase professionals table - simplified approach
     const professionalData = {
       // Combine firstName and lastName into a single name field
       name: `${formData.firstName} ${formData.lastName}`.trim(),
@@ -119,16 +98,11 @@ export const submitSignupForm = async (
       phone_number: formData.phone || null,
       company_name: formData.companyName || null,
       experience_years: experienceYearsMap[formData.experience] || 1,
-      city: formData.city || "לא צוין",
-      // Ensure these don't overwrite the defaults in the database
-      is_verified: false,
-      status: 'pending'
+      city: formData.city || "לא צוין"
+      // Removed is_verified and status as they have defaults in the database
     };
     
     console.log("Prepared professional data for Supabase:", professionalData);
-    
-    // 4. Direct insert approach - skip checking for existing email to simplify the process
-    console.log("Attempting direct insert to professionals table");
     
     const { data: insertedData, error: insertError } = await supabase
       .from('professionals')
@@ -136,19 +110,9 @@ export const submitSignupForm = async (
       .select('id');
       
     if (insertError) {
-      console.error("CRITICAL ERROR: Failed to insert professional data:", insertError);
+      console.error("Error inserting professional data:", insertError);
       console.error("Error code:", insertError.code);
       console.error("Error details:", insertError.message, insertError.details);
-      
-      // More detailed error reporting for debugging
-      if (insertError.message.includes("permission denied")) {
-        throw new Error("שגיאת הרשאות: אין אפשרות לשמור את הנתונים (קוד RLS)");
-      }
-      
-      if (insertError.message.includes("violates not-null constraint")) {
-        const missingField = insertError.message.match(/column "(.*?)"/)?.[1] || "unknown";
-        throw new Error(`שגיאה: שדה חובה חסר - ${missingField}`);
-      }
       
       if (insertError.message.includes("duplicate key")) {
         // Try update instead
@@ -166,10 +130,10 @@ export const submitSignupForm = async (
           console.log("Successfully updated existing professional record");
           return Promise.resolve();
         }
+      } else {
+        // Generic error for other cases
+        throw new Error(`שגיאה בשמירת הנתונים: ${insertError.message}`);
       }
-      
-      // Generic error if no specific case matched
-      throw new Error(`שגיאה בשמירת הנתונים: ${insertError.message}`);
     }
 
     console.log("Successfully stored in Supabase:", insertedData);
