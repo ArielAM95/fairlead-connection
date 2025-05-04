@@ -1,6 +1,6 @@
 
 import { ContactFormData } from "@/components/contact/ContactForm";
-import { SignupFormData } from "@/components/cta/SignupForm";
+import { SignupFormData } from "@/types/signupForm"; // Fixed import
 import { supabase } from "@/integrations/supabase/client";
 
 const WEBHOOK_URL = "https://hook.eu2.make.com/4flq1xywuqf165vnw7v61hjn8ap6airq";

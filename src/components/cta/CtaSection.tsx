@@ -1,7 +1,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
-import SignupForm, { SignupFormData } from "./SignupForm";
+import SignupForm from "./SignupForm";
+import { SignupFormData } from "@/types/signupForm"; // Fixed import
 import CtaHeader from "./CtaHeader";
 import { workFields, workRegions } from "./data/workFields";
 import { useUtmParams } from "@/hooks/useUtmParams";
