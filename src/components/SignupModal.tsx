@@ -67,6 +67,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
     workRegions: ["center"] // Default to center region
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -100,8 +101,10 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
     
     if (formData.workFields.length === 0) {
+      setFormError("יש לבחור לפחות תחום עבודה אחד");
       toast({
         title: "שגיאה",
         description: "יש לבחור לפחות תחום עבודה אחד",
@@ -113,10 +116,11 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
     
     try {
+      console.log("SignupModal: Submitting form data", formData);
+      
       await submitSignupForm(
         {
           ...formData,
-          // These fields are needed for the SignupFormData interface
           workRegions: formData.workRegions,
           phone: formData.phone || "00-0000000", // Default value if not provided
           city: formData.city || "לא צוין", // Default value if not provided
@@ -132,9 +136,17 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
       });
       onClose();
     } catch (error) {
+      console.error("Error in form submission:", error);
+      
+      const errorMsg = error instanceof Error 
+        ? error.message 
+        : "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר.";
+      
+      setFormError(errorMsg);
+      
       toast({
         title: "שגיאה בהרשמה",
-        description: "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר.",
+        description: errorMsg,
         variant: "destructive"
       });
     } finally {
@@ -159,6 +171,12 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
         </div>
         
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {formError && (
+            <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md text-sm">
+              {formError}
+            </div>
+          )}
+          
           <p className="text-muted-foreground mb-6">
             הצטרפו למהפכת שיתוף הלידים וקבלו גישה ללקוחות איכותיים
           </p>

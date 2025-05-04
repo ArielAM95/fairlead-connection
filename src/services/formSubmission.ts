@@ -86,57 +86,63 @@ export const submitSignupForm = async (
       '10+': 11
     };
 
-    // Prepare data for Supabase professionals table - simplified approach
+    // Improved professional data preparation - ensuring required fields are provided
     const professionalData = {
-      // Combine firstName and lastName into a single name field
       name: `${formData.firstName} ${formData.lastName}`.trim(),
-      profession: formData.workFields[0] || "לא צוין",
+      profession: formData.workFields[0] ? (() => {
+        const field = workFields.find(f => f.id === formData.workFields[0]);
+        return field ? field.label : formData.workFields[0];
+      })() : "לא צוין",
       specialties: formData.workFields,
-      location: formData.city || "לא צוין",
-      areas: formData.workRegions.join(", "),
-      email: formData.email,
-      phone_number: formData.phone || null,
+      email: formData.email.toLowerCase().trim(),
+      phone_number: formData.phone ? formData.phone.trim() : null,
       company_name: formData.companyName || null,
       experience_years: experienceYearsMap[formData.experience] || 1,
-      city: formData.city || "לא צוין"
-      // Removed is_verified and status as they have defaults in the database
+      city: formData.city || "לא צוין",
+      location: formData.city || "לא צוין",
+      areas: formData.workRegions.join(", ")
     };
     
     console.log("Prepared professional data for Supabase:", professionalData);
     
-    const { data: insertedData, error: insertError } = await supabase
+    // First check if the professional already exists with this email
+    const { data: existingProfessional, error: checkError } = await supabase
       .from('professionals')
-      .insert(professionalData)
-      .select('id');
+      .select('id, email')
+      .eq('email', professionalData.email)
+      .maybeSingle();
       
-    if (insertError) {
-      console.error("Error inserting professional data:", insertError);
-      console.error("Error code:", insertError.code);
-      console.error("Error details:", insertError.message, insertError.details);
+    if (checkError) {
+      console.error("Error checking existing professional:", checkError);
+    }
+    
+    let result;
+    
+    if (existingProfessional?.id) {
+      // Update existing professional
+      console.log("Professional already exists with ID:", existingProfessional.id, "- updating record");
       
-      if (insertError.message.includes("duplicate key")) {
-        // Try update instead
-        console.log("Email already exists, trying to update the record instead");
-        
-        const { error: updateError } = await supabase
-          .from('professionals')
-          .update(professionalData)
-          .eq('email', formData.email);
-          
-        if (updateError) {
-          console.error("Update failed after duplicate key error:", updateError);
-          throw new Error(`שגיאה בעדכון הנתונים: ${updateError.message}`);
-        } else {
-          console.log("Successfully updated existing professional record");
-          return Promise.resolve();
-        }
-      } else {
-        // Generic error for other cases
-        throw new Error(`שגיאה בשמירת הנתונים: ${insertError.message}`);
-      }
+      result = await supabase
+        .from('professionals')
+        .update(professionalData)
+        .eq('id', existingProfessional.id);
+    } else {
+      // Insert new professional
+      console.log("No existing professional found - inserting new record");
+      
+      result = await supabase
+        .from('professionals')
+        .insert(professionalData);
+    }
+    
+    if (result.error) {
+      console.error("Error with Supabase operation:", result.error);
+      console.error("Error code:", result.error.code);
+      console.error("Error details:", result.error.message, result.error.details);
+      throw new Error(`שגיאה בשמירת הנתונים: ${result.error.message}`);
     }
 
-    console.log("Successfully stored in Supabase:", insertedData);
+    console.log("Successfully stored in Supabase:", result.data);
     return Promise.resolve();
   } catch (err) {
     console.error("Exception during form submission process:", err);

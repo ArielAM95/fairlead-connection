@@ -1,7 +1,8 @@
+
 import { useState, useRef, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
 import SignupForm from "./SignupForm";
-import { SignupFormData } from "@/types/signupForm"; // Fixed import
+import { SignupFormData } from "@/types/signupForm"; 
 import CtaHeader from "./CtaHeader";
 import { workFields, workRegions } from "./data/workFields";
 import { useUtmParams } from "@/hooks/useUtmParams";
@@ -114,6 +115,21 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
         return Promise.resolve();
       } catch (submitError) {
         console.error("Error in submitSignupForm:", submitError);
+        
+        const errorMsg = submitError instanceof Error 
+          ? submitError.message 
+          : "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר.";
+          
+        if (showNotification) {
+          showNotification(
+            "שגיאה בהרשמה",
+            errorMsg
+          );
+        } else {
+          toast.error(errorMsg);
+        }
+        
+        setFormError(errorMsg);
         throw submitError; // Re-throw for outer catch block
       }
       
