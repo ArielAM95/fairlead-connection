@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -64,7 +63,8 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
     password: "",
     phone: "",
     city: "",
-    workRegions: ["center"] // Default to center region
+    workRegions: ["center"], // Default to center region
+    acceptMarketing: false   // New field
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -108,6 +108,16 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
       toast({
         title: "שגיאה",
         description: "יש לבחור לפחות תחום עבודה אחד",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!formData.acceptMarketing) {
+      setFormError("יש לאשר את קבלת העדכונים כדי להמשיך");
+      toast({
+        title: "שגיאה",
+        description: "יש לאשר את קבלת העדכונים כדי להמשיך",
         variant: "destructive"
       });
       return;
@@ -362,11 +372,28 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
             </p>
           </div>
           
+          <div className="flex items-start space-x-2 space-x-reverse rtl:space-x-reverse">
+            <Checkbox 
+              id="acceptMarketing" 
+              checked={formData.acceptMarketing}
+              onCheckedChange={(checked) => {
+                setFormData(prev => ({ ...prev, acceptMarketing: checked === true }));
+              }}
+              required
+            />
+            <label 
+              htmlFor="acceptMarketing" 
+              className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              אני מאשר/ת קבלת עדכונים לגבי ההרשמה שלי, תוכן שיווקי והטבות באמצעות דוא"ל והודעות SMS *
+            </label>
+          </div>
+          
           <div className="pt-4">
             <Button 
               type="submit" 
               className="w-full bg-ofair-900 hover:bg-ofair-800 text-white py-6"
-              disabled={isSubmitting || formData.workFields.length === 0}
+              disabled={isSubmitting || formData.workFields.length === 0 || !formData.acceptMarketing}
             >
               {isSubmitting ? "מבצע רישום..." : "הרשמה"}
             </Button>

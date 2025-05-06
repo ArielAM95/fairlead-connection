@@ -7,6 +7,7 @@ import { WorkRegionsSection } from "./form-sections/WorkRegionsSection";
 import { ExperienceSection } from "./form-sections/ExperienceSection";
 import { useSignupForm } from "@/hooks/useSignupForm";
 import { SignupFormData } from "@/types/signupForm";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface SignupFormProps {
   onSubmit: (formData: SignupFormData) => Promise<void>;
@@ -74,6 +75,26 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
         />
       </div>
 
+      <div className="flex items-start space-x-2 space-x-reverse rtl:space-x-reverse">
+        <Checkbox
+          id="acceptMarketing"
+          name="acceptMarketing"
+          checked={formData.acceptMarketing}
+          onCheckedChange={(checked) => {
+            handleChange({
+              target: { name: "acceptMarketing", value: checked === true }
+            } as React.ChangeEvent<HTMLInputElement>)
+          }}
+          required
+        />
+        <label
+          htmlFor="acceptMarketing"
+          className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          אני מאשר/ת קבלת עדכונים לגבי ההרשמה שלי, תוכן שיווקי והטבות באמצעות דוא"ל והודעות SMS *
+        </label>
+      </div>
+
       <div className="pt-4">
         <Button
           type="submit"
@@ -83,6 +104,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
             formData.workFields.length === 0 ||
             formData.workRegions.length === 0 ||
             !formData.experience ||
+            !formData.acceptMarketing ||
             !!errors.email ||
             !!errors.phone
           }

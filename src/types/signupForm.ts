@@ -11,6 +11,7 @@ export interface SignupFormData {
   phone: string;
   city: string;
   workRegions: string[];
+  acceptMarketing: boolean;
 }
 
 export interface SignupFormErrors {
