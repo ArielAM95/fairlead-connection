@@ -79,14 +79,15 @@ export const submitSignupForm = async (
     }
 
     // 2. Parse experience years from selection
-    const experienceYearsMap: Record<string, number> = {
-      '0-2': 1,
-      '3-5': 4,
-      '6-10': 8,
-      '10+': 11
+    const experienceYearsMap: Record<string, string> = {
+      '0-2': '1',
+      '3-5': '4',
+      '6-10': '8',
+      '10+': '11'
     };
 
     // Improved professional data preparation - ensuring required fields are provided
+    // Convert experience_years to string to match the database schema
     const professionalData = {
       name: `${formData.firstName} ${formData.lastName}`.trim(),
       profession: formData.workFields[0] ? (() => {
@@ -97,7 +98,7 @@ export const submitSignupForm = async (
       email: formData.email.toLowerCase().trim(),
       phone_number: formData.phone ? formData.phone.trim() : null,
       company_name: formData.companyName || null,
-      experience_years: experienceYearsMap[formData.experience] || 1,
+      experience_years: experienceYearsMap[formData.experience] || '1',
       city: formData.city || "לא צוין",
       location: formData.city || "לא צוין",
       areas: formData.workRegions.join(", ")

@@ -30,8 +30,9 @@ export const useFormState = () => {
     const { name, value } = e.target;
     
     if (name === "acceptMarketing") {
-      // Convert value to boolean for the acceptMarketing field
-      const boolValue = value === true || value === "true";
+      // For checkbox values, we need to handle boolean values
+      // Note that value might be a string "true"/"false" or a boolean true/false
+      const boolValue = value === "true" || Boolean(value);
       setFormData(prev => ({
         ...prev,
         [name]: boolValue
