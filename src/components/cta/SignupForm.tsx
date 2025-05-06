@@ -81,9 +81,15 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           name="acceptMarketing"
           checked={formData.acceptMarketing}
           onCheckedChange={(checked) => {
-            handleChange({
-              target: { name: "acceptMarketing", value: checked === true }
-            } as React.ChangeEvent<HTMLInputElement>)
+            // Convert the checkbox event to a format compatible with handleChange
+            const syntheticEvent = {
+              target: { 
+                name: "acceptMarketing", 
+                value: checked === true 
+              }
+            } as unknown as React.ChangeEvent<HTMLInputElement>;
+            
+            handleChange(syntheticEvent);
           }}
           required
         />
