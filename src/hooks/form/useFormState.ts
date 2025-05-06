@@ -30,9 +30,11 @@ export const useFormState = () => {
     const { name, value } = e.target;
     
     if (name === "acceptMarketing") {
+      // Convert value to boolean for the acceptMarketing field
+      const boolValue = value === true || value === "true";
       setFormData(prev => ({
         ...prev,
-        [name]: value === "true" || value === true
+        [name]: boolValue
       }));
     } else {
       setFormData(prev => ({
