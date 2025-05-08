@@ -406,7 +406,8 @@ const CtaSection = ({ showNotification: propsShowNotification }: CtaSectionProps
         email: "",
         phone: "",
         city: "",
-        workRegions: []
+        workRegions: [],
+        acceptMarketing: false
       });
       setErrors({
         email: "",
