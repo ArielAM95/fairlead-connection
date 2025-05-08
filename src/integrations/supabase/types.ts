@@ -15,6 +15,7 @@ export type Database = {
           date: string
           description: string
           id: string
+          payment_method: string | null
           price: string
           professional_id: string
           professional_name: string
@@ -28,6 +29,7 @@ export type Database = {
           date: string
           description: string
           id?: string
+          payment_method?: string | null
           price: string
           professional_id: string
           professional_name: string
@@ -41,6 +43,7 @@ export type Database = {
           date?: string
           description?: string
           id?: string
+          payment_method?: string | null
           price?: string
           professional_id?: string
           professional_name?: string
@@ -117,9 +120,11 @@ export type Database = {
       leads: {
         Row: {
           budget: number | null
+          category: string | null
           client_address: string | null
           client_name: string | null
           client_phone: string | null
+          constraints: string | null
           created_at: string
           description: string
           id: string
@@ -135,9 +140,11 @@ export type Database = {
         }
         Insert: {
           budget?: number | null
+          category?: string | null
           client_address?: string | null
           client_name?: string | null
           client_phone?: string | null
+          constraints?: string | null
           created_at?: string
           description: string
           id?: string
@@ -153,9 +160,11 @@ export type Database = {
         }
         Update: {
           budget?: number | null
+          category?: string | null
           client_address?: string | null
           client_name?: string | null
           client_phone?: string | null
+          constraints?: string | null
           created_at?: string
           description?: string
           id?: string
@@ -569,6 +578,8 @@ export type Database = {
       }
       requests: {
         Row: {
+          category: string | null
+          constraints: string | null
           created_at: string
           date: string
           description: string
@@ -581,6 +592,8 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          category?: string | null
+          constraints?: string | null
           created_at?: string
           date?: string
           description: string
@@ -593,6 +606,8 @@ export type Database = {
           user_id: string
         }
         Update: {
+          category?: string | null
+          constraints?: string | null
           created_at?: string
           date?: string
           description?: string

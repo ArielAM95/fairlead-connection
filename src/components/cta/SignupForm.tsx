@@ -8,6 +8,7 @@ import { ExperienceSection } from "./form-sections/ExperienceSection";
 import { useSignupForm } from "@/hooks/useSignupForm";
 import { SignupFormData } from "@/types/signupForm";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 interface SignupFormProps {
   onSubmit: (formData: SignupFormData) => Promise<void>;
@@ -75,30 +76,28 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
         />
       </div>
 
-      <div className="flex items-start space-x-2 space-x-reverse rtl:space-x-reverse">
+      <div className="flex items-start gap-2 rtl:space-x-reverse">
         <Checkbox
           id="acceptMarketing"
           name="acceptMarketing"
           checked={formData.acceptMarketing}
           onCheckedChange={(checked) => {
-            // Convert the checkbox event to a format compatible with handleChange
-            const syntheticEvent = {
-              target: { 
-                name: "acceptMarketing", 
-                value: checked === true 
+            // Create a synthetic event that mimics an input change event
+            handleChange({
+              target: {
+                name: "acceptMarketing",
+                type: "checkbox",
+                checked: !!checked
               }
-            } as unknown as React.ChangeEvent<HTMLInputElement>;
-            
-            handleChange(syntheticEvent);
+            } as React.ChangeEvent<HTMLInputElement>)
           }}
-          required
         />
-        <label
+        <Label
           htmlFor="acceptMarketing"
-          className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
         >
           אני מאשר/ת קבלת עדכונים לגבי ההרשמה שלי, תוכן שיווקי והטבות באמצעות דוא"ל והודעות SMS *
-        </label>
+        </Label>
       </div>
 
       <div className="pt-4">

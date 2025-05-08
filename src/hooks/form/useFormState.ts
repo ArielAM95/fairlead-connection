@@ -27,15 +27,13 @@ export const useFormState = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target as HTMLInputElement;
     
-    if (name === "acceptMarketing") {
-      // For checkbox values, we need to handle boolean values
-      // Note that value might be a string "true"/"false" or a boolean true/false
-      const boolValue = value === "true" || Boolean(value);
+    if (type === "checkbox") {
+      // Directly use the checked property for checkboxes
       setFormData(prev => ({
         ...prev,
-        [name]: boolValue
+        [name]: checked
       }));
     } else {
       setFormData(prev => ({
