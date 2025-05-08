@@ -1,4 +1,3 @@
-
 import { ContactFormData } from "@/components/contact/ContactForm";
 import { SignupFormData } from "@/types/signupForm";
 import { supabase } from "@/integrations/supabase/client";
@@ -101,7 +100,8 @@ export const submitSignupForm = async (
       experience_years: experienceYearsMap[formData.experience] || '1',
       city: formData.city || "לא צוין",
       location: formData.city || "לא צוין",
-      areas: formData.workRegions.join(", ")
+      areas: formData.workRegions.join(", "),
+      marketing_consent: formData.acceptMarketing
     };
     
     console.log("Prepared professional data for Supabase:", professionalData);
