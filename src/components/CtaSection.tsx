@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { showNotification, showSuccessNotification } from "@/utils/notification";
 import { supabase } from "@/integrations/supabase/client";
+import { Label } from "@/components/ui/label";
 
 interface CtaSectionProps {
   showNotification?: (title: string, description: string) => void;
@@ -132,7 +133,8 @@ const CtaSection = ({ showNotification: propsShowNotification }: CtaSectionProps
     email: "",
     phone: "",
     city: "",
-    workRegions: [] as string[]
+    workRegions: [] as string[],
+    acceptMarketing: false
   });
   const [errors, setErrors] = useState({
     email: "",
@@ -176,12 +178,15 @@ const CtaSection = ({ showNotification: propsShowNotification }: CtaSectionProps
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const {
-      name,
-      value
-    } = e.target;
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
 
-    if (name === 'email') {
+    if (type === "checkbox") {
+      setFormData(prev => ({
+        ...prev,
+        [name]: checked
+      }));
+    } else if (name === 'email') {
       const sanitizedValue = value.replace(/[^\x00-\x7F]/g, "");
       setFormData({
         ...formData,
@@ -265,6 +270,20 @@ const CtaSection = ({ showNotification: propsShowNotification }: CtaSectionProps
         ...prev,
         phone: "נא להזין מספר טלפון תקין"
       }));
+      return;
+    }
+    if (!formData.acceptMarketing) {
+      if (propsShowNotification) {
+        propsShowNotification(
+          "שגיאה בהרשמה",
+          "נא לאשר קבלת עדכונים ותוכן שיווקי"
+        );
+      } else {
+        showNotification(
+          "שגיאה בהרשמה",
+          "נא לאשר קבלת עדכונים ותוכן שיווקי"
+        );
+      }
       return;
     }
     setIsSubmitting(true);
@@ -528,8 +547,44 @@ const CtaSection = ({ showNotification: propsShowNotification }: CtaSectionProps
                 <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required className="bg-gray-50 border-gray-200" dir="ltr" placeholder="your@email.com" error={!!errors.email} errorMessage={errors.email} />
               </div>
               
+              <div className="flex items-start gap-2 rtl:space-x-reverse">
+                <Checkbox
+                  id="acceptMarketing"
+                  name="acceptMarketing"
+                  checked={formData.acceptMarketing}
+                  onCheckedChange={(checked) => {
+                    handleChange({
+                      target: {
+                        name: "acceptMarketing",
+                        type: "checkbox",
+                        checked: !!checked
+                      }
+                    } as React.ChangeEvent<HTMLInputElement>)
+                  }}
+                  required
+                />
+                <Label
+                  htmlFor="acceptMarketing"
+                  className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                >
+                  אני מאשר/ת קבלת עדכונים לגבי ההרשמה שלי, תוכן שיווקי והטבות באמצעות דוא"ל והודעות SMS *
+                </Label>
+              </div>
+              
               <div className="pt-4">
-                <Button type="submit" className="w-full bg-ofair-900 hover:bg-ofair-800 text-white py-6" disabled={isSubmitting || formData.workFields.length === 0 || formData.workRegions.length === 0 || !!errors.email || !!errors.phone}>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-ofair-900 hover:bg-ofair-800 text-white py-6" 
+                  disabled={
+                    isSubmitting || 
+                    formData.workFields.length === 0 || 
+                    formData.workRegions.length === 0 || 
+                    !formData.experience || 
+                    !formData.acceptMarketing || 
+                    !!errors.email || 
+                    !!errors.phone
+                  }
+                >
                   {isSubmitting ? "מבצע רישום..." : "להרשמה"}
                 </Button>
                 
