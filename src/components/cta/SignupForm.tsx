@@ -96,7 +96,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           htmlFor="acceptMarketing"
           className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
         >
-          אני מאשר/ת קבלת עדכונים לגבי ההרשמה שלי, תוכן שיווקי והטבות באמצעות דוא"ל והודעות SMS *
+          אני מאשר/ת קבלת עדכונים לגבי ההרשמה שלי, תוכן שיווקי והטבות באמצעות דוא"ל והודעות Whatsapp *
         </Label>
       </div>
 
