@@ -27,15 +27,17 @@ export const useFormState = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type, checked } = e.target as HTMLInputElement;
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
     
     if (type === "checkbox") {
-      // Directly use the checked property for checkboxes
+      // For checkbox inputs, use the checked property
       setFormData(prev => ({
         ...prev,
         [name]: checked
       }));
     } else {
+      // For other input types, use the value property
       setFormData(prev => ({
         ...prev,
         [name]: value
