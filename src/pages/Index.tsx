@@ -17,6 +17,9 @@ export interface NotificationState {
   isOpen: boolean;
   title: string;
   description: string;
+  userName?: string;
+  userPhone?: string;
+  showWelcomeMessage?: boolean;
 }
 
 export const useNotification = () => {
@@ -24,13 +27,25 @@ export const useNotification = () => {
     isOpen: false,
     title: "",
     description: "",
+    userName: "",
+    userPhone: "",
+    showWelcomeMessage: false,
   });
 
-  const showNotification = (title: string, description: string) => {
+  const showNotification = (
+    title: string, 
+    description: string,
+    userName?: string,
+    userPhone?: string,
+    showWelcomeMessage?: boolean
+  ) => {
     setNotification({
       isOpen: true,
       title,
       description,
+      userName,
+      userPhone,
+      showWelcomeMessage,
     });
   };
 
@@ -85,6 +100,9 @@ const Index = () => {
         description={notification.description}
         isOpen={notification.isOpen}
         onClose={hideNotification}
+        userName={notification.userName}
+        userPhone={notification.userPhone}
+        showWelcomeMessage={notification.showWelcomeMessage}
       />
     </div>
   );
