@@ -9,7 +9,7 @@ import { submitSignupForm } from "@/services/formSubmission";
 import { toast } from "sonner";
 
 interface MainCtaSectionProps {
-  showNotification?: (title: string, description: string) => void;
+  showNotification?: (title: string, description: string, userName?: string, userPhone?: string, showWelcomeMessage?: boolean) => void;
 }
 
 const MainCtaSection = ({ showNotification }: MainCtaSectionProps) => {
@@ -95,7 +95,6 @@ const MainCtaSection = ({ showNotification }: MainCtaSectionProps) => {
         return Promise.reject(new Error("חסר ותק"));
       }
       
-      // Validate marketing consent
       if (!formData.acceptMarketing) {
         const errorMsg = "נא לאשר קבלת עדכונים ותוכן שיווקי";
         if (showNotification) {
@@ -113,10 +112,18 @@ const MainCtaSection = ({ showNotification }: MainCtaSectionProps) => {
         await submitSignupForm(formData, workFields, workRegions, utmParams);
         
         const successMsg = "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה.";
+        
+        // Get the user's full name and phone for the personalized message
+        const userName = `${formData.firstName} ${formData.lastName}`.trim();
+        const userPhone = formData.phone || "";
+        
         if (showNotification) {
           showNotification(
             "הרשמה בוצעה בהצלחה",
-            successMsg
+            successMsg,
+            userName,
+            userPhone,
+            true // Show the welcome message
           );
         } else {
           toast.success(successMsg);

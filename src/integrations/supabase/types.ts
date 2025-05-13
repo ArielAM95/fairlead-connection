@@ -117,6 +117,94 @@ export type Database = {
         }
         Relationships: []
       }
+      internal_crm: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          is_super_admin: boolean
+          name: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          is_super_admin?: boolean
+          name?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          is_super_admin?: boolean
+          name?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      lead_payments: {
+        Row: {
+          commission_amount: number
+          created_at: string
+          final_amount: number
+          id: string
+          lead_id: string
+          payment_method: string
+          professional_id: string
+          proposal_id: string
+          share_percentage: number
+        }
+        Insert: {
+          commission_amount?: number
+          created_at?: string
+          final_amount: number
+          id?: string
+          lead_id: string
+          payment_method: string
+          professional_id: string
+          proposal_id: string
+          share_percentage?: number
+        }
+        Update: {
+          commission_amount?: number
+          created_at?: string
+          final_amount?: number
+          id?: string
+          lead_id?: string
+          payment_method?: string
+          professional_id?: string
+          proposal_id?: string
+          share_percentage?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_payments_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_payments_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_payments_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
           budget: number | null
@@ -305,6 +393,7 @@ export type Database = {
           image_url: string | null
           is_verified: boolean | null
           location: string
+          marketing_consent: boolean | null
           name: string
           phone_number: string | null
           profession: string
@@ -332,6 +421,7 @@ export type Database = {
           image_url?: string | null
           is_verified?: boolean | null
           location: string
+          marketing_consent?: boolean | null
           name: string
           phone_number?: string | null
           profession: string
@@ -359,6 +449,7 @@ export type Database = {
           image_url?: string | null
           is_verified?: boolean | null
           location?: string
+          marketing_consent?: boolean | null
           name?: string
           phone_number?: string | null
           profession?: string
@@ -415,6 +506,36 @@ export type Database = {
         }
         Relationships: []
       }
+      proposal_reminders: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_scheduled: boolean | null
+          last_reminder: string | null
+          proposal_id: string
+          proposal_type: string
+          reminder_count: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_scheduled?: boolean | null
+          last_reminder?: string | null
+          proposal_id: string
+          proposal_type: string
+          reminder_count?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_scheduled?: boolean | null
+          last_reminder?: string | null
+          proposal_id?: string
+          proposal_type?: string
+          reminder_count?: number | null
+        }
+        Relationships: []
+      }
       proposals: {
         Row: {
           created_at: string
@@ -427,6 +548,8 @@ export type Database = {
           price: number
           professional_id: string | null
           sample_image_url: string | null
+          scheduled_date: string | null
+          scheduled_time: string | null
           status: string
         }
         Insert: {
@@ -440,6 +563,8 @@ export type Database = {
           price: number
           professional_id?: string | null
           sample_image_url?: string | null
+          scheduled_date?: string | null
+          scheduled_time?: string | null
           status?: string
         }
         Update: {
@@ -453,6 +578,8 @@ export type Database = {
           price?: number
           professional_id?: string | null
           sample_image_url?: string | null
+          scheduled_date?: string | null
+          scheduled_time?: string | null
           status?: string
         }
         Relationships: [
@@ -481,7 +608,10 @@ export type Database = {
           price: string
           professional_id: string
           request_id: string
+          request_status: string | null
           sample_image_url: string | null
+          scheduled_date: string | null
+          scheduled_time: string | null
           status: string
           updated_at: string
         }
@@ -493,7 +623,10 @@ export type Database = {
           price: string
           professional_id: string
           request_id: string
+          request_status?: string | null
           sample_image_url?: string | null
+          scheduled_date?: string | null
+          scheduled_time?: string | null
           status?: string
           updated_at?: string
         }
@@ -505,7 +638,10 @@ export type Database = {
           price?: string
           professional_id?: string
           request_id?: string
+          request_status?: string | null
           sample_image_url?: string | null
+          scheduled_date?: string | null
+          scheduled_time?: string | null
           status?: string
           updated_at?: string
         }
@@ -695,9 +831,30 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_internal_user: {
+        Args: {
+          user_email: string
+          user_name?: string
+          make_super_admin?: boolean
+        }
+        Returns: string
+      }
+      add_internal_user_by_email: {
+        Args: {
+          caller_email: string
+          new_user_email: string
+          user_name?: string
+          make_super_admin?: boolean
+        }
+        Returns: Json
+      }
       check_admin_status: {
         Args: { user_id_param: string }
         Returns: boolean
+      }
+      check_internal_email: {
+        Args: { email_param: string }
+        Returns: Json
       }
       check_is_admin_user: {
         Args: { user_id_param: string }
@@ -723,9 +880,17 @@ export type Database = {
         Args: { user_id_param: string }
         Returns: boolean
       }
+      check_user_is_internal_super_admin: {
+        Args: { user_id_param: string }
+        Returns: boolean
+      }
       check_user_is_super_admin: {
         Args: { user_id_param: string }
         Returns: boolean
+      }
+      create_first_internal_super_admin: {
+        Args: { admin_email: string; admin_name?: string }
+        Returns: string
       }
       create_first_super_admin: {
         Args: { admin_email: string }
@@ -775,6 +940,14 @@ export type Database = {
         Returns: boolean
       }
       is_admin_safe: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      is_internal_super_admin_check: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      is_internal_user_check: {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }

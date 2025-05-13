@@ -2,12 +2,16 @@
 import React from "react";
 import { X, Facebook, Instagram } from "lucide-react";
 import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
 
 interface NotificationPopupProps {
   title: string;
   description: string;
   isOpen: boolean;
   onClose: () => void;
+  userName?: string;
+  userPhone?: string;
+  showWelcomeMessage?: boolean;
 }
 
 const NotificationPopup = ({
@@ -15,6 +19,9 @@ const NotificationPopup = ({
   description,
   isOpen,
   onClose,
+  userName = "",
+  userPhone = "",
+  showWelcomeMessage = false,
 }: NotificationPopupProps) => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -29,12 +36,18 @@ const NotificationPopup = ({
     }
   }, [isOpen]);
 
+  // Format the user's first name for the welcome message
+  const firstName = userName.split(" ")[0] || "";
+  
+  // Create the document upload URL with user parameters
+  const documentUploadUrl = `https://docs.ofair.co.il/?phone=${encodeURIComponent(userPhone || "")}&name=${encodeURIComponent(userName || "")}`;
+
   if (!isVisible) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 animate-fade-in">
       <div
-        className={`bg-white rounded-lg shadow-lg max-w-md w-full mx-4 p-6 ${
+        className={`bg-white rounded-lg shadow-lg max-w-md w-full mx-4 p-6 max-h-[90vh] overflow-y-auto ${
           isOpen ? "animate-scale-in" : "animate-scale-out"
         }`}
       >
@@ -47,6 +60,54 @@ const NotificationPopup = ({
             <X className="h-5 w-5" />
           </button>
         </div>
+        
+        {showWelcomeMessage && (
+          <div className="mb-6">
+            <h4 className="text-xl font-bold mb-3">כמעט בפנים! 😎 סוגרים פינה עם ההרשמה ל-oFair</h4>
+            <p className="font-medium mb-3">היי {firstName}! 👑</p>
+            
+            <p className="mb-3">כיף שבחרת להצטרף ל-oFair – המקום שבו בעלי מקצוע כמוך עושים יותר כסף, מבזבזים פחות זמן, ופשוט... חיים טוב יותר! 🚀</p>
+            
+            <p className="mb-3">אבל רגע! לפני שאתה נכנס לעולם של לידים איכותיים ולקוחות שמחכים רק לך – יש לנו משימה קטנה:</p>
+            
+            <p className="font-medium mb-2">🎯 להשלים את ההרשמה ולתפוס מקום אצלנו בסטייל:</p>
+            
+            <ul className="mb-4 list-none">
+              <li className="mb-1">✅ תעלה לפחות 5 חשבוניות של עבודות שביצעת (ככל שיותר – יותר טוב! זה מראה שאתה תותח רציני).</li>
+              <li>✅ תוסיף תעודות הסמכה / רישיון עבודה (אם יש – מושלם! זה עושה אותך הרבה יותר אטרקטיבי ללקוחות).</li>
+            </ul>
+            
+            <p className="font-medium mb-2">💡 למה זה חשוב?</p>
+            <p className="mb-3">כי אנחנו כאן בשביל להרים את הרמה ולדאוג שלקוחות יקבלו רק את הקרם דה לה קרם. ואתה שם, נכון? 😉</p>
+            
+            <p className="font-medium mb-2">🔥 ומה יוצא לך מזה?</p>
+            <p className="mb-3">אם הציון שלך מעל 4.2 מתוך 5, מחכה לך הפתעה:</p>
+            
+            <ul className="mb-4 list-none">
+              <li className="mb-1">✨ 50% הנחה על דמי ההקמה (כי למה לא לחסוך?)</li>
+              <li>✨ הדרכה אישית שתראה לך איך לקרוע את המערכת ולהתחיל להרוויח כמו שצריך!</li>
+            </ul>
+            
+            <p className="font-medium mb-2">📤 יאללה, תעלה את הקבצים כאן – ונגמר הסיפור:</p>
+            <p className="mb-4">
+              <a 
+                href={documentUploadUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline font-medium"
+              >
+                🔗 להעלאת חשבוניות
+              </a>
+            </p>
+            
+            <p className="mb-4">נתקעת? יש שאלה? אנחנו כאן תמיד, רק תגיד!</p>
+            
+            <p className="font-medium">oFair – כי לעבוד חכם זה להרוויח יותר. 😉🚀</p>
+            
+            <div className="border-t border-gray-200 my-6"></div>
+          </div>
+        )}
+        
         <div className="text-gray-700 mb-4">{description}</div>
         <p className="text-sm text-muted-foreground mt-1">נשלח מייל עם הנחיות להמשך התהליך (אם לא מוצאים ממליצים לבדוק גם בספאם)</p>
         
