@@ -5,7 +5,6 @@ import Index from './pages/Index';
 import NotFound from './pages/NotFound';
 import Terms from './pages/Terms';
 import ScrollToTop from './components/ScrollToTop';
-import { Toaster } from "./components/ui/sonner";
 import './App.css';
 
 function App() {
@@ -17,7 +16,6 @@ function App() {
         <Route path="/terms" element={<Terms />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <Toaster position="top-center" closeButton richColors />
     </Router>
   );
 }

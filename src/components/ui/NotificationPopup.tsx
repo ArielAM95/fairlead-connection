@@ -51,8 +51,8 @@ const NotificationPopup = ({
           isOpen ? "animate-scale-in" : "animate-scale-out"
         }`}
       >
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">{title}</h3>
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-bold">{title}</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 transition-colors"
@@ -61,76 +61,36 @@ const NotificationPopup = ({
           </button>
         </div>
         
-        {showWelcomeMessage && (
-          <div className="mb-6">
-            <h4 className="text-xl font-bold mb-3">כמעט בפנים! 😎 סוגרים פינה עם ההרשמה ל-oFair</h4>
-            <p className="font-medium mb-3">היי {firstName}! 👑</p>
+        <div className="py-4">
+          {showWelcomeMessage && (
+            <div>
+              <p className="text-center">ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה.</p>
+              <p className="mt-4 text-center font-medium">נשלח מייל עם הנחיות להמשך התהליך (אם לא מוצאים ממליצים לבדוק גם בספאם)</p>
+            </div>
+          )}
+          
+          <div className="mt-4 text-center">
+            <p className="mb-2 font-medium">ממש יעזור אם תעקבו אחרינו ברשתות החברתיות</p>
+            <p className="mb-4">אנחנו איתכם ואתם איתנו - ככה בעז״ה נעשה ונצליח</p>
             
-            <p className="mb-3">כיף שבחרת להצטרף ל-oFair – המקום שבו בעלי מקצוע כמוך עושים יותר כסף, מבזבזים פחות זמן, ופשוט... חיים טוב יותר! 🚀</p>
-            
-            <p className="mb-3">אבל רגע! לפני שאתה נכנס לעולם של לידים איכותיים ולקוחות שמחכים רק לך – יש לנו משימה קטנה:</p>
-            
-            <p className="font-medium mb-2">🎯 להשלים את ההרשמה ולתפוס מקום אצלנו בסטייל:</p>
-            
-            <ul className="mb-4 list-none">
-              <li className="mb-1">✅ תעלה לפחות 5 חשבוניות של עבודות שביצעת (ככל שיותר – יותר טוב! זה מראה שאתה תותח רציני).</li>
-              <li>✅ תוסיף תעודות הסמכה / רישיון עבודה (אם יש – מושלם! זה עושה אותך הרבה יותר אטרקטיבי ללקוחות).</li>
-            </ul>
-            
-            <p className="font-medium mb-2">💡 למה זה חשוב?</p>
-            <p className="mb-3">כי אנחנו כאן בשביל להרים את הרמה ולדאוג שלקוחות יקבלו רק את הקרם דה לה קרם. ואתה שם, נכון? 😉</p>
-            
-            <p className="font-medium mb-2">🔥 ומה יוצא לך מזה?</p>
-            <p className="mb-3">אם הציון שלך מעל 4.2 מתוך 5, מחכה לך הפתעה:</p>
-            
-            <ul className="mb-4 list-none">
-              <li className="mb-1">✨ 50% הנחה על דמי ההקמה (כי למה לא לחסוך?)</li>
-              <li>✨ הדרכה אישית שתראה לך איך לקרוע את המערכת ולהתחיל להרוויח כמו שצריך!</li>
-            </ul>
-            
-            <p className="font-medium mb-2">📤 יאללה, תעלה את הקבצים כאן – ונגמר הסיפור:</p>
-            <p className="mb-4">
+            <div className="flex justify-center space-x-4 mt-2">
               <a 
-                href={documentUploadUrl} 
+                href="https://www.facebook.com/profile.php?id=61573771175534#" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:underline font-medium"
+                className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors"
               >
-                🔗 להעלאת חשבוניות
+                <Facebook size={18} />
               </a>
-            </p>
-            
-            <p className="mb-4">נתקעת? יש שאלה? אנחנו כאן תמיד, רק תגיד!</p>
-            
-            <p className="font-medium">oFair – כי לעבוד חכם זה להרוויח יותר. 😉🚀</p>
-            
-            <div className="border-t border-gray-200 my-6"></div>
-          </div>
-        )}
-        
-        <div className="text-gray-700 mb-4">{description}</div>
-        <p className="text-sm text-muted-foreground mt-1">נשלח מייל עם הנחיות להמשך התהליך (אם לא מוצאים ממליצים לבדוק גם בספאם)</p>
-        
-        <div className="mt-3 pt-3 border-t border-gray-200 text-center">
-          <p className="text-sm font-medium mb-2">ממש יעזור אם תעקבו אחרינו ברשתות החברתיות</p>
-          <p className="text-sm mb-3">אנחנו איתכם ואתם איתנו - ככה בעז״ה נעשה ונצליח</p>
-          <div className="flex gap-2 mt-2 justify-center">
-            <a 
-              href="https://www.facebook.com/profile.php?id=61573771175534#" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors"
-            >
-              <Facebook size={18} />
-            </a>
-            <a 
-              href="https://www.instagram.com/ofair_il?fbclid=IwZXh0bgNhZW0CMTAAAR1Hdq28l9YzB4sHU41YXjS5UYVD_LihmktdeE0cqacfrxkIm1ryJ6_Y3qQ_aem_uZmC0wj1Asq9SbLb9ZLcWg" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white p-2 rounded-full hover:opacity-90 transition-opacity"
-            >
-              <Instagram size={18} />
-            </a>
+              <a 
+                href="https://www.instagram.com/ofair_il?fbclid=IwZXh0bgNhZW0CMTAAAR1Hdq28l9YzB4sHU41YXjS5UYVD_LihmktdeE0cqacfrxkIm1ryJ6_Y3qQ_aem_uZmC0wj1Asq9SbLb9ZLcWg" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white p-2 rounded-full hover:opacity-90 transition-opacity"
+              >
+                <Instagram size={18} />
+              </a>
+            </div>
           </div>
         </div>
       </div>
