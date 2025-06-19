@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -11,11 +10,6 @@ const Terms = () => {
   useEffect(() => {
     document.title = "תקנון ותנאי שימוש - oFair";
     window.scrollTo(0, 0);
-    
-    // Track page view with Meta Pixel
-    if (typeof window !== 'undefined' && window.fbq) {
-      window.fbq('track', 'PageView');
-    }
   }, []);
 
   return (
