@@ -147,12 +147,46 @@ export type Database = {
         }
         Relationships: []
       }
+      israeli_settlements: {
+        Row: {
+          council_code: number | null
+          created_at: string | null
+          id: string
+          name: string
+          original_district: string | null
+          region: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          council_code?: number | null
+          created_at?: string | null
+          id?: string
+          name: string
+          original_district?: string | null
+          region: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          council_code?: number | null
+          created_at?: string | null
+          id?: string
+          name?: string
+          original_district?: string | null
+          region?: string
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       lead_payments: {
         Row: {
           commission_amount: number
           created_at: string
           final_amount: number
           id: string
+          invoice_url: string | null
           lead_id: string
           payment_method: string
           professional_id: string
@@ -164,6 +198,7 @@ export type Database = {
           created_at?: string
           final_amount: number
           id?: string
+          invoice_url?: string | null
           lead_id: string
           payment_method: string
           professional_id: string
@@ -175,6 +210,7 @@ export type Database = {
           created_at?: string
           final_amount?: number
           id?: string
+          invoice_url?: string | null
           lead_id?: string
           payment_method?: string
           professional_id?: string
@@ -217,8 +253,12 @@ export type Database = {
           description: string
           id: string
           image_url: string | null
+          image_urls: string[] | null
+          latitude: number | null
           location: string
+          longitude: number | null
           notes: string | null
+          profession: string | null
           professional_id: string | null
           share_percentage: number
           status: string
@@ -237,8 +277,12 @@ export type Database = {
           description: string
           id?: string
           image_url?: string | null
+          image_urls?: string[] | null
+          latitude?: number | null
           location: string
+          longitude?: number | null
           notes?: string | null
+          profession?: string | null
           professional_id?: string | null
           share_percentage?: number
           status?: string
@@ -257,8 +301,12 @@ export type Database = {
           description?: string
           id?: string
           image_url?: string | null
+          image_urls?: string[] | null
+          latitude?: number | null
           location?: string
+          longitude?: number | null
           notes?: string | null
+          profession?: string | null
           professional_id?: string | null
           share_percentage?: number
           status?: string
@@ -278,6 +326,7 @@ export type Database = {
       }
       notifications: {
         Row: {
+          client_details: Json | null
           created_at: string
           description: string
           id: string
@@ -289,6 +338,7 @@ export type Database = {
           type: string
         }
         Insert: {
+          client_details?: Json | null
           created_at?: string
           description: string
           id?: string
@@ -300,6 +350,7 @@ export type Database = {
           type: string
         }
         Update: {
+          client_details?: Json | null
           created_at?: string
           description?: string
           id?: string
@@ -319,6 +370,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      professional_notification_areas: {
+        Row: {
+          area_name: string
+          created_at: string
+          id: string
+          is_active: boolean | null
+          latitude: number | null
+          longitude: number | null
+          professional_id: string
+          radius_km: number | null
+          updated_at: string
+        }
+        Insert: {
+          area_name: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          professional_id: string
+          radius_km?: number | null
+          updated_at?: string
+        }
+        Update: {
+          area_name?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          professional_id?: string
+          radius_km?: number | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       professional_ratings: {
         Row: {
@@ -392,6 +479,7 @@ export type Database = {
           image: string | null
           image_url: string | null
           is_verified: boolean | null
+          languages: string[]
           location: string
           marketing_consent: boolean | null
           name: string
@@ -420,6 +508,7 @@ export type Database = {
           image?: string | null
           image_url?: string | null
           is_verified?: boolean | null
+          languages?: string[]
           location: string
           marketing_consent?: boolean | null
           name: string
@@ -448,6 +537,7 @@ export type Database = {
           image?: string | null
           image_url?: string | null
           is_verified?: boolean | null
+          languages?: string[]
           location?: string
           marketing_consent?: boolean | null
           name?: string
@@ -534,7 +624,15 @@ export type Database = {
           proposal_type?: string
           reminder_count?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_proposal_reminders_proposal_id"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "proposals"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       proposals: {
         Row: {
@@ -545,6 +643,7 @@ export type Database = {
           lead_id: string | null
           lower_price_value: number | null
           lower_price_willing: boolean | null
+          media_urls: string[] | null
           price: number
           professional_id: string | null
           sample_image_url: string | null
@@ -560,6 +659,7 @@ export type Database = {
           lead_id?: string | null
           lower_price_value?: number | null
           lower_price_willing?: boolean | null
+          media_urls?: string[] | null
           price: number
           professional_id?: string | null
           sample_image_url?: string | null
@@ -575,6 +675,7 @@ export type Database = {
           lead_id?: string | null
           lower_price_value?: number | null
           lower_price_willing?: boolean | null
+          media_urls?: string[] | null
           price?: number
           professional_id?: string | null
           sample_image_url?: string | null
@@ -599,12 +700,52 @@ export type Database = {
           },
         ]
       }
+      quote_payments: {
+        Row: {
+          commission_amount: number
+          created_at: string
+          final_amount: number
+          id: string
+          invoice_url: string | null
+          payment_method: string
+          professional_id: string
+          quote_id: string | null
+          request_id: string
+          share_percentage: number
+        }
+        Insert: {
+          commission_amount?: number
+          created_at?: string
+          final_amount: number
+          id?: string
+          invoice_url?: string | null
+          payment_method: string
+          professional_id: string
+          quote_id?: string | null
+          request_id: string
+          share_percentage?: number
+        }
+        Update: {
+          commission_amount?: number
+          created_at?: string
+          final_amount?: number
+          id?: string
+          invoice_url?: string | null
+          payment_method?: string
+          professional_id?: string
+          quote_id?: string | null
+          request_id?: string
+          share_percentage?: number
+        }
+        Relationships: []
+      }
       quotes: {
         Row: {
           created_at: string
           description: string
           estimated_time: string | null
           id: string
+          media_urls: string[] | null
           price: string
           professional_id: string
           request_id: string
@@ -620,6 +761,7 @@ export type Database = {
           description: string
           estimated_time?: string | null
           id?: string
+          media_urls?: string[] | null
           price: string
           professional_id: string
           request_id: string
@@ -635,6 +777,7 @@ export type Database = {
           description?: string
           estimated_time?: string | null
           id?: string
+          media_urls?: string[] | null
           price?: string
           professional_id?: string
           request_id?: string
@@ -720,7 +863,10 @@ export type Database = {
           date: string
           description: string
           id: string
+          latitude: number | null
           location: string
+          longitude: number | null
+          media_urls: string[] | null
           status: string
           timing: string | null
           title: string
@@ -734,7 +880,10 @@ export type Database = {
           date?: string
           description: string
           id?: string
+          latitude?: number | null
           location: string
+          longitude?: number | null
+          media_urls?: string[] | null
           status?: string
           timing?: string | null
           title: string
@@ -748,7 +897,10 @@ export type Database = {
           date?: string
           description?: string
           id?: string
+          latitude?: number | null
           location?: string
+          longitude?: number | null
+          media_urls?: string[] | null
           status?: string
           timing?: string | null
           title?: string
@@ -826,9 +978,93 @@ export type Database = {
         }
         Relationships: []
       }
+      work_completion_reminders: {
+        Row: {
+          completion_form_sent: boolean | null
+          created_at: string
+          id: string
+          proposal_id: string
+          proposal_type: string
+          reminder_sent: boolean | null
+          scheduled_work_time: string
+          updated_at: string
+        }
+        Insert: {
+          completion_form_sent?: boolean | null
+          created_at?: string
+          id?: string
+          proposal_id: string
+          proposal_type: string
+          reminder_sent?: boolean | null
+          scheduled_work_time: string
+          updated_at?: string
+        }
+        Update: {
+          completion_form_sent?: boolean | null
+          created_at?: string
+          id?: string
+          proposal_id?: string
+          proposal_type?: string
+          reminder_sent?: boolean | null
+          scheduled_work_time?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      work_completions: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          professional_id: string
+          proposal_id: string | null
+          proposal_type: string | null
+          referral_id: string | null
+          status: string
+          updated_at: string
+          work_title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          professional_id: string
+          proposal_id?: string | null
+          proposal_type?: string | null
+          referral_id?: string | null
+          status: string
+          updated_at?: string
+          work_title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          professional_id?: string
+          proposal_id?: string | null
+          proposal_type?: string | null
+          referral_id?: string | null
+          status?: string
+          updated_at?: string
+          work_title?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      settlement_statistics: {
+        Row: {
+          cities: number | null
+          cities_percentage: number | null
+          local_councils: number | null
+          local_councils_percentage: number | null
+          region: string | null
+          regional_councils: number | null
+          regional_councils_percentage: number | null
+          total_settlements: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       add_internal_user: {
@@ -847,6 +1083,10 @@ export type Database = {
           make_super_admin?: boolean
         }
         Returns: Json
+      }
+      calculate_distance_km: {
+        Args: { lat1: number; lon1: number; lat2: number; lon2: number }
+        Returns: number
       }
       check_admin_status: {
         Args: { user_id_param: string }

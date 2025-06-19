@@ -66,11 +66,6 @@ const Index = () => {
   useEffect(() => {
     document.title = "oFair - מהפכת שיתוף הלידים לבעלי מקצוע";
     
-    // Track page view with Meta Pixel
-    if (typeof window !== 'undefined' && window.fbq) {
-      window.fbq('track', 'PageView');
-    }
-    
     // Log UTM parameters for debugging
     const urlParams = new URLSearchParams(window.location.search);
     const utmParams: Record<string, string> = {};
