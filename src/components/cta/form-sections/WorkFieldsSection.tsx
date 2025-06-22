@@ -1,7 +1,5 @@
 
-import FieldSelector from "../FieldSelector";
-import { Input } from "@/components/ui/input";
-import { workFields } from "../data/workFields";
+import { DynamicWorkFieldsSelector } from "../DynamicWorkFieldsSelector";
 
 interface WorkFieldsSectionProps {
   selectedFields: string[];
@@ -18,34 +16,13 @@ export const WorkFieldsSection = ({
   otherWorkField,
   onChange
 }: WorkFieldsSectionProps) => {
-  // הוסף את האופציה "אחר" לרשימת התחומים
-  const fieldsWithOther = [
-    ...workFields,
-    { id: "other", label: "אחר" }
-  ];
-
   return (
-    <div className="space-y-4">
-      <FieldSelector
-        fields={fieldsWithOther}
-        selectedFields={selectedFields}
-        onToggleField={onToggleField}
-        label="תחומי עבודה *"
-        showError={selectedFields.length === 0}
-      />
-      
-      {showOtherWorkField && (
-        <div>
-          <Input
-            id="otherWorkField"
-            name="otherWorkField"
-            value={otherWorkField}
-            onChange={onChange}
-            placeholder="נא פרט תחום עבודה אחר"
-            className="bg-gray-50 border-gray-200"
-          />
-        </div>
-      )}
-    </div>
+    <DynamicWorkFieldsSelector
+      selectedFields={selectedFields}
+      onToggleField={onToggleField}
+      showOtherWorkField={showOtherWorkField}
+      otherWorkField={otherWorkField}
+      onChange={onChange}
+    />
   );
 };
