@@ -1,3 +1,4 @@
+
 import { ContactFormData } from "@/components/contact/ContactForm";
 import { SignupFormData } from "@/types/signupForm";
 import { supabase } from "@/integrations/supabase/client";
@@ -106,40 +107,57 @@ export const submitSignupForm = async (
     
     console.log("Prepared professional data for Supabase:", professionalData);
     
-    // First check if the professional already exists with this email
-    const { data: existingProfessional, error: checkError } = await supabase
+    // First check if the professional already exists with this email or phone
+    const { data: existingByEmail, error: checkEmailError } = await supabase
       .from('professionals')
-      .select('id, email')
+      .select('id, email, phone_number')
       .eq('email', professionalData.email)
       .maybeSingle();
       
-    if (checkError) {
-      console.error("Error checking existing professional:", checkError);
+    if (checkEmailError) {
+      console.error("Error checking existing professional by email:", checkEmailError);
+    }
+
+    const { data: existingByPhone, error: checkPhoneError } = await supabase
+      .from('professionals')
+      .select('id, email, phone_number')
+      .eq('phone_number', professionalData.phone_number)
+      .maybeSingle();
+      
+    if (checkPhoneError) {
+      console.error("Error checking existing professional by phone:", checkPhoneError);
+    }
+    
+    // Check if user already exists
+    if (existingByEmail?.id || existingByPhone?.id) {
+      throw new Error("היי! נראה שנרשמתם כבר בעבר 😊 המספר טלפון או המייל הזה כבר מופיע במערכת שלנו. בדקו את המייל שלכם (גם בספאם) או צרו איתנו קשר בוואטסאפ אם אתם זקוקים לעזרה נוספת.");
     }
     
     let result;
     
-    if (existingProfessional?.id) {
-      // Update existing professional
-      console.log("Professional already exists with ID:", existingProfessional.id, "- updating record");
-      
-      result = await supabase
-        .from('professionals')
-        .update(professionalData)
-        .eq('id', existingProfessional.id);
-    } else {
-      // Insert new professional
-      console.log("No existing professional found - inserting new record");
-      
-      result = await supabase
-        .from('professionals')
-        .insert(professionalData);
-    }
+    // Insert new professional
+    console.log("No existing professional found - inserting new record");
+    
+    result = await supabase
+      .from('professionals')
+      .insert(professionalData);
     
     if (result.error) {
       console.error("Error with Supabase operation:", result.error);
       console.error("Error code:", result.error.code);
       console.error("Error details:", result.error.message, result.error.details);
+      
+      // Handle specific database constraint errors with user-friendly messages
+      if (result.error.code === '23505') { // unique constraint violation
+        if (result.error.message.includes('phone')) {
+          throw new Error("היי! נראה שנרשמתם כבר בעבר 😊 המספר טלפון הזה כבר מופיע במערכת שלנו. בדקו את המייל שלכם (גם בספאם) או צרו איתנו קשר בוואטסאפ אם אתם זקוקים לעזרה נוספת.");
+        } else if (result.error.message.includes('email')) {
+          throw new Error("היי! נראה שנרשמתם כבר בעבר 😊 המייל הזה כבר מופיע במערכת שלנו. בדקו את המייל שלכם (גם בספאם) או צרו איתנו קשר בוואטסאפ אם אתם זקוקים לעזרה נוספת.");
+        } else {
+          throw new Error("היי! נראה שנרשמתם כבר בעבר 😊 הפרטים שלכם כבר מופיעים במערכת שלנו. בדקו את המייל שלכם (גם בספאם) או צרו איתנו קשר בוואטסאפ אם אתם זקוקים לעזרה נוספת.");
+        }
+      }
+      
       throw new Error(`שגיאה בשמירת הנתונים: ${result.error.message}`);
     }
 
