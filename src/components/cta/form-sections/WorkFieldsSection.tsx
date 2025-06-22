@@ -18,10 +18,16 @@ export const WorkFieldsSection = ({
   otherWorkField,
   onChange
 }: WorkFieldsSectionProps) => {
+  // הוסף את האופציה "אחר" לרשימת התחומים
+  const fieldsWithOther = [
+    ...workFields,
+    { id: "other", label: "אחר" }
+  ];
+
   return (
     <div className="space-y-4">
       <FieldSelector
-        fields={workFields}
+        fields={fieldsWithOther}
         selectedFields={selectedFields}
         onToggleField={onToggleField}
         label="תחומי עבודה *"
