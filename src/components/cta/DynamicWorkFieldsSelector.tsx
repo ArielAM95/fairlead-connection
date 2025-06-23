@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
 import { X, Search } from "lucide-react";
@@ -41,6 +42,11 @@ export const DynamicWorkFieldsSelector = ({
   // Get labels for selected fields
   const getSelectedFieldsLabels = () => {
     return selectedFields.map(fieldId => {
+      // Check if it's a custom field (starts with "other:")
+      if (fieldId.startsWith("other:")) {
+        return fieldId.replace("other:", "");
+      }
+      // Check if it's the old "other" field
       if (fieldId === "other") {
         return otherWorkField || "אחר";
       }
@@ -57,9 +63,10 @@ export const DynamicWorkFieldsSelector = ({
     inputRef.current?.focus();
   };
 
-  // Handle "other" option
+  // Handle "other" option - create unique ID for each custom field
   const handleOtherSelect = () => {
-    onToggleField("other");
+    const customFieldId = `other:${searchTerm.trim()}`;
+    onToggleField(customFieldId);
     setSearchTerm("");
     setIsDropdownOpen(false);
     setShowOtherOption(false);
@@ -153,7 +160,7 @@ export const DynamicWorkFieldsSelector = ({
                 onClick={handleOtherSelect}
                 className="w-full text-right px-3 py-2 text-sm hover:bg-gray-50 text-ofair-600"
               >
-                אחר: "{searchTerm}"
+                הוסף: "{searchTerm}"
               </button>
             ) : (
               <div className="px-3 py-2 text-sm text-gray-500 text-right">
