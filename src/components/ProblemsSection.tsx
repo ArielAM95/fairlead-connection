@@ -46,54 +46,30 @@ const ProblemsSection = () => {
   ];
 
   return (
-    <section id="problems" className="section-padding morphing-background" ref={sectionRef}>
-      {/* Background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-10 left-10 w-72 h-72 bg-tertiary/10 rounded-full blur-3xl floating-element"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-quaternary/10 rounded-full blur-3xl floating-element" style={{animationDelay: '3s'}}></div>
-      </div>
-      
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
-        <div className="max-w-4xl mx-auto text-center mb-20">
-          <div className="text-blob scroll-fade">
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-6">
-              מה הבעיות שאנחנו פותרים עבורך?
-            </h2>
-          </div>
+    <section id="problems" className="section-padding bg-white" ref={sectionRef}>
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-ofair-900 scroll-fade">מה הבעיות שאנחנו פותרים עבורך?</h2>
         </div>
 
-        <div className="space-y-16 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {problems.map((item, index) => (
-            <div key={item.id} className="relative">
-              {/* Problem card with organic shape */}
-              <div 
-                className={`feature-blob scroll-fade ${index % 2 === 0 ? 'mr-auto' : 'ml-auto'} max-w-4xl`}
-                style={{ transitionDelay: `${index * 200}ms` }}
-              >
-                {/* Floating number */}
-                <div className={`absolute -top-4 ${index % 2 === 0 ? '-right-4' : '-left-4'} w-16 h-16 bg-primary-gradient rounded-full flex items-center justify-center text-white text-xl font-bold shadow-glow pulsing-glow`}>
+            <div 
+              key={item.id}
+              className={`bg-white rounded-xl p-6 border border-gray-100 shadow-subtle hover:shadow-card transition-all duration-300 scroll-fade ${index >= 3 ? 'md:col-span-3/2' : ''}`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+            >
+              <div className="mb-4">
+                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-ofair-900 text-white text-sm font-medium">
                   {item.id}
-                </div>
-                
-                {/* Problem text */}
-                <div className="mb-6">
-                  <h3 className="text-2xl md:text-3xl font-bold text-primary mb-4">
-                    {item.problem}
-                  </h3>
-                </div>
-                
-                {/* Solution blob */}
-                <div className="text-blob bg-secondary-gradient text-white">
-                  <p className="text-lg leading-relaxed">
-                    {item.solution}
-                  </p>
-                </div>
+                </span>
               </div>
-              
-              {/* Connecting line */}
-              {index < problems.length - 1 && (
-                <div className={`absolute bottom-0 ${index % 2 === 0 ? 'left-1/2' : 'right-1/2'} w-px h-16 bg-gradient-to-b from-primary to-transparent transform translate-y-full`}></div>
-              )}
+              <h3 className="text-xl font-bold mb-3 text-ofair-900">
+                {item.problem}
+              </h3>
+              <p className="text-muted-foreground">
+                {item.solution}
+              </p>
             </div>
           ))}
         </div>
