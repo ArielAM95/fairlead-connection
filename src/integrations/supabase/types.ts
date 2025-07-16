@@ -7,6 +7,11 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instanciate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "12.2.3 (519615d)"
+  }
   public: {
     Tables: {
       accepted_quotes: {
@@ -117,6 +122,47 @@ export type Database = {
         }
         Relationships: []
       }
+      auth_tokens: {
+        Row: {
+          created_at: string | null
+          device_info: string | null
+          expires_at: string
+          id: string
+          is_active: boolean | null
+          last_used_at: string | null
+          professional_id: string | null
+          token: string
+        }
+        Insert: {
+          created_at?: string | null
+          device_info?: string | null
+          expires_at: string
+          id?: string
+          is_active?: boolean | null
+          last_used_at?: string | null
+          professional_id?: string | null
+          token: string
+        }
+        Update: {
+          created_at?: string | null
+          device_info?: string | null
+          expires_at?: string
+          id?: string
+          is_active?: boolean | null
+          last_used_at?: string | null
+          professional_id?: string | null
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "auth_tokens_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       internal_crm: {
         Row: {
           created_at: string
@@ -155,6 +201,7 @@ export type Database = {
           id: string
           invoice_url: string | null
           lead_id: string
+          notes: string | null
           payment_method: string
           professional_id: string
           proposal_id: string
@@ -167,6 +214,7 @@ export type Database = {
           id?: string
           invoice_url?: string | null
           lead_id: string
+          notes?: string | null
           payment_method: string
           professional_id: string
           proposal_id: string
@@ -179,6 +227,7 @@ export type Database = {
           id?: string
           invoice_url?: string | null
           lead_id?: string
+          notes?: string | null
           payment_method?: string
           professional_id?: string
           proposal_id?: string
@@ -331,6 +380,50 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "notifications_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      professional_certificates: {
+        Row: {
+          certificate_name: string
+          certificate_url: string
+          created_at: string
+          file_name: string
+          file_size: number | null
+          id: string
+          professional_id: string
+          updated_at: string
+          upload_date: string
+        }
+        Insert: {
+          certificate_name: string
+          certificate_url: string
+          created_at?: string
+          file_name: string
+          file_size?: number | null
+          id?: string
+          professional_id: string
+          updated_at?: string
+          upload_date?: string
+        }
+        Update: {
+          certificate_name?: string
+          certificate_url?: string
+          created_at?: string
+          file_name?: string
+          file_size?: number | null
+          id?: string
+          professional_id?: string
+          updated_at?: string
+          upload_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_professional_certificates_professional_id"
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
@@ -606,6 +699,7 @@ export type Database = {
           created_at: string
           description: string
           estimated_completion: string | null
+          final_amount: number | null
           id: string
           lead_id: string | null
           lower_price_value: number | null
@@ -622,6 +716,7 @@ export type Database = {
           created_at?: string
           description: string
           estimated_completion?: string | null
+          final_amount?: number | null
           id?: string
           lead_id?: string | null
           lower_price_value?: number | null
@@ -638,6 +733,7 @@ export type Database = {
           created_at?: string
           description?: string
           estimated_completion?: string | null
+          final_amount?: number | null
           id?: string
           lead_id?: string | null
           lower_price_value?: number | null
@@ -674,6 +770,7 @@ export type Database = {
           final_amount: number
           id: string
           invoice_url: string | null
+          notes: string | null
           payment_method: string
           professional_id: string
           quote_id: string | null
@@ -686,6 +783,7 @@ export type Database = {
           final_amount: number
           id?: string
           invoice_url?: string | null
+          notes?: string | null
           payment_method: string
           professional_id: string
           quote_id?: string | null
@@ -698,19 +796,29 @@ export type Database = {
           final_amount?: number
           id?: string
           invoice_url?: string | null
+          notes?: string | null
           payment_method?: string
           professional_id?: string
           quote_id?: string | null
           request_id?: string
           share_percentage?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_quote_payments_request_id"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "requests"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       quotes: {
         Row: {
           created_at: string
           description: string
           estimated_time: string | null
+          final_amount: number | null
           id: string
           media_urls: string[] | null
           price: string
@@ -727,6 +835,7 @@ export type Database = {
           created_at?: string
           description: string
           estimated_time?: string | null
+          final_amount?: number | null
           id?: string
           media_urls?: string[] | null
           price: string
@@ -743,6 +852,7 @@ export type Database = {
           created_at?: string
           description?: string
           estimated_time?: string | null
+          final_amount?: number | null
           id?: string
           media_urls?: string[] | null
           price?: string
@@ -981,8 +1091,10 @@ export type Database = {
       work_completions: {
         Row: {
           created_at: string
+          final_amount: number | null
           id: string
           notes: string | null
+          payment_method: string | null
           professional_id: string
           proposal_id: string | null
           proposal_type: string | null
@@ -993,8 +1105,10 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          final_amount?: number | null
           id?: string
           notes?: string | null
+          payment_method?: string | null
           professional_id: string
           proposal_id?: string | null
           proposal_type?: string | null
@@ -1005,8 +1119,10 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          final_amount?: number | null
           id?: string
           notes?: string | null
+          payment_method?: string | null
           professional_id?: string
           proposal_id?: string | null
           proposal_type?: string | null
@@ -1083,6 +1199,10 @@ export type Database = {
         Args: { user_id_param: string }
         Returns: boolean
       }
+      cleanup_expired_tokens: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       create_first_internal_super_admin: {
         Args: { admin_email: string; admin_name?: string }
         Returns: string
@@ -1093,6 +1213,74 @@ export type Database = {
       }
       create_super_admin: {
         Args: { admin_email_param: string }
+        Returns: string
+      }
+      fetch_active_leads: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          budget: number | null
+          category: string | null
+          client_address: string | null
+          client_name: string | null
+          client_phone: string | null
+          constraints: string | null
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          image_urls: string[] | null
+          latitude: number | null
+          location: string
+          longitude: number | null
+          notes: string | null
+          profession: string | null
+          professional_id: string | null
+          share_percentage: number
+          status: string
+          title: string
+          work_date: string | null
+          work_time: string | null
+        }[]
+      }
+      get_active_leads: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          budget: number | null
+          category: string | null
+          client_address: string | null
+          client_name: string | null
+          client_phone: string | null
+          constraints: string | null
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          image_urls: string[] | null
+          latitude: number | null
+          location: string
+          longitude: number | null
+          notes: string | null
+          profession: string | null
+          professional_id: string | null
+          share_percentage: number
+          status: string
+          title: string
+          work_date: string | null
+          work_time: string | null
+        }[]
+      }
+      get_client_details_for_proposal: {
+        Args:
+          | { proposal_id_param: string; proposal_type_param: string }
+          | {
+              proposal_id_param: string
+              proposal_type_param: string
+              token_param?: string
+            }
+        Returns: Json
+      }
+      get_current_professional_id_secure: {
+        Args: Record<PropertyKey, never> | { token_param?: string }
         Returns: string
       }
       get_professional_by_identifier: {
@@ -1126,8 +1314,29 @@ export type Database = {
           updated_at: string | null
         }[]
       }
+      insert_lead: {
+        Args: {
+          p_professional_id: string
+          p_title: string
+          p_description: string
+          p_location: string
+          p_budget: number
+          p_share_percentage: number
+        }
+        Returns: string
+      }
       insert_project: {
         Args: { project_data: Json }
+        Returns: string
+      }
+      insert_proposal: {
+        Args: {
+          p_professional_id: string
+          p_lead_id: string
+          p_price: number
+          p_description: string
+          p_estimated_completion: string
+        }
         Returns: string
       }
       is_admin_check: {
@@ -1154,6 +1363,27 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      submit_lead: {
+        Args: {
+          p_professional_id: string
+          p_title: string
+          p_description: string
+          p_location: string
+          p_budget: number
+          p_share_percentage: number
+        }
+        Returns: boolean
+      }
+      submit_proposal: {
+        Args: {
+          p_professional_id: string
+          p_lead_id: string
+          p_price: number
+          p_description: string
+          p_estimated_completion: string
+        }
+        Returns: boolean
+      }
       update_project: {
         Args: { project_id_param: string; project_data: Json }
         Returns: boolean
@@ -1168,21 +1398,25 @@ export type Database = {
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
@@ -1200,14 +1434,16 @@ export type Tables<
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
@@ -1223,14 +1459,16 @@ export type TablesInsert<
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
@@ -1246,14 +1484,16 @@ export type TablesUpdate<
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
@@ -1261,14 +1501,16 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
