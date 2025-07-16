@@ -19,7 +19,7 @@ const WhatIsSection = () => {
   return <section id="what-is" className="section-padding bg-white" ref={sectionRef}>
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-ofair-900 scroll-fade">מה זה oFair?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-ofair-900 scroll-fade mx-0 px-0 py-0 my-0">מה זה oFair?</h2>
           <p className="text-lg md:text-xl text-muted-foreground scroll-fade">פלטפורמת oFair מחברת בין בעלי מקצוע מכל התחומים, ומאפשרת לכם לקבל לידים איכותיים, לשתף לידים שלא מתאימים לכם ולהרוויח – הכול במקום אחד!</p>
         </div>
 
