@@ -73,7 +73,26 @@ const HeroSection = () => {
           </div>
           
           <div className="lg:col-span-5 relative">
-            
+            <div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-xl animate-float">
+              <div className="absolute inset-0 bg-gradient-to-br from-ofair-100 to-ofair-50 opacity-80"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="glass-morphism rounded-2xl p-8 max-w-md">
+                  <h3 className="text-2xl font-bold text-ofair-900 mb-4">זה רק FAIR</h3>
+                  <p className="text-foreground mb-4 font-semibold">קבלו גישה ללקוחות איכותיים, שמחפשים הצעות בצורה פשוטה וכשמתקשרים - זה כדי לסגור. שתפו לידים לא רלוונטיים עם בעלי מקצוע אחרים, הרוויחו וצרו רשת עסקית חזקה.
+
+
+💰 אתם משלמים רק על עבודות שבוצעו !</p>
+                  <div className="flex items-center text-sm">
+                    <div className="flex space-x-1 space-x-reverse">
+                      <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                      <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                      <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                    </div>
+                    <span className="text-green-600 mr-2">עולה לאוויר בקרוב</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
