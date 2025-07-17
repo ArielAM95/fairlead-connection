@@ -36,61 +36,82 @@ const HeroSection = () => {
       });
     }
   };
-  return <div className="min-h-screen flex items-center relative overflow-hidden pt-20 hero-gradient">
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute -bottom-56 -left-56 w-96 h-96 bg-ofair-100 rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute top-32 -right-40 w-80 h-80 bg-ofair-200 rounded-full opacity-20 blur-3xl"></div>
+  return <div className="min-h-screen flex items-center relative overflow-hidden">
+      {/* Video Background */}
+      <div className="absolute inset-0 z-0">
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src="/hero-video.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/40"></div>
       </div>
       
-      <div className="container mx-auto px-4 md:px-6 pb-16 z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div ref={elementRef} className="lg:col-span-7 staggered-animation">
-            <div className="space-y-6 max-w-3xl mx-auto text-center lg:text-right">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight">
-                oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
-              </h1>
-              <p className="text-xl text-muted-foreground">פלטפורמת oFair מחברת בין בעלי מקצוע מכל התחומים, ומאפשרת לכם לקבל לידים איכותיים ומפורטים, לשתף לידים שלא מתאימים לכם ולהרוויח מהם – הכול במקום אחד!</p>
-              <p className="text-xl font-semibold text-ofair-900">
-                📢 הגיע הזמן לעבוד חכם יותר ולהרוויח יותר!
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">
-                <Button className="bg-ofair-900 hover:bg-ofair-800 text-white px-8 py-6 text-lg button-pulse" onClick={scrollToForm}>
-                  <span>הירשמו כעת</span>
-                  <ChevronRight className="mr-2 h-5 w-5" />
-                </Button>
-                <Button variant="outline" className="border-ofair-200 hover:bg-ofair-50 text-ofair-900 px-8 py-6 text-lg" onClick={scrollToWhatIs}>
-                  <span>קרא עוד</span>
-                </Button>
-              </div>
-              
-              <div className="pt-6">
-                <p className="text-muted-foreground flex items-center justify-center lg:justify-start">
-                  <span className="inline-block ml-2 text-ofair-900 font-semibold">🚀</span>
-                  הטבה ייחודית בדמי ההקמה למצטרפים כעת!
+      {/* Content Overlay */}
+      <div className="container mx-auto px-4 md:px-6 py-20 z-10 relative">
+        <div className="max-w-6xl mx-auto">
+          <div ref={elementRef} className="staggered-animation text-center">
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-tight mb-8 drop-shadow-lg">
+              oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
+            </h1>
+            
+            <p className="text-xl lg:text-2xl text-white/90 mb-6 max-w-4xl mx-auto drop-shadow-md">
+              פלטפורמת oFair מחברת בין בעלי מקצוע מכל התחומים, ומאפשרת לכם לקבל לידים איכותיים ומפורטים, לשתף לידים שלא מתאימים לכם ולהרוויח מהם – הכול במקום אחד!
+            </p>
+            
+            <p className="text-xl lg:text-2xl font-bold text-white mb-8 drop-shadow-md">
+              📢 הגיע הזמן לעבוד חכם יותר ולהרוויח יותר!
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
+              <Button 
+                className="bg-primary hover:bg-primary/90 text-white px-10 py-6 text-lg button-pulse shadow-xl" 
+                onClick={scrollToForm}
+              >
+                <span>הירשמו כעת</span>
+                <ChevronRight className="mr-2 h-5 w-5" />
+              </Button>
+              <Button 
+                variant="outline" 
+                className="border-2 border-white bg-white/10 backdrop-blur-md hover:bg-white/20 text-white px-10 py-6 text-lg shadow-xl" 
+                onClick={scrollToWhatIs}
+              >
+                <span>קרא עוד</span>
+              </Button>
+            </div>
+            
+            {/* Key Points scattered on background */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 max-w-5xl mx-auto">
+              <div className="text-center transform hover:scale-105 transition-transform duration-300">
+                <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">זה רק FAIR</h3>
+                <p className="text-white/90 text-lg drop-shadow-md">
+                  קבלו גישה ללקוחות איכותיים שמחפשים הצעות בצורה פשוטה
                 </p>
               </div>
-            </div>
-          </div>
-          
-          <div className="lg:col-span-5 relative">
-            <div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-xl animate-float">
-              <div className="absolute inset-0 bg-gradient-to-br from-ofair-100 to-ofair-50 opacity-80"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="glass-morphism rounded-2xl p-8 max-w-md">
-                  <h3 className="text-2xl font-bold text-ofair-900 mb-4">זה רק FAIR</h3>
-                  <p className="text-foreground mb-4 font-semibold">קבלו גישה ללקוחות איכותיים, שמחפשים הצעות בצורה פשוטה וכשמתקשרים - זה כדי לסגור. שתפו לידים לא רלוונטיים עם בעלי מקצוע אחרים, הרוויחו וצרו רשת עסקית חזקה.
-
-
-💰 אתם משלמים רק על עבודות שבוצעו !</p>
-                  <div className="flex items-center text-sm">
-                    <div className="flex space-x-1 space-x-reverse">
-                      <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                      <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                      <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                    </div>
-                    <span className="text-green-600 mr-2">עולה לאוויר בקרוב</span>
+              
+              <div className="text-center transform hover:scale-105 transition-transform duration-300">
+                <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">💰 רק על עבודות שבוצעו</h3>
+                <p className="text-white/90 text-lg drop-shadow-md">
+                  שתפו לידים לא רלוונטיים עם בעלי מקצוע אחרים והרוויחו
+                </p>
+              </div>
+              
+              <div className="text-center transform hover:scale-105 transition-transform duration-300">
+                <div className="flex items-center justify-center mb-2">
+                  <div className="flex space-x-1 space-x-reverse ml-2">
+                    <span className="w-3 h-3 rounded-full bg-green-400 animate-pulse"></span>
+                    <span className="w-3 h-3 rounded-full bg-green-400 animate-pulse delay-75"></span>
+                    <span className="w-3 h-3 rounded-full bg-green-400 animate-pulse delay-150"></span>
                   </div>
+                  <span className="text-green-400 text-xl font-bold drop-shadow-lg">עולה לאוויר בקרוב</span>
                 </div>
+                <p className="text-white/90 text-lg drop-shadow-md">
+                  🚀 הטבה ייחודית בדמי ההקמה למצטרפים כעת!
+                </p>
               </div>
             </div>
           </div>
