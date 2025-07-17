@@ -33,27 +33,47 @@ const BenefitsSection = () => {
   ];
 
   return (
-    <section id="benefits" className="section-padding bg-ofair-50/50 section-clip" ref={sectionRef}>
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <span className="benefit-badge mb-4 scroll-fade text-base">יתרונות</span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-ofair-900 scroll-fade">למה להצטרף ל-oFair?</h2>
+    <section id="benefits" className="section-padding bg-gradient-to-br from-accent/10 via-background to-primary/5 relative overflow-hidden" ref={sectionRef}>
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 right-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-20 w-60 h-60 bg-accent/10 rounded-full blur-3xl"></div>
+      </div>
+      
+      <div className="container mx-auto px-4 md:px-6 relative">
+        <div className="max-w-3xl mx-auto text-center mb-20">
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary font-medium mb-6 scroll-fade">
+            יתרונות oFair
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary scroll-fade">למה להצטרף ל-oFair?</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto space-y-12">
           {benefits.map((benefit, index) => (
             <div 
               key={index}
-              className={`flex items-start bg-white rounded-xl p-5 shadow-subtle hover:shadow-card transition-all duration-300 scroll-fade ${index === 0 ? 'border-2 border-ofair-900' : ''}`}
+              className={`scroll-fade transform hover:scale-105 transition-all duration-300 ${
+                index % 2 === 0 ? 'text-right' : 'text-left'
+              }`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <div className="shrink-0 mt-1">
-                <div className={`w-6 h-6 rounded-full ${index === 0 ? 'bg-ofair-900' : 'bg-ofair-100'} flex items-center justify-center`}>
-                  <Check className={`h-3.5 w-3.5 ${index === 0 ? 'text-white' : 'text-ofair-900'}`} />
+              <div className={`flex items-start gap-6 max-w-4xl ${
+                index % 2 === 0 ? 'mr-auto' : 'ml-auto flex-row-reverse'
+              }`}>
+                <div className="shrink-0 mt-2">
+                  <div className={`w-8 h-8 rounded-full ${
+                    index === 0 ? 'bg-primary' : 'bg-accent'
+                  } flex items-center justify-center shadow-lg`}>
+                    <Check className="h-5 w-5 text-white" />
+                  </div>
                 </div>
-              </div>
-              <div className="mr-4">
-                <p className={`${index === 0 ? 'font-bold' : ''} text-foreground`}>{benefit}</p>
+                <div>
+                  <p className={`text-lg md:text-xl leading-relaxed ${
+                    index === 0 ? 'font-bold text-primary' : 'text-foreground'
+                  }`}>
+                    {benefit}
+                  </p>
+                </div>
               </div>
             </div>
           ))}

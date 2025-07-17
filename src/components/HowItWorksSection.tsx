@@ -41,31 +41,33 @@ const HowItWorksSection = () => {
   ];
 
   return (
-    <section className="section-padding bg-gradient-to-b from-ofair-50/30 to-white" ref={sectionRef}>
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-ofair-900 scroll-fade">איך זה עובד?</h2>
+    <section className="section-padding bg-gradient-to-br from-primary/5 via-background to-accent/5 relative overflow-hidden" ref={sectionRef}>
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-32 left-32 w-48 h-48 bg-accent/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-32 right-32 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
+      </div>
+      
+      <div className="container mx-auto px-4 md:px-6 relative">
+        <div className="max-w-3xl mx-auto text-center mb-20">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary scroll-fade">איך זה עובד?</h2>
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          <div className="relative">
-            {/* Vertical line connecting steps */}
-            <div className="absolute top-0 bottom-0 right-[29px] w-1 bg-ofair-100 hidden md:block"></div>
-            
-            <div className="space-y-12">
-              {steps.map((step, index) => (
-                <div key={index} className="flex flex-col md:flex-row items-start scroll-fade" style={{ transitionDelay: `${index * 150}ms` }}>
-                  <div className="flex items-center justify-center w-14 h-14 rounded-full bg-ofair-100 text-ofair-900 text-xl shrink-0 z-10 mb-4 md:mb-0">
-                    <span>{step.number}</span>
-                  </div>
-                  <div className="md:mr-8 md:pt-3">
-                    <h3 className="text-xl font-bold mb-2 text-ofair-900">{step.title}</h3>
-                    <p className="text-muted-foreground">{step.description}</p>
-                  </div>
+        <div className="max-w-4xl mx-auto space-y-20">
+          {steps.map((step, index) => (
+            <div key={index} className={`scroll-fade flex items-center gap-8 ${
+              index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'
+            }`} style={{ transitionDelay: `${index * 150}ms` }}>
+              <div className="shrink-0">
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-accent text-white flex items-center justify-center text-3xl font-bold shadow-xl">
+                  {step.number}
                 </div>
-              ))}
+              </div>
+              <div className={`space-y-4 ${index % 2 === 0 ? 'text-right' : 'text-left'}`}>
+                <h3 className="text-2xl md:text-3xl font-bold text-primary">{step.title}</h3>
+                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">{step.description}</p>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
