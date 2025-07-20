@@ -38,18 +38,14 @@ const HeroSection = () => {
     }
   };
   return <div className="min-h-screen flex items-center relative overflow-hidden">
-      {/* Background Video */}
+      {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <video 
-          autoPlay
-          muted
-          loop
-          playsInline
+        <img 
+          src={heroBackground}
+          alt="Professional collaboration background"
           className="w-full h-full object-cover"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 via-blue-400/20 to-blue-600/30"></div>
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/60"></div>
       </div>
       
       {/* Content Overlay */}
