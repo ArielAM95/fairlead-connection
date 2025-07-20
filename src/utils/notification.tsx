@@ -37,22 +37,22 @@ export const showSuccessNotification = (
         
         <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <span className="flex-shrink-0 w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>
+            <span className="text-green-500 text-lg">✅</span>
             <p className="text-sm">בצעו תשלום חד־פעמי של 350 ₪ בלבד</p>
           </div>
           
           <div className="flex items-center gap-3">
-            <span className="flex-shrink-0 w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
+            <span className="text-green-500 text-lg">✅</span>
             <p className="text-sm">שלחו לנו לפחות 5 חשבוניות אחרונות (ללקוחות אמיתיים מהשנה האחרונה)</p>
           </div>
           
           <div className="flex items-center gap-3">
-            <span className="flex-shrink-0 w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
+            <span className="text-green-500 text-lg">✅</span>
             <p className="text-sm">אנחנו נבדוק את הדירוג שלכם מול לקוחות</p>
           </div>
           
           <div className="flex items-center gap-3">
-            <span className="flex-shrink-0 w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm">✓</span>
+            <span className="text-green-500 text-lg">✅</span>
             <p className="text-sm">אם הדירוג 4.2 ומעלה – החשבון שלכם יעלה לאוויר באופן רשמי, לתמיד!</p>
           </div>
         </div>
@@ -84,7 +84,7 @@ export const showSuccessNotification = (
           className="block w-full border border-gray-300 text-gray-700 text-center py-3 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors"
           onClick={() => window.open('tel:+972-50-123-4567', '_self')}
         >
-          🔘 רוצים לדבר איתנו קודם? לחצו כאן להתקשרות
+          דברו איתנו בטלפון
         </button>
       </div>
       
