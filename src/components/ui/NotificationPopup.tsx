@@ -70,46 +70,57 @@ const NotificationPopup = ({
         
         {showWelcomeMessage && (
           <div className="mb-6">
-            <h4 className="text-xl font-bold mb-3">כמעט בפנים! 😎 סוגרים פינה עם ההרשמה ל-oFair</h4>
-            <p className="font-medium mb-3">היי {firstName}! 👑</p>
+            <h3 className="text-xl font-bold mb-4 text-center">נשאר רק שלב אחד – ואתם בפנים!</h3>
             
-            <p className="mb-3">כיף שבחרת להצטרף ל-oFair – המקום שבו בעלי מקצוע כמוך עושים יותר כסף, מבזבזים פחות זמן, ופשוט... חיים טוב יותר! 🚀</p>
-            
-            <p className="mb-3">אבל רגע! לפני שאתה נכנס לעולם של לידים איכותיים ולקוחות שמחכים רק לך – יש לנו משימה קטנה:</p>
-            
-            <p className="font-medium mb-2">🎯 להשלים את ההרשמה ולתפוס מקום אצלנו בסטייל:</p>
-            
-            <ul className="mb-4 list-none">
-              <li className="mb-1">✅ תעלה לפחות 5 חשבוניות של עבודות שביצעת (ככל שיותר – יותר טוב! זה מראה שאתה תותח רציני).</li>
-              <li>✅ תוסיף תעודות הסמכה / רישיון עבודה (אם יש – מושלם! זה עושה אותך הרבה יותר אטרקטיבי ללקוחות).</li>
-            </ul>
-            
-            <p className="font-medium mb-2">💡 למה זה חשוב?</p>
-            <p className="mb-3">כי אנחנו כאן בשביל להרים את הרמה ולדאוג שלקוחות יקבלו רק את הקרם דה לה קרם. ואתה שם, נכון? 😉</p>
-            
-            <p className="font-medium mb-2">🔥 ומה יוצא לך מזה?</p>
-            <p className="mb-3">אם הציון שלך מעל 4.2 מתוך 5, מחכה לך הפתעה:</p>
-            
-            <ul className="mb-4 list-none">
-              <li className="mb-1">✨ 50% הנחה על דמי ההקמה (כי למה לא לחסוך?)</li>
-              <li>✨ הדרכה אישית שתראה לך איך לקרוע את המערכת ולהתחיל להרוויח כמו שצריך!</li>
-            </ul>
-            
-            <p className="font-medium mb-2">📤 יאללה, תעלה את הקבצים כאן – ונגמר הסיפור:</p>
-            <p className="mb-4">
-              <a 
-                href={documentUploadUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:underline font-medium"
-              >
-                🔗 להעלאת חשבוניות
-              </a>
-            </p>
-            
-            <p className="mb-4">נתקעת? יש שאלה? אנחנו כאן תמיד, רק תגיד!</p>
-            
-            <p className="font-medium">oFair – כי לעבוד חכם זה להרוויח יותר. 😉🚀</p>
+            <div className="mb-6">
+              <p className="mb-4 font-medium">כדי להשלים את ההצטרפות לפלטפורמת OFAIR:</p>
+              
+              <ol className="mb-4 list-none space-y-2">
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>בצעו תשלום חד־פעמי של 350 ₪ בלבד</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>שלחו לנו לפחות 5 חשבוניות אחרונות (ללקוחות אמיתיים מהשנה האחרונה)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>אנחנו נבדוק את הדירוג שלכם מול לקוחות</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>אם הדירוג 4.2 ומעלה – החשבון שלכם יעלה לאוויר באופן רשמי, לתמיד!</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>במקרה שהדירוג נמוך מ־4.2 – תקבלו החזר כספי מלא או תוכלו לשלוח עוד 5 חשבוניות לבדיקה חוזרת.</span>
+                </li>
+              </ol>
+              
+              <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3 mb-4">
+                <p className="text-sm text-cyan-800">
+                  📌 ככל שתשלחו יותר חשבוניות – כך הדף שלכם ייראה מקצועי, אמין ומלא חוות דעת!
+                </p>
+              </div>
+              
+              <div className="flex flex-col gap-3">
+                <a 
+                  href="https://app.icount.co.il/m/12419/c692686dp3u687d0a2c?utm_source=iCount&utm_medium=paypage&utm_campaign=3" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="block text-center px-6 py-3 bg-[#00327B] text-white rounded-lg font-medium hover:bg-[#002a66] transition-colors"
+                >
+                  🔵 בצע תשלום עכשיו
+                </a>
+                <button 
+                  onClick={() => window.open('tel:+972537779773', '_self')}
+                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                >
+                  🔘 דברו איתנו בטלפון
+                </button>
+              </div>
+            </div>
             
             <div className="border-t border-gray-200 my-6"></div>
           </div>
