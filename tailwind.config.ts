@@ -67,18 +67,13 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				ofair: {
-					'50': '#e8f1ff',
-					'100': '#d5e3ff',
-					'200': '#b4caff',
-					'300': '#8aa6ff',
-					'400': '#6077ff',
-					'500': '#4352ff',
-					'600': '#2c39f3',
-					'700': '#1e2dd6',
-					'800': '#1f28ae',
-					'900': '#00327B', // Main brand color
-					'950': '#0d1252',
+				brand: {
+					primary: '#1B365D',    // Primary Blue
+					secondary: '#16A085',  // Secondary Teal
+					accent: '#F39C12',     // Accent Gold
+					light: '#F8FAFC',      // Background Light
+					'text-primary': '#2D3748',   // Text Primary
+					'text-secondary': '#4A5568', // Text Secondary
 				},
 			},
 			borderRadius: {
@@ -131,12 +126,12 @@ export default {
 				'pulse-soft': 'pulse-soft 3s ease-in-out infinite',
 			},
 			fontFamily: {
-				sans: ['var(--font-heebo)', 'sans-serif'],
+				sans: ['var(--font-inter)', 'sans-serif'],
 			},
 			boxShadow: {
-				'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+				'glass': '0 4px 30px hsl(var(--glass-shadow))',
 				'subtle': '0 2px 15px rgba(0, 0, 0, 0.05)',
-				'card': '0 10px 30px rgba(0, 50, 123, 0.07)',
+				'card': '0 10px 30px rgba(27, 54, 93, 0.07)',
 			},
 		}
 	},
