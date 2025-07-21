@@ -49,13 +49,13 @@ const HeroSection = () => {
         >
           <source src="/hero-video.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 via-blue-400/20 to-blue-600/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/50 to-black/60"></div>
       </div>
       
       {/* Content Overlay */}
       <div className="container mx-auto px-4 md:px-6 py-20 z-10 relative">
         <div className="max-w-6xl mx-auto">
-          <div ref={elementRef} className="staggered-animation text-center">
+          <div ref={elementRef} className="staggered-animation text-right">
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-tight mb-8 drop-shadow-lg">
               oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
             </h1>
