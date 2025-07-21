@@ -148,13 +148,38 @@
     @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-ofair-100 text-ofair-900;
   }
   
+  /* Updated staggered animation system */
   .staggered-animation > * {
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    transition: opacity 0.6s ease, transform 0.6s ease;
   }
   
   .staggered-animation > *.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Mobile hero items - visible by default with animation enhancement */
+  .mobile-hero-item {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  
+  .mobile-hero-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Desktop hero items - use staggered animation */
+  .desktop-hero-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  
+  .desktop-hero-item.visible {
     opacity: 1;
     transform: translateY(0);
   }
