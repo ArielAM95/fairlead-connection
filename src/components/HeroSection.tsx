@@ -38,35 +38,15 @@ const HeroSection = () => {
     }
   };
   return <div className="min-h-screen flex items-center relative overflow-hidden">
-      {/* Background Video */}
-      <div className="absolute inset-0 z-0">
-        <video 
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/50 to-black/60"></div>
-      </div>
+      {/* Background Gradient */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
       
       {/* Content Overlay */}
       <div className="container mx-auto px-4 md:px-6 py-20 z-10 relative">
         <div className="max-w-6xl mx-auto">
           {/* Mobile and Tablet Layout */}
-          <div className="lg:hidden text-right relative">
-            {/* Character Image - Small and positioned */}
-            <div className="absolute top-0 left-4 md:left-8">
-              <img 
-                src="/lovable-uploads/01360891-da5d-43ab-94f6-35060af38c05.png" 
-                alt="oFair Character" 
-                className="w-32 md:w-40 h-auto object-contain drop-shadow-2xl animate-float opacity-80"
-              />
-            </div>
-            
-            <div ref={elementRef} className="staggered-animation pr-36 md:pr-48">
+          <div className="lg:hidden text-right">
+            <div ref={elementRef} className="staggered-animation">
               <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-tight mb-8 drop-shadow-lg">
                 oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
               </h1>
