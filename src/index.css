@@ -176,4 +176,17 @@
   .hero-gradient {
     background: radial-gradient(circle at top right, #1e3a8a00, #00327B40);
   }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
 }
