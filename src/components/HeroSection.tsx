@@ -38,14 +38,18 @@ const HeroSection = () => {
     }
   };
   return <div className="min-h-screen flex items-center relative overflow-hidden">
-      {/* Background Image */}
+      {/* Background Video */}
       <div className="absolute inset-0 z-0">
-        <img 
-          src={heroBackground}
-          alt="Professional collaboration background"
+        <video 
+          autoPlay
+          muted
+          loop
+          playsInline
           className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/60"></div>
+        >
+          <source src="/hero-video.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 via-blue-400/20 to-blue-600/30"></div>
       </div>
       
       {/* Content Overlay */}
@@ -82,31 +86,31 @@ const HeroSection = () => {
             </div>
             
             {/* Key Points scattered on background */}
-            <div className="flex flex-wrap justify-center gap-12 mt-16 max-w-6xl mx-auto">
-              <div className="text-center max-w-sm backdrop-blur-sm bg-white/5 rounded-2xl p-6 transform hover:scale-105 transition-all duration-300">
-                <h3 className="text-xl font-bold text-white mb-3 drop-shadow-lg">זה רק FAIR</h3>
-                <p className="text-white/90 text-base drop-shadow-md leading-relaxed">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 max-w-5xl mx-auto">
+              <div className="text-center transform hover:scale-105 transition-transform duration-300">
+                <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">זה רק FAIR</h3>
+                <p className="text-white/90 text-lg drop-shadow-md">
                   קבלו גישה ללקוחות איכותיים שמחפשים הצעות בצורה פשוטה
                 </p>
               </div>
               
-              <div className="text-center max-w-sm backdrop-blur-sm bg-white/5 rounded-2xl p-6 transform hover:scale-105 transition-all duration-300">
-                <h3 className="text-xl font-bold text-white mb-3 drop-shadow-lg">💰 רק על עבודות שבוצעו</h3>
-                <p className="text-white/90 text-base drop-shadow-md leading-relaxed">
+              <div className="text-center transform hover:scale-105 transition-transform duration-300">
+                <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">💰 רק על עבודות שבוצעו</h3>
+                <p className="text-white/90 text-lg drop-shadow-md">
                   שתפו לידים לא רלוונטיים עם בעלי מקצוע אחרים והרוויחו
                 </p>
               </div>
               
-              <div className="text-center max-w-sm backdrop-blur-sm bg-white/5 rounded-2xl p-6 transform hover:scale-105 transition-all duration-300">
-                <div className="flex items-center justify-center mb-3">
+              <div className="text-center transform hover:scale-105 transition-transform duration-300">
+                <div className="flex items-center justify-center mb-2">
                   <div className="flex space-x-1 space-x-reverse ml-2">
-                    <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                    <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse delay-75"></span>
-                    <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse delay-150"></span>
+                    <span className="w-3 h-3 rounded-full bg-green-400 animate-pulse"></span>
+                    <span className="w-3 h-3 rounded-full bg-green-400 animate-pulse delay-75"></span>
+                    <span className="w-3 h-3 rounded-full bg-green-400 animate-pulse delay-150"></span>
                   </div>
-                  <span className="text-green-400 text-lg font-bold drop-shadow-lg">עולה לאוויר בקרוב</span>
+                  <span className="text-green-400 text-xl font-bold drop-shadow-lg">עולה לאוויר בקרוב</span>
                 </div>
-                <p className="text-white/90 text-base drop-shadow-md leading-relaxed">
+                <p className="text-white/90 text-lg drop-shadow-md">
                   🚀 הטבה ייחודית בדמי ההקמה למצטרפים כעת!
                 </p>
               </div>
