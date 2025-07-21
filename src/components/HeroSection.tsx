@@ -61,6 +61,9 @@ const HeroSection = () => {
             <div ref={elementRef} className="staggered-animation">
               <div className="mobile-hero-item">
                 <div className="flex items-start gap-4 mb-8">
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight drop-shadow-lg">
+                    oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
+                  </h1>
                   <div className="flex-shrink-0">
                     <img 
                       src="/lovable-uploads/01360891-da5d-43ab-94f6-35060af38c05.png" 
@@ -68,9 +71,6 @@ const HeroSection = () => {
                       className="w-24 sm:w-32 h-auto object-contain drop-shadow-2xl animate-float"
                     />
                   </div>
-                  <h1 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight drop-shadow-lg">
-                    oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
-                  </h1>
                 </div>
               </div>
               
