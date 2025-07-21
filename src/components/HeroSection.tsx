@@ -47,9 +47,18 @@ const HeroSection = () => {
           {/* Mobile and Tablet Layout */}
           <div className="lg:hidden text-right">
             <div ref={elementRef} className="staggered-animation">
-              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-tight mb-8 drop-shadow-lg">
-                oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
-              </h1>
+              <div className="flex items-start gap-4 mb-8">
+                <div className="flex-shrink-0">
+                  <img 
+                    src="/lovable-uploads/01360891-da5d-43ab-94f6-35060af38c05.png" 
+                    alt="oFair Character" 
+                    className="w-24 sm:w-32 h-auto object-contain drop-shadow-2xl animate-float"
+                  />
+                </div>
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight drop-shadow-lg">
+                  oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
+                </h1>
+              </div>
               
               <p className="text-xl lg:text-2xl text-white/90 mb-6 drop-shadow-md">
                 פלטפורמת oFair מחברת בין בעלי מקצוע מכל התחומים, ומאפשרת לכם לקבל לידים איכותיים ומפורטים, לשתף לידים שלא מתאימים לכם ולהרוויח מהם – הכול במקום אחד!
