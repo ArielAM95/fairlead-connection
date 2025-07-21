@@ -37,12 +37,9 @@ const HeroSection = () => {
       });
     }
   };
-  return <div className="min-h-screen flex items-center relative overflow-hidden">
-      {/* Background Gradient */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
-      
+  return <div className="min-h-screen flex items-center relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black">
       {/* Content Overlay */}
-      <div className="container mx-auto px-4 md:px-6 py-20 z-10 relative">
+      <div className="container mx-auto px-4 md:px-6 py-20 relative w-full">
         <div className="max-w-6xl mx-auto">
           {/* Mobile and Tablet Layout */}
           <div className="lg:hidden text-right">
