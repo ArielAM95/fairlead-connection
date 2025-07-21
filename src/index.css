@@ -3,46 +3,41 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap');
 
 @layer base {
   :root {
-    --font-inter: 'Inter', sans-serif;
+    --font-heebo: 'Heebo', sans-serif;
     
-    --background: 210 40% 98%; /* #F8FAFC */
-    --foreground: 213 27% 20%; /* #2D3748 */
+    --background: 210 33% 99%;
+    --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 213 27% 20%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 213 27% 20%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 210 50% 23%; /* #1B365D */
-    --primary-foreground: 0 0% 98%;
+    --primary: 217 100% 24%; /* Based on #00327B */
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 174 56% 35%; /* #16A085 */
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222 47% 11.2%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 15% 33%; /* #4A5568 */
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 37 81% 51%; /* #F39C12 */
-    --accent-foreground: 0 0% 98%;
+    --accent: 209 100% 50%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214 13% 91%;
-    --input: 214 13% 91%;
-    --ring: 210 50% 23%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 217 100% 24%;
 
     --radius: 0.75rem;
-
-    /* Glass morphism variables */
-    --glass-bg: 0 0% 100% / 0.8;
-    --glass-border: 0 0% 100% / 0.2;
-    --glass-shadow: 215 28% 17% / 0.05;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -51,7 +46,7 @@
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 174 56% 35%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
@@ -72,8 +67,7 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: var(--font-inter);
+    @apply bg-background text-foreground font-sans antialiased;
     direction: rtl;
   }
 
@@ -104,7 +98,7 @@
 
 @layer components {
   .glass-morphism {
-    @apply backdrop-blur-lg bg-white/80 border border-white/20 shadow-xl shadow-slate-900/5;
+    @apply backdrop-blur-md bg-white/80 border border-white/20 shadow-glass;
   }
   
   .glass-card {
@@ -115,24 +109,28 @@
     @apply py-16 md:py-24;
   }
 
-  .button-gradient {
-    @apply bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-xl px-6 py-3 shadow-md hover:scale-[1.02] transition-all duration-300;
+  .button-pulse {
+    @apply relative overflow-hidden;
   }
 
-  .button-accent {
-    @apply bg-accent text-accent-foreground font-semibold rounded-xl px-6 py-3 shadow-md hover:scale-[1.02] transition-all duration-300;
+  .button-pulse::after {
+    @apply content-[''] absolute inset-0 bg-white opacity-0 rounded-full transform scale-x-0 scale-y-0 origin-center transition-all duration-300 ease-out;
+  }
+
+  .button-pulse:hover::after {
+    @apply opacity-20 scale-x-100 scale-y-100;
   }
 
   .feature-card {
-    @apply p-6 rounded-2xl transition-all duration-300 border border-transparent hover:border-secondary/20 glass-morphism;
+    @apply p-6 rounded-2xl transition-all duration-300 border border-transparent hover:border-ofair-100 bg-white shadow-subtle hover:shadow-card;
   }
 
   .feature-icon {
-    @apply flex items-center justify-center w-12 h-12 rounded-full bg-secondary text-white mb-4;
+    @apply flex items-center justify-center w-12 h-12 rounded-full bg-ofair-100 text-ofair-900 mb-4;
   }
 
-  .form-input {
-    @apply rounded-lg bg-white/90 border border-input px-3 py-2 text-sm focus:ring focus:ring-secondary/40 focus:border-secondary transition-colors;
+  .faq-item {
+    @apply border-b border-gray-200 py-5 transition-all;
   }
 
   .scroll-fade {
@@ -147,7 +145,7 @@
   }
 
   .benefit-badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary/10 text-secondary border border-secondary/20;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-ofair-100 text-ofair-900;
   }
   
   .staggered-animation > * {
@@ -172,10 +170,10 @@
   }
   
   .cta-gradient {
-    background: linear-gradient(90deg, #1B365D, #16A085);
+    background: linear-gradient(90deg, #00327B, #0052cb);
   }
   
   .hero-gradient {
-    background: radial-gradient(circle at top right, rgba(27, 54, 93, 0), rgba(27, 54, 93, 0.25));
+    background: radial-gradient(circle at top right, #1e3a8a00, #00327B40);
   }
 }
