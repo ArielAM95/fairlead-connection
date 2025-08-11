@@ -178,7 +178,7 @@ const MainCtaSection = ({ showNotification }: MainCtaSectionProps) => {
         <div className="max-w-4xl mx-auto">
           <CtaHeader />
           
-          <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg scroll-fade max-w-2xl mx-auto">
+          <div className="glass-card md:p-8 scroll-fade max-w-2xl mx-auto">
             {formError && (
               <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md text-sm">
                 {formError}

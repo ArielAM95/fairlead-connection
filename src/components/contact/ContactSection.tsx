@@ -39,7 +39,7 @@ const ContactSection = ({ showNotification }: ContactSectionProps) => {
   };
 
   return (
-    <section className="py-24 md:py-32 bg-gray-50" id="contact">
+    <section className="py-24 md:py-32 bg-background" id="contact">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto">
           <ContactHeader />

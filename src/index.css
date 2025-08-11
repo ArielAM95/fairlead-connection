@@ -9,36 +9,39 @@
   :root {
     --font-heebo: 'Heebo', sans-serif;
     
-    --background: 210 33% 99%;
-    --foreground: 222 47% 11%;
+    /* Light hi-tech pastel palette (blue–lilac–teal) */
+    --background: 210 40% 98%;
+    --foreground: 222 47% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 222 47% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 222 47% 12%;
 
-    --primary: 217 100% 24%; /* Based on #00327B */
-    --primary-foreground: 210 40% 98%;
+    /* Primary = soft blue, Accent = teal, Secondary = lilac */
+    --primary: 214 90% 62%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222 47% 11.2%;
+    --secondary: 260 60% 92%;
+    --secondary-foreground: 260 60% 20%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 46%;
 
-    --accent: 209 100% 50%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 168 70% 62%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 217 100% 24%;
+    --border: 214 32% 90%;
+    --input: 214 32% 90%;
+    --ring: 214 90% 62%;
 
     --radius: 0.75rem;
 
+    /* Sidebar (kept subtle) */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -47,6 +50,10 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Hero base (darker canvas for neon pastel beams) */
+    --hero-bg-start: 230 35% 10%;
+    --hero-bg-end: 230 35% 14%;
   }
 
   .dark {
@@ -98,7 +105,7 @@
 
 @layer components {
   .glass-morphism {
-    @apply backdrop-blur-md bg-white/80 border border-white/20 shadow-glass;
+    @apply backdrop-blur-md bg-card/70 border border-primary/10 shadow-glass;
   }
   
   .glass-card {
@@ -122,11 +129,11 @@
   }
 
   .feature-card {
-    @apply p-6 rounded-2xl transition-all duration-300 border border-transparent hover:border-ofair-100 bg-white shadow-subtle hover:shadow-card;
+    @apply p-6 rounded-2xl transition-all duration-300 border bg-card/80 backdrop-blur-md border-primary/10 hover:border-primary/20 shadow-subtle hover:shadow-card;
   }
 
   .feature-icon {
-    @apply flex items-center justify-center w-12 h-12 rounded-full bg-ofair-100 text-ofair-900 mb-4;
+    @apply flex items-center justify-center w-12 h-12 rounded-full bg-accent/20 text-accent mb-4;
   }
 
   .faq-item {
@@ -145,7 +152,7 @@
   }
 
   .benefit-badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-ofair-100 text-ofair-900;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-accent/20 text-accent;
   }
   
   /* Updated staggered animation system */
@@ -195,11 +202,14 @@
   }
   
   .cta-gradient {
-    background: linear-gradient(90deg, #00327B, #0052cb);
+    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
   }
   
   .hero-gradient {
-    background: radial-gradient(circle at top right, #1e3a8a00, #00327B40);
+    background:
+      radial-gradient(1200px 600px at 80% -10%, hsl(var(--accent) / 0.25), transparent),
+      radial-gradient(1000px 500px at 0% 20%, hsl(var(--primary) / 0.35), transparent),
+      linear-gradient(180deg, hsl(var(--hero-bg-start)), hsl(var(--hero-bg-end)));
   }
   
   .animate-float {

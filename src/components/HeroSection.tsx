@@ -52,7 +52,7 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black">
+    <div className="min-h-screen flex items-center relative overflow-hidden bg-background hero-gradient">
       {/* Content Overlay */}
       <div className="container mx-auto px-4 md:px-6 py-20 relative w-full">
         <div className="max-w-6xl mx-auto">
@@ -89,7 +89,7 @@ const HeroSection = () => {
               <div className="mobile-hero-item">
                 <div className="flex flex-col sm:flex-row gap-6 justify-end mb-8">
                   <Button 
-                    className="bg-gradient-to-r from-secondary to-secondary-light text-white px-10 py-6 text-lg button-pulse shadow-xl" 
+                    className="cta-gradient text-white px-10 py-6 text-lg button-pulse shadow-xl" 
                     onClick={scrollToForm}
                   >
                     <span>הירשמו כעת</span>
@@ -165,7 +165,7 @@ const HeroSection = () => {
               <div className="desktop-hero-item">
                 <div className="flex flex-col sm:flex-row gap-6 justify-end mb-8">
                   <Button 
-                    className="bg-gradient-to-r from-secondary to-secondary-light text-white px-10 py-6 text-lg button-pulse shadow-xl" 
+                    className="cta-gradient text-white px-10 py-6 text-lg button-pulse shadow-xl" 
                     onClick={scrollToForm}
                   >
                     <span>הירשמו כעת</span>
@@ -224,7 +224,7 @@ const HeroSection = () => {
                   className="w-80 h-auto object-contain drop-shadow-2xl animate-float"
                 />
                 {/* Glowing effect behind character */}
-                <div className="absolute inset-0 bg-gradient-to-r from-secondary/30 to-secondary-light/30 blur-3xl -z-10 scale-110"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-accent/30 blur-3xl -z-10 scale-110"></div>
               </div>
             </div>
           </div>
