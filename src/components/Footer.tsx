@@ -14,7 +14,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-gray-50 pt-16 pb-10">
+    <footer className="bg-background pt-16 pb-10">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
           {/* Logo and tagline */}
@@ -26,27 +26,27 @@ const Footer = () => {
                 className="h-14 w-auto" 
               />
             </a>
-            <p className="text-gray-600 text-lg mb-3">🔹 oFair – מהפכת שיתוף הלידים והעבודה החכמה כבר כאן!</p>
-            <p className="text-gray-500 text-sm">הפלטפורמה שתחבר בין בעלי מקצוע, מאפשרת שיתוף לידים ומציגה הצעות מחיר בזמן אמת</p>
+            <p className="text-muted-foreground text-lg mb-3">🔹 oFair – מהפכת שיתוף הלידים והעבודה החכמה כבר כאן!</p>
+            <p className="text-muted-foreground text-sm">הפלטפורמה שתחבר בין בעלי מקצוע, מאפשרת שיתוף לידים ומציגה הצעות מחיר בזמן אמת</p>
           </div>
           
           {/* Navigation Links */}
           <div className="md:col-span-3">
-            <h3 className="font-semibold text-ofair-900 text-lg mb-5">ניווט מהיר</h3>
+            <h3 className="font-semibold text-primary text-lg mb-5">ניווט מהיר</h3>
             <nav className="flex flex-col space-y-3">
-              <a href="#what-is" className="text-gray-600 hover:text-ofair-900 transition-colors">
+              <a href="#what-is" className="text-muted-foreground hover:text-primary transition-colors">
                 מה זה oFair?
               </a>
-              <a href="#benefits" className="text-gray-600 hover:text-ofair-900 transition-colors">
+              <a href="#benefits" className="text-muted-foreground hover:text-primary transition-colors">
                 יתרונות
               </a>
-              <a href="#problems" className="text-gray-600 hover:text-ofair-900 transition-colors">
+              <a href="#problems" className="text-muted-foreground hover:text-primary transition-colors">
                 פתרונות לבעיות
               </a>
-              <a href="#how-it-works" className="text-gray-600 hover:text-ofair-900 transition-colors">
+              <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors">
                 איך זה עובד?
               </a>
-              <Link to="/terms" className="text-ofair-900 hover:underline font-medium">
+              <Link to="/terms" className="text-primary hover:underline font-medium">
                 תקנון ותנאי פרטיות
               </Link>
             </nav>
@@ -54,7 +54,7 @@ const Footer = () => {
           
           {/* Contact */}
           <div className="md:col-span-4">
-            <h3 className="font-semibold text-ofair-900 text-lg mb-5">צור קשר</h3>
+            <h3 className="font-semibold text-primary text-lg mb-5">צור קשר</h3>
             <div className="space-y-4">
               <p className="text-gray-600 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 ml-2 text-ofair-900 flex-shrink-0">
@@ -69,13 +69,13 @@ const Footer = () => {
                 <a href="tel:+972545308505" className="hover:text-ofair-900 transition-colors">054-5308505</a>
               </p>
               <div className="flex space-x-4 space-x-reverse mt-6">
-                <a href="https://www.facebook.com/profile.php?id=61573771175534#" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-ofair-900 transition-colors">
+                <a href="https://www.facebook.com/profile.php?id=61573771175534#" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                   <Facebook className="w-6 h-6" />
                 </a>
-                <a href="https://www.instagram.com/ofair_il?fbclid=IwZXh0bgNhZW0CMTAAAR1Hdq28l9YzB4sHU41YXjS5UYVD_LihmktdeE0cqacfrxkIm1ryJ6_Y3qQ_aem_uZmC0wj1Asq9SbLb9ZLcWg" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-ofair-900 transition-colors">
+                <a href="https://www.instagram.com/ofair_il?fbclid=IwZXh0bgNhZW0CMTAAAR1Hdq28l9YzB4sHU41YXjS5UYVD_LihmktdeE0cqacfrxkIm1ryJ6_Y3qQ_aem_uZmC0wj1Asq9SbLb9ZLcWg" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                   <Instagram className="w-6 h-6" />
                 </a>
-                <a href="https://www.tiktok.com/@ofair.co.il?_t=ZS-8xQd5lF74xL&_r=1" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-ofair-900 transition-colors">
+                <a href="https://www.tiktok.com/@ofair.co.il?_t=ZS-8xQd5lF74xL&_r=1" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                   <TikTokIcon className="w-6 h-6" />
                 </a>
               </div>
@@ -83,8 +83,8 @@ const Footer = () => {
           </div>
         </div>
         
-        <div className="border-t border-gray-200 pt-8 text-center">
-          <p className="text-gray-500 text-sm">&copy; {currentYear} oFair. כל הזכויות שמורות.</p>
+        <div className="border-t border-border pt-8 text-center">
+          <p className="text-muted-foreground text-sm">&copy; {currentYear} oFair. כל הזכויות שמורות.</p>
         </div>
       </div>
     </footer>

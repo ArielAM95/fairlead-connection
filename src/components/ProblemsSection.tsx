@@ -52,25 +52,23 @@ const ProblemsSection = () => {
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary scroll-fade">מה הבעיות שאנחנו פותרים עבורך?</h2>
         </div>
 
-        <div className="max-w-6xl mx-auto space-y-16">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
           {problems.map((item, index) => (
             <div 
               key={item.id}
-              className={`relative scroll-fade ${index % 2 === 0 ? 'text-right' : 'text-left'}`}
-              style={{ transitionDelay: `${index * 150}ms` }}
+              className="scroll-fade"
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <div className={`max-w-4xl ${index % 2 === 0 ? 'mr-auto' : 'ml-auto'}`}>
-                <div className={`flex items-start gap-6 ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}>
-                  <div className="shrink-0">
-                    <div className="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center text-2xl font-bold shadow-lg">
-                      {item.id}
-                    </div>
+              <div className="glass-card h-full">
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-bold">
+                    {item.id}
                   </div>
-                  <div className="space-y-4 pt-2">
-                    <h3 className="text-2xl md:text-3xl font-bold text-primary leading-tight">
+                  <div className="space-y-2 text-right">
+                    <h3 className="text-xl md:text-2xl font-bold text-primary leading-snug">
                       {item.problem}
                     </h3>
-                    <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                    <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
                       {item.solution}
                     </p>
                   </div>

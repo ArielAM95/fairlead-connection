@@ -48,31 +48,19 @@ const BenefitsSection = () => {
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary scroll-fade">למה להצטרף ל-oFair?</h2>
         </div>
 
-        <div className="max-w-5xl mx-auto space-y-12">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {benefits.map((benefit, index) => (
             <div 
               key={index}
-              className={`scroll-fade transform hover:scale-105 transition-all duration-300 ${
-                index % 2 === 0 ? 'text-right' : 'text-left'
-              }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
+              className="scroll-fade"
+              style={{ transitionDelay: `${index * 80}ms` }}
             >
-              <div className={`flex items-start gap-6 max-w-4xl ${
-                index % 2 === 0 ? 'mr-auto' : 'ml-auto flex-row-reverse'
-              }`}>
-                <div className="shrink-0 mt-2">
-                  <div className={`w-8 h-8 rounded-full ${
-                    index === 0 ? 'bg-primary' : 'bg-accent'
-                  } flex items-center justify-center shadow-lg`}>
-                    <Check className="h-5 w-5 text-white" />
+              <div className="glass-card h-full text-right">
+                <div className="flex items-start gap-4">
+                  <div className="w-9 h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center shadow-subtle mt-1">
+                    <Check className="h-5 w-5" />
                   </div>
-                </div>
-                <div>
-                  <p className={`text-lg md:text-xl leading-relaxed ${
-                    index === 0 ? 'font-bold text-primary' : 'text-foreground'
-                  }`}>
-                    {benefit}
-                  </p>
+                  <p className="text-base md:text-lg text-foreground leading-relaxed">{benefit}</p>
                 </div>
               </div>
             </div>
