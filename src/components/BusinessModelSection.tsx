@@ -126,11 +126,11 @@ const BusinessModelSection = () => {
                   </h4>
                   <div className="space-y-3">
                     {feature.items.map((item, itemIndex) => (
-                      <div key={itemIndex} className="flex items-center justify-end gap-3 group/item">
+                      <div key={itemIndex} className="flex items-center justify-start gap-3 group/item">
+                        <div className="w-2 h-2 bg-gradient-to-r from-primary to-accent rounded-full group-hover/item:scale-125 transition-transform"></div>
                         <span className="text-muted-foreground text-right hover:text-foreground transition-colors">
                           {item}
                         </span>
-                        <div className="w-2 h-2 bg-gradient-to-r from-primary to-accent rounded-full group-hover/item:scale-125 transition-transform"></div>
                       </div>
                     ))}
                   </div>
