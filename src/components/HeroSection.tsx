@@ -49,7 +49,7 @@ const HeroSection = () => {
             <div ref={elementRef} className="staggered-animation">
               <div className="mobile-hero-item">
                 <div className="flex items-start gap-4 mb-8">
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight drop-shadow-lg">
+                  <h1 className="sm:text-3xl font-extrabold text-white leading-tight drop-shadow-lg text-2xl">
                     oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
                   </h1>
                   <div className="flex-shrink-0">
