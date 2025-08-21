@@ -30,18 +30,18 @@ const AppShowcaseSection = () => {
       className="relative min-h-screen flex items-center justify-center overflow-hidden py-20"
       dir="rtl"
     >
-      {/* Background Image with Blur */}
+      {/* Background Image with Light Blur */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url('/lovable-uploads/06084aa6-83ff-48e5-9242-1481a8169865.png')`,
-          filter: 'blur(8px)',
-          transform: 'scale(1.1)'
+          filter: 'blur(2px)',
+          transform: 'scale(1.05)'
         }}
       />
       
-      {/* Blue Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-700/80 via-blue-600/70 to-blue-500/60" />
+      {/* Lighter Blue Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-700/40 via-blue-600/30 to-blue-500/20" />
       
       {/* Content Container */}
       <div className="relative z-10 w-full max-w-4xl mx-auto px-6">
