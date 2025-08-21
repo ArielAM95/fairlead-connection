@@ -55,15 +55,13 @@ const HowItWorksSection = () => {
         <div className="max-w-4xl mx-auto space-y-20">
           {steps.map((step, index) => (
             <div key={index} className="scroll-fade" style={{ transitionDelay: `${index * 150}ms` }}>
-              <div className={`glass-card flex items-center gap-8 ${
-                index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'
-              }`}>
+              <div className="glass-card flex items-center gap-8 flex-row">
                 <div className="shrink-0">
                   <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-accent text-white flex items-center justify-center text-3xl font-bold shadow-xl">
                     {step.number}
                   </div>
                 </div>
-                <div className={`space-y-4 ${index % 2 === 0 ? 'text-right' : 'text-left'}`}>
+                <div className="space-y-4 text-right">
                   <h3 className="text-2xl md:text-3xl font-bold text-primary">{step.title}</h3>
                   <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">{step.description}</p>
                 </div>
