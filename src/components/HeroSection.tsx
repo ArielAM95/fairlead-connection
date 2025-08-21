@@ -1,25 +1,18 @@
-
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useRef } from "react";
-
 const HeroSection = () => {
   const elementRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-      }
-    );
-
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
     const staggeredContainer = elementRef.current?.querySelector(".staggered-animation");
     if (staggeredContainer) {
       const childElements = staggeredContainer.children;
@@ -29,10 +22,8 @@ const HeroSection = () => {
         observer.observe(el);
       });
     }
-
     return () => observer.disconnect();
   }, []);
-
   const scrollToForm = () => {
     const ctaSection = document.querySelector('#signup-form');
     if (ctaSection) {
@@ -41,7 +32,6 @@ const HeroSection = () => {
       });
     }
   };
-
   const scrollToWhatIs = () => {
     const whatIsSection = document.querySelector('#what-is');
     if (whatIsSection) {
@@ -50,9 +40,7 @@ const HeroSection = () => {
       });
     }
   };
-
-  return (
-    <div className="min-h-screen flex items-center relative overflow-hidden bg-background hero-gradient">
+  return <div className="min-h-screen flex items-center relative overflow-hidden bg-background hero-gradient">
       {/* Content Overlay */}
       <div className="container mx-auto px-4 md:px-6 py-20 relative w-full">
         <div className="max-w-6xl mx-auto">
@@ -65,11 +53,7 @@ const HeroSection = () => {
                     oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
                   </h1>
                   <div className="flex-shrink-0">
-                    <img 
-                      src="/lovable-uploads/01360891-da5d-43ab-94f6-35060af38c05.png" 
-                      alt="oFair Character" 
-                      className="w-24 sm:w-32 h-auto object-contain drop-shadow-2xl animate-float"
-                    />
+                    <img src="/lovable-uploads/01360891-da5d-43ab-94f6-35060af38c05.png" alt="oFair Character" className="w-24 sm:w-32 h-auto object-contain drop-shadow-2xl animate-float" />
                   </div>
                 </div>
               </div>
@@ -88,18 +72,11 @@ const HeroSection = () => {
               
               <div className="mobile-hero-item">
                 <div className="flex flex-col sm:flex-row gap-6 justify-end mb-8">
-                  <Button 
-                    className="cta-gradient text-white px-10 py-6 text-lg button-pulse shadow-xl" 
-                    onClick={scrollToForm}
-                  >
+                  <Button className="cta-gradient text-white px-10 py-6 text-lg button-pulse shadow-xl" onClick={scrollToForm}>
                     <span>הירשמו כעת</span>
                     <ChevronRight className="mr-2 h-5 w-5" />
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    className="border-2 border-white bg-white/10 backdrop-blur-md hover:bg-white/20 text-white px-10 py-6 text-lg shadow-xl" 
-                    onClick={scrollToWhatIs}
-                  >
+                  <Button variant="outline" className="border-2 border-white bg-white/10 backdrop-blur-md hover:bg-white/20 text-white px-10 py-6 text-lg shadow-xl" onClick={scrollToWhatIs}>
                     <span>קרא עוד</span>
                   </Button>
                 </div>
@@ -145,7 +122,7 @@ const HeroSection = () => {
             {/* Text Content */}
             <div ref={elementRef} className="staggered-animation text-right">
               <div className="desktop-hero-item">
-                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-tight mb-8 drop-shadow-lg">
+                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-tight mb-8 drop-shadow-lg mx-[2px]">
                   oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
                 </h1>
               </div>
@@ -163,19 +140,12 @@ const HeroSection = () => {
               </div>
               
               <div className="desktop-hero-item">
-                <div className="flex flex-col sm:flex-row gap-6 justify-end mb-8">
-                  <Button 
-                    className="cta-gradient text-white px-10 py-6 text-lg button-pulse shadow-xl" 
-                    onClick={scrollToForm}
-                  >
+                <div className="flex flex-col sm:flex-row gap-6 justify-end mb-8 mx-0">
+                  <Button className="cta-gradient text-white px-10 py-6 text-lg button-pulse shadow-xl" onClick={scrollToForm}>
                     <span>הירשמו כעת</span>
                     <ChevronRight className="mr-2 h-5 w-5" />
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    className="border-2 border-white bg-white/10 backdrop-blur-md hover:bg-white/20 text-white px-10 py-6 text-lg shadow-xl" 
-                    onClick={scrollToWhatIs}
-                  >
+                  <Button variant="outline" className="border-2 border-white bg-white/10 backdrop-blur-md hover:bg-white/20 text-white px-10 py-6 text-lg shadow-xl" onClick={scrollToWhatIs}>
                     <span>קרא עוד</span>
                   </Button>
                 </div>
@@ -218,11 +188,7 @@ const HeroSection = () => {
             {/* Character Image */}
             <div className="flex justify-center lg:justify-end">
               <div className="relative">
-                <img 
-                  src="/lovable-uploads/01360891-da5d-43ab-94f6-35060af38c05.png" 
-                  alt="oFair Character" 
-                  className="w-80 h-auto object-contain drop-shadow-2xl animate-float"
-                />
+                <img src="/lovable-uploads/01360891-da5d-43ab-94f6-35060af38c05.png" alt="oFair Character" className="w-80 h-auto object-contain drop-shadow-2xl animate-float" />
                 {/* Glowing effect behind character */}
                 <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-accent/30 blur-3xl -z-10 scale-110"></div>
               </div>
@@ -230,8 +196,6 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default HeroSection;
