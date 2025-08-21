@@ -63,6 +63,12 @@ const AppShowcaseSection = () => {
               <Button
                 size="lg"
                 className="bg-white text-blue-700 hover:bg-white/90 font-semibold px-8 py-4 text-lg rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/25 border border-white/30"
+                onClick={() => {
+                  const ctaSection = document.getElementById('cta');
+                  if (ctaSection) {
+                    ctaSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
               >
                 התחל להרוויח מהלידים שלך
               </Button>
