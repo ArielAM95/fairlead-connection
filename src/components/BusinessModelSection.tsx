@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { ScrollFade } from "@/utils/ScrollObserver";
 
 const BusinessModelSection = () => {
-  const [animatedValue, setAnimatedValue] = useState(0);
+  const [animatedValue, setAnimatedValue] = useState(350);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
