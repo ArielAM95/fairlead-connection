@@ -3,11 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700;800&display=swap');
 
 @layer base {
   :root {
-    --font-heebo: 'Heebo', sans-serif;
+    --font-assistant: 'Assistant', sans-serif;
     
     /* Light hi-tech pastel palette (blue–lilac–teal) */
     --background: 210 40% 98%;

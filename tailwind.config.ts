@@ -131,7 +131,7 @@ export default {
 				'pulse-soft': 'pulse-soft 3s ease-in-out infinite',
 			},
 			fontFamily: {
-				sans: ['var(--font-heebo)', 'sans-serif'],
+				sans: ['var(--font-assistant)', 'sans-serif'],
 			},
 			boxShadow: {
 				'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
