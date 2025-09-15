@@ -23,7 +23,7 @@ const Navbar = () => {
   }, []);
 
   const scrollToForm = () => {
-    const ctaSection = document.querySelector('#signup-form');
+    const ctaSection = document.querySelector('#cta');
     if (ctaSection) {
       ctaSection.scrollIntoView({
         behavior: 'smooth'
@@ -39,7 +39,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <a href="#" className="flex items-center px-0">
-              <img alt="oFair Logo" src="/lovable-uploads/2bc5f38c-6146-47fa-b542-6931e17357c0.png" className="h-12 w-auto object-contain" />
+              <img alt="oFair Logo" src="/lovable-uploads/ofair-logo.png" className="h-12 w-auto object-contain" />
             </a>
           </div>
 

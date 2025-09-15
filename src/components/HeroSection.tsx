@@ -53,7 +53,7 @@ const HeroSection = () => {
                     oFair – כל ליד שווה לכם כסף: קבלו לידים איכותיים, או שתפו ותיהנו מרווח מיידי!
                   </h1>
                   <div className="flex-shrink-0">
-                    <img src="/lovable-uploads/01360891-da5d-43ab-94f6-35060af38c05.png" alt="oFair Character" className="w-24 sm:w-32 h-auto object-contain drop-shadow-2xl animate-float" />
+                    <img src="/lovable-uploads/ofair-logo.png" alt="oFair Logo" className="w-24 sm:w-32 h-auto object-contain drop-shadow-2xl" />
                   </div>
                 </div>
               </div>
@@ -188,7 +188,7 @@ const HeroSection = () => {
             {/* Character Image */}
             <div className="flex justify-center lg:justify-end">
               <div className="relative">
-                <img src="/lovable-uploads/01360891-da5d-43ab-94f6-35060af38c05.png" alt="oFair Character" className="w-80 h-auto object-contain drop-shadow-2xl animate-float" />
+                <img src="/lovable-uploads/ofair-logo.png" alt="oFair Logo" className="w-80 h-auto object-contain drop-shadow-2xl" />
                 {/* Glowing effect behind character */}
                 <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-accent/30 blur-3xl -z-10 scale-110"></div>
               </div>
