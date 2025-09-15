@@ -25,7 +25,7 @@ const HeroSection = () => {
     return () => observer.disconnect();
   }, []);
   const scrollToForm = () => {
-    const ctaSection = document.querySelector('#signup-form');
+    const ctaSection = document.querySelector('#cta');
     if (ctaSection) {
       ctaSection.scrollIntoView({
         behavior: 'smooth'
