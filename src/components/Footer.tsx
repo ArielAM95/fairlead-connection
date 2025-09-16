@@ -18,7 +18,7 @@ const Footer = () => {
           {/* Logo and tagline */}
           <div className="md:col-span-5">
             <a href="#" className="flex items-center mb-5">
-              <img src="/lovable-uploads/ofair-logo.png" alt="oFair Logo" className="h-14 w-auto" />
+              <img src="/lovable-uploads/ofair-logo.png" alt="oFair Logo" className="h-18 w-auto" />
             </a>
             <p className="text-white/90 text-lg mb-3">🔹 oFair – מהפכת שיתוף הלידים והעבודה החכמה כבר כאן!</p>
             <p className="text-white/80 text-sm">הפלטפורמה שתחבר בין בעלי מקצוע, מאפשרת שיתוף לידים ומציגה הצעות מחיר בזמן אמת</p>
