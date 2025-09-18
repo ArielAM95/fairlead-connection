@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -122,6 +122,33 @@ export type Database = {
         }
         Relationships: []
       }
+      auth_rate_limits: {
+        Row: {
+          attempt_count: number | null
+          blocked_until: string | null
+          created_at: string | null
+          id: string
+          identifier: string
+          last_attempt_at: string | null
+        }
+        Insert: {
+          attempt_count?: number | null
+          blocked_until?: string | null
+          created_at?: string | null
+          id?: string
+          identifier: string
+          last_attempt_at?: string | null
+        }
+        Update: {
+          attempt_count?: number | null
+          blocked_until?: string | null
+          created_at?: string | null
+          id?: string
+          identifier?: string
+          last_attempt_at?: string | null
+        }
+        Relationships: []
+      }
       auth_tokens: {
         Row: {
           created_at: string | null
@@ -161,6 +188,139 @@ export type Database = {
             referencedRelation: "professionals"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "auth_tokens_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contact_access_logs: {
+        Row: {
+          access_granted: boolean
+          access_type: string
+          accessed_at: string | null
+          accessed_professional_id: string
+          accessor_professional_id: string | null
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+        }
+        Insert: {
+          access_granted: boolean
+          access_type: string
+          accessed_at?: string | null
+          accessed_professional_id: string
+          accessor_professional_id?: string | null
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+        }
+        Update: {
+          access_granted?: boolean
+          access_type?: string
+          accessed_at?: string | null
+          accessed_professional_id?: string
+          accessor_professional_id?: string | null
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      customer_contact_access_logs: {
+        Row: {
+          access_granted: boolean
+          access_type: string
+          accessed_at: string | null
+          accessor_professional_id: string | null
+          id: string
+          ip_address: unknown | null
+          lead_id: string
+          user_agent: string | null
+        }
+        Insert: {
+          access_granted: boolean
+          access_type: string
+          accessed_at?: string | null
+          accessor_professional_id?: string | null
+          id?: string
+          ip_address?: unknown | null
+          lead_id: string
+          user_agent?: string | null
+        }
+        Update: {
+          access_granted?: boolean
+          access_type?: string
+          accessed_at?: string | null
+          accessor_professional_id?: string | null
+          id?: string
+          ip_address?: unknown | null
+          lead_id?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      icount_transactions: {
+        Row: {
+          amount: number
+          confirmation_code: string | null
+          created_at: string | null
+          currency: string | null
+          icount_transaction_id: string | null
+          id: string
+          professional_id: string
+          request_payload: Json | null
+          response_payload: Json | null
+          status: string | null
+          transaction_type: string
+          updated_at: string | null
+        }
+        Insert: {
+          amount: number
+          confirmation_code?: string | null
+          created_at?: string | null
+          currency?: string | null
+          icount_transaction_id?: string | null
+          id?: string
+          professional_id: string
+          request_payload?: Json | null
+          response_payload?: Json | null
+          status?: string | null
+          transaction_type?: string
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: number
+          confirmation_code?: string | null
+          created_at?: string | null
+          currency?: string | null
+          icount_transaction_id?: string | null
+          id?: string
+          professional_id?: string
+          request_payload?: Json | null
+          response_payload?: Json | null
+          status?: string | null
+          transaction_type?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_icount_transactions_professional"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_icount_transactions_professional"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
         ]
       }
       internal_crm: {
@@ -192,6 +352,57 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      issue_reports: {
+        Row: {
+          admin_response: string | null
+          created_at: string | null
+          description: string
+          id: string
+          issue_type: string
+          professional_id: string
+          resolved_at: string | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          admin_response?: string | null
+          created_at?: string | null
+          description: string
+          id?: string
+          issue_type: string
+          professional_id: string
+          resolved_at?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          admin_response?: string | null
+          created_at?: string | null
+          description?: string
+          id?: string
+          issue_type?: string
+          professional_id?: string
+          resolved_at?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_issue_reports_professional_id"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_issue_reports_professional_id"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       lead_payments: {
         Row: {
@@ -246,6 +457,13 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_payments_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
             referencedColumns: ["id"]
           },
           {
@@ -338,6 +556,13 @@ export type Database = {
             referencedRelation: "professionals"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "leads_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
         ]
       }
       notifications: {
@@ -385,6 +610,112 @@ export type Database = {
             referencedRelation: "professionals"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "notifications_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      phone_revelations: {
+        Row: {
+          created_at: string | null
+          id: string
+          professional_id: string
+          professional_name: string
+          professional_phone: string
+          revealed_at: string | null
+          user_agent: string | null
+          user_id: string
+          user_ip: unknown | null
+          user_name: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          professional_id: string
+          professional_name: string
+          professional_phone: string
+          revealed_at?: string | null
+          user_agent?: string | null
+          user_id: string
+          user_ip?: unknown | null
+          user_name?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          professional_id?: string
+          professional_name?: string
+          professional_phone?: string
+          revealed_at?: string | null
+          user_agent?: string | null
+          user_id?: string
+          user_ip?: unknown | null
+          user_name?: string | null
+        }
+        Relationships: []
+      }
+      professional_billing_details: {
+        Row: {
+          address: string | null
+          business_name: string | null
+          city: string | null
+          contact_name: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          phone: string | null
+          postal_code: string | null
+          professional_id: string
+          updated_at: string | null
+          vat_id: string | null
+        }
+        Insert: {
+          address?: string | null
+          business_name?: string | null
+          city?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          phone?: string | null
+          postal_code?: string | null
+          professional_id: string
+          updated_at?: string | null
+          vat_id?: string | null
+        }
+        Update: {
+          address?: string | null
+          business_name?: string | null
+          city?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          phone?: string | null
+          postal_code?: string | null
+          professional_id?: string
+          updated_at?: string | null
+          vat_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_billing_details_professional"
+            columns: ["professional_id"]
+            isOneToOne: true
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_billing_details_professional"
+            columns: ["professional_id"]
+            isOneToOne: true
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
         ]
       }
       professional_certificates: {
@@ -427,6 +758,13 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_professional_certificates_professional_id"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
             referencedColumns: ["id"]
           },
         ]
@@ -705,7 +1043,7 @@ export type Database = {
           lower_price_value: number | null
           lower_price_willing: boolean | null
           media_urls: string[] | null
-          price: number
+          price: number | null
           professional_id: string | null
           sample_image_url: string | null
           scheduled_date: string | null
@@ -722,7 +1060,7 @@ export type Database = {
           lower_price_value?: number | null
           lower_price_willing?: boolean | null
           media_urls?: string[] | null
-          price: number
+          price?: number | null
           professional_id?: string | null
           sample_image_url?: string | null
           scheduled_date?: string | null
@@ -739,7 +1077,7 @@ export type Database = {
           lower_price_value?: number | null
           lower_price_willing?: boolean | null
           media_urls?: string[] | null
-          price?: number
+          price?: number | null
           professional_id?: string | null
           sample_image_url?: string | null
           scheduled_date?: string | null
@@ -759,6 +1097,13 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "proposals_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
             referencedColumns: ["id"]
           },
         ]
@@ -809,6 +1154,13 @@ export type Database = {
             columns: ["request_id"]
             isOneToOne: false
             referencedRelation: "requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_quote_payments_request_id"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "requests_public_view"
             referencedColumns: ["id"]
           },
         ]
@@ -874,10 +1226,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "quotes_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "quotes_request_id_fkey"
             columns: ["request_id"]
             isOneToOne: false
             referencedRelation: "requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotes_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "requests_public_view"
             referencedColumns: ["id"]
           },
         ]
@@ -928,6 +1294,13 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referrals_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
             referencedColumns: ["id"]
           },
         ]
@@ -983,6 +1356,39 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      security_audit_log: {
+        Row: {
+          accessor_id: string | null
+          action: string
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          record_id: string | null
+          table_name: string
+          user_agent: string | null
+        }
+        Insert: {
+          accessor_id?: string | null
+          action: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          record_id?: string | null
+          table_name: string
+          user_agent?: string | null
+        }
+        Update: {
+          accessor_id?: string | null
+          action?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          record_id?: string | null
+          table_name?: string
+          user_agent?: string | null
         }
         Relationships: []
       }
@@ -1093,7 +1499,9 @@ export type Database = {
           created_at: string
           final_amount: number | null
           id: string
+          invoice_url: string | null
           notes: string | null
+          ocr_detected_amount: number | null
           payment_method: string | null
           professional_id: string
           proposal_id: string | null
@@ -1101,13 +1509,16 @@ export type Database = {
           referral_id: string | null
           status: string
           updated_at: string
+          user_corrected_amount: number | null
           work_title: string
         }
         Insert: {
           created_at?: string
           final_amount?: number | null
           id?: string
+          invoice_url?: string | null
           notes?: string | null
+          ocr_detected_amount?: number | null
           payment_method?: string | null
           professional_id: string
           proposal_id?: string | null
@@ -1115,13 +1526,16 @@ export type Database = {
           referral_id?: string | null
           status: string
           updated_at?: string
+          user_corrected_amount?: number | null
           work_title: string
         }
         Update: {
           created_at?: string
           final_amount?: number | null
           id?: string
+          invoice_url?: string | null
           notes?: string | null
+          ocr_detected_amount?: number | null
           payment_method?: string | null
           professional_id?: string
           proposal_id?: string | null
@@ -1129,38 +1543,153 @@ export type Database = {
           referral_id?: string | null
           status?: string
           updated_at?: string
+          user_corrected_amount?: number | null
           work_title?: string
         }
         Relationships: []
       }
     }
     Views: {
-      [_ in never]: never
+      professionals_public_view: {
+        Row: {
+          about: string | null
+          areas: string | null
+          certifications: string[] | null
+          city: string | null
+          company_name: string | null
+          experience_range: string | null
+          experience_years: string | null
+          id: string | null
+          image: string | null
+          image_url: string | null
+          is_verified: boolean | null
+          location: string | null
+          name: string | null
+          profession: string | null
+          rating: number | null
+          review_count: number | null
+          specialties: string[] | null
+          status: string | null
+        }
+        Insert: {
+          about?: string | null
+          areas?: string | null
+          certifications?: string[] | null
+          city?: string | null
+          company_name?: string | null
+          experience_range?: string | null
+          experience_years?: string | null
+          id?: string | null
+          image?: string | null
+          image_url?: string | null
+          is_verified?: boolean | null
+          location?: string | null
+          name?: string | null
+          profession?: string | null
+          rating?: number | null
+          review_count?: number | null
+          specialties?: string[] | null
+          status?: string | null
+        }
+        Update: {
+          about?: string | null
+          areas?: string | null
+          certifications?: string[] | null
+          city?: string | null
+          company_name?: string | null
+          experience_range?: string | null
+          experience_years?: string | null
+          id?: string | null
+          image?: string | null
+          image_url?: string | null
+          is_verified?: boolean | null
+          location?: string | null
+          name?: string | null
+          profession?: string | null
+          rating?: number | null
+          review_count?: number | null
+          specialties?: string[] | null
+          status?: string | null
+        }
+        Relationships: []
+      }
+      requests_public_view: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          date: string | null
+          description: string | null
+          id: string | null
+          location: string | null
+          media_urls: string[] | null
+          status: string | null
+          timing: string | null
+          title: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          date?: string | null
+          description?: string | null
+          id?: string | null
+          location?: string | null
+          media_urls?: string[] | null
+          status?: string | null
+          timing?: string | null
+          title?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          date?: string | null
+          description?: string | null
+          id?: string | null
+          location?: string | null
+          media_urls?: string[] | null
+          status?: string | null
+          timing?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       add_internal_user: {
         Args: {
+          make_super_admin?: boolean
           user_email: string
           user_name?: string
-          make_super_admin?: boolean
         }
         Returns: string
       }
       add_internal_user_by_email: {
         Args: {
           caller_email: string
+          make_super_admin?: boolean
           new_user_email: string
           user_name?: string
-          make_super_admin?: boolean
         }
         Returns: Json
       }
+      audit_customer_data_access: {
+        Args: {
+          access_type: string
+          accessor_id: string
+          record_id: string
+          table_name: string
+        }
+        Returns: undefined
+      }
       calculate_distance_km: {
-        Args: { lat1: number; lon1: number; lat2: number; lon2: number }
+        Args: { lat1: number; lat2: number; lon1: number; lon2: number }
         Returns: number
       }
       check_admin_status: {
         Args: { user_id_param: string }
+        Returns: boolean
+      }
+      check_auth_token_for_professional: {
+        Args: { professional_id_param: string }
         Returns: boolean
       }
       check_internal_email: {
@@ -1177,6 +1706,10 @@ export type Database = {
       }
       check_is_super_admin_user: {
         Args: { user_id_param: string }
+        Returns: boolean
+      }
+      check_professional_exists_by_phone: {
+        Args: { phone_param: string }
         Returns: boolean
       }
       check_professional_ownership: {
@@ -1279,23 +1812,178 @@ export type Database = {
             }
         Returns: Json
       }
+      get_clients_history_secure: {
+        Args: { token_param?: string }
+        Returns: {
+          amount: number
+          client_address: string
+          client_email: string
+          client_name: string
+          client_phone: string
+          payment_method: string
+          status: string
+          title: string
+          transaction_date: string
+          transaction_id: string
+          transaction_type: string
+        }[]
+      }
       get_current_professional_id_secure: {
-        Args: Record<PropertyKey, never> | { token_param?: string }
+        Args: { token_param?: string }
         Returns: string
+      }
+      get_icount_transactions_secure: {
+        Args: { token_param?: string }
+        Returns: {
+          amount: number
+          confirmation_code: string
+          created_at: string
+          currency: string
+          id: string
+          professional_id: string
+          status: string
+          transaction_type: string
+        }[]
+      }
+      get_lead_customer_info_secure: {
+        Args: { lead_id_param: string }
+        Returns: {
+          client_address: string
+          client_name: string
+          client_phone: string
+        }[]
+      }
+      get_my_payments_secure: {
+        Args: { token_param?: string }
+        Returns: {
+          commission_amount: number
+          created_at: string
+          final_amount: number
+          id: string
+          invoice_url: string
+          lead_description: string
+          lead_id: string
+          lead_title: string
+          notes: string
+          payment_method: string
+          professional_id: string
+          proposal_id: string
+          share_percentage: number
+        }[]
+      }
+      get_my_professional_ratings: {
+        Args: { token_param?: string }
+        Returns: {
+          created_at: string
+          customer_initials: string
+          customer_phone_masked: string
+          id: string
+          rating_cleanliness: number
+          rating_communication: number
+          rating_overall: number
+          rating_quality: number
+          rating_recommendation: number
+          rating_timing: number
+          rating_value: number
+          recommendation: string
+          weighted_average: number
+        }[]
       }
       get_professional_by_identifier: {
         Args: { identifier_param: string; is_email_param: boolean }
         Returns: {
+          about: string
+          email: string
           id: string
-          user_id: string
+          image: string
+          location: string
           name: string
           phone_number: string
-          email: string
           profession: string
-          location: string
           specialties: string[]
-          image: string
-          about: string
+          user_id: string
+        }[]
+      }
+      get_professional_contact_info: {
+        Args: { professional_id_param: string }
+        Returns: {
+          email: string
+          id: string
+          phone_number: string
+          professional_name: string
+        }[]
+      }
+      get_professional_contact_info_secure: {
+        Args: { professional_id_param: string }
+        Returns: {
+          email: string
+          id: string
+          phone_number: string
+          professional_name: string
+        }[]
+      }
+      get_professional_phone_secure: {
+        Args: { professional_id_param: string; user_name_param?: string }
+        Returns: {
+          message: string
+          phone_number: string
+          success: boolean
+        }[]
+      }
+      get_professional_rating_stats: {
+        Args: { professional_phone_param: string }
+        Returns: {
+          average_cleanliness: number
+          average_communication: number
+          average_overall: number
+          average_quality: number
+          average_recommendation: number
+          average_timing: number
+          average_value: number
+          overall_weighted_average: number
+          total_ratings: number
+        }[]
+      }
+      get_professional_ratings_public: {
+        Args: { professional_phone_param: string }
+        Returns: {
+          company_name: string
+          created_at: string
+          professional_name: string
+          rating_cleanliness: number
+          rating_communication: number
+          rating_overall: number
+          rating_quality: number
+          rating_recommendation: number
+          rating_timing: number
+          rating_value: number
+          recommendation: string
+          weighted_average: number
+        }[]
+      }
+      get_professional_ratings_public_safe: {
+        Args: { professional_id_param: string }
+        Returns: {
+          average_rating: number
+          rating_cleanliness: number
+          rating_communication: number
+          rating_overall: number
+          rating_quality: number
+          rating_timing: number
+          rating_value: number
+          total_reviews: number
+        }[]
+      }
+      get_professionals_for_business: {
+        Args: { search_term?: string }
+        Returns: {
+          has_contact_access: boolean
+          id: string
+          is_verified: boolean
+          location: string
+          name: string
+          profession: string
+          rating: number
         }[]
       }
       get_projects_for_professional: {
@@ -1314,14 +2002,130 @@ export type Database = {
           updated_at: string | null
         }[]
       }
+      get_proposals_secure: {
+        Args:
+          | { lead_id_param?: string; professional_id_param?: string }
+          | { token_param?: string }
+        Returns: {
+          created_at: string
+          description: string
+          estimated_completion: string
+          id: string
+          lead_id: string
+          price: number
+          professional_id: string
+          professional_location: string
+          professional_name: string
+          professional_profession: string
+          professional_rating: number
+          professional_verified: boolean
+          status: string
+        }[]
+      }
+      get_public_leads_secure: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          budget: number
+          constraints: string
+          created_at: string
+          description: string
+          id: string
+          image_url: string
+          image_urls: string[]
+          latitude: number
+          location: string
+          longitude: number
+          notes: string
+          profession: string
+          share_percentage: number
+          status: string
+          title: string
+          work_date: string
+          work_time: string
+        }[]
+      }
+      get_public_professional_data: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          about: string
+          experience_range: string
+          id: string
+          image: string
+          is_verified: boolean
+          location: string
+          name: string
+          profession: string
+          rating: number
+          review_count: number
+          specialties: string[]
+        }[]
+      }
+      get_public_professionals_basic_info: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          about: string
+          experience_range: string
+          id: string
+          image: string
+          is_verified: boolean
+          location: string
+          name: string
+          profession: string
+          rating: number
+          review_count: number
+          specialties: string[]
+          status: string
+        }[]
+      }
+      get_public_professionals_secure: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          about: string
+          areas: string
+          certifications: string[]
+          city: string
+          company_name: string
+          experience_range: string
+          experience_years: string
+          id: string
+          image: string
+          image_url: string
+          is_verified: boolean
+          location: string
+          name: string
+          profession: string
+          rating: number
+          review_count: number
+          specialties: string[]
+          status: string
+        }[]
+      }
+      get_quotes_secure: {
+        Args: { token_param?: string }
+        Returns: {
+          created_at: string
+          description: string
+          estimated_time: string
+          id: string
+          price: string
+          professional_id: string
+          request_id: string
+          request_status: string
+          status: string
+        }[]
+      }
+      get_security_status: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       insert_lead: {
         Args: {
-          p_professional_id: string
-          p_title: string
+          p_budget: number
           p_description: string
           p_location: string
-          p_budget: number
+          p_professional_id: string
           p_share_percentage: number
+          p_title: string
         }
         Returns: string
       }
@@ -1331,11 +2135,11 @@ export type Database = {
       }
       insert_proposal: {
         Args: {
-          p_professional_id: string
-          p_lead_id: string
-          p_price: number
           p_description: string
           p_estimated_completion: string
+          p_lead_id: string
+          p_price: number
+          p_professional_id: string
         }
         Returns: string
       }
@@ -1363,29 +2167,58 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      sanitize_phone_number: {
+        Args: { phone_input: string }
+        Returns: string
+      }
       submit_lead: {
         Args: {
-          p_professional_id: string
-          p_title: string
+          p_budget: number
           p_description: string
           p_location: string
-          p_budget: number
+          p_professional_id: string
           p_share_percentage: number
+          p_title: string
         }
         Returns: boolean
       }
       submit_proposal: {
         Args: {
-          p_professional_id: string
-          p_lead_id: string
-          p_price: number
           p_description: string
           p_estimated_completion: string
+          p_lead_id: string
+          p_price: number
+          p_professional_id: string
         }
         Returns: boolean
       }
+      submit_proposal_secure: {
+        Args: {
+          p_description: string
+          p_estimated_completion?: string
+          p_lead_id: string
+          p_lower_price_value?: number
+          p_lower_price_willing?: boolean
+          p_price: number
+          p_sample_image_url?: string
+          token_param?: string
+        }
+        Returns: string
+      }
+      update_professional_rating_secure: {
+        Args: {
+          new_rating: number
+          new_review_count: number
+          professional_id_param: string
+        }
+        Returns: undefined
+      }
       update_project: {
-        Args: { project_id_param: string; project_data: Json }
+        Args: { project_data: Json; project_id_param: string }
+        Returns: boolean
+      }
+      validate_input_length: {
+        Args: { field_name: string; input_text: string; max_length: number }
         Returns: boolean
       }
     }
