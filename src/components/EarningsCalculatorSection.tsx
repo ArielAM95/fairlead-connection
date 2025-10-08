@@ -90,7 +90,7 @@ const EarningsCalculatorSection = () => {
                   onChange={(e) => setAvgAmount(e.target.value)}
                   className="w-full px-4 py-3 bg-background/50 border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
                   ₪
                 </span>
               </div>
@@ -111,7 +111,7 @@ const EarningsCalculatorSection = () => {
                   onChange={(e) => setCommission(e.target.value)}
                   className="w-full px-4 py-3 bg-background/50 border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
                   %
                 </span>
               </div>
