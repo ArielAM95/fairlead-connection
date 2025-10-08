@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { showNotification, showSuccessNotification } from "@/utils/notification";
 
 interface ContactSectionProps {
@@ -15,12 +17,14 @@ const ContactSection = ({ showNotification: propsShowNotification }: ContactSect
     lastName: "",
     email: "",
     phone: "",
-    message: ""
+    message: "",
+    acceptTerms: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({
     email: "",
-    phone: ""
+    phone: "",
+    acceptTerms: ""
   });
 
   const validateEmail = (email: string) => {
@@ -35,10 +39,13 @@ const ContactSection = ({ showNotification: propsShowNotification }: ContactSect
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
     
-    // For email fields, strip non-Latin characters
-    if (name === 'email') {
+    if (type === "checkbox") {
+      setFormData(prev => ({ ...prev, [name]: checked }));
+    } else if (name === 'email') {
+      // For email fields, strip non-Latin characters
       const sanitizedValue = value.replace(/[^\x00-\x7F]/g, "");
       setFormData({ ...formData, [name]: sanitizedValue });
       
@@ -73,6 +80,12 @@ const ContactSection = ({ showNotification: propsShowNotification }: ContactSect
     // Validate phone before submission
     if (!validatePhone(formData.phone)) {
       setErrors(prev => ({ ...prev, phone: "נא להזין מספר טלפון תקין" }));
+      return;
+    }
+    
+    // Validate terms acceptance
+    if (!formData.acceptTerms) {
+      setErrors(prev => ({ ...prev, acceptTerms: "יש לאשר את תנאי השימוש ומדיניות הפרטיות" }));
       return;
     }
     
@@ -117,7 +130,8 @@ const ContactSection = ({ showNotification: propsShowNotification }: ContactSect
         lastName: "",
         email: "",
         phone: "",
-        message: ""
+        message: "",
+        acceptTerms: false
       });
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -243,11 +257,45 @@ const ContactSection = ({ showNotification: propsShowNotification }: ContactSect
                 />
               </div>
               
+              <div className="flex items-start gap-2 rtl:space-x-reverse">
+                <Checkbox
+                  id="acceptTerms"
+                  name="acceptTerms"
+                  checked={formData.acceptTerms}
+                  onCheckedChange={(checked) => {
+                    handleChange({
+                      target: {
+                        name: "acceptTerms",
+                        type: "checkbox",
+                        checked: !!checked
+                      }
+                    } as React.ChangeEvent<HTMLInputElement>)
+                  }}
+                />
+                <Label
+                  htmlFor="acceptTerms"
+                  className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                >
+                  אני מאשר/ת את{" "}
+                  <a href="/terms" className="text-ofair-900 hover:underline">
+                    תנאי השימוש
+                  </a>
+                  {" "}ואת{" "}
+                  <a href="/terms" className="text-ofair-900 hover:underline">
+                    מדיניות הפרטיות
+                  </a>
+                  {" *"}
+                </Label>
+              </div>
+              {errors.acceptTerms && (
+                <p className="text-sm text-red-500">{errors.acceptTerms}</p>
+              )}
+              
               <div>
                 <Button 
                   type="submit" 
                   className="w-full bg-ofair-900 hover:bg-ofair-800 text-white"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !formData.acceptTerms || !!errors.email || !!errors.phone}
                 >
                   {isSubmitting ? "שולח..." : "שלח הודעה"}
                 </Button>
