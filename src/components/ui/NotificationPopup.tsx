@@ -106,7 +106,7 @@ const NotificationPopup = ({
               
               <div className="flex flex-col gap-3">
                 <a 
-                  href="https://app.icount.co.il/m/12419/c692686dp3u687d0a2c?utm_source=iCount&utm_medium=paypage&utm_campaign=3" 
+                  href="https://pay.tranzila.com/fxpofair001" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="block text-center px-6 py-3 bg-[#00327B] text-white rounded-lg font-medium hover:bg-[#002a66] transition-colors"
