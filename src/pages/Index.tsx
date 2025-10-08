@@ -6,6 +6,7 @@ import WhatIsSection from "@/components/WhatIsSection";
 import BusinessModelSection from "@/components/BusinessModelSection";
 import BenefitsSection from "@/components/BenefitsSection";
 import ProblemsSection from "@/components/ProblemsSection";
+import EarningsCalculatorSection from "@/components/EarningsCalculatorSection";
 import AppShowcaseSection from "@/components/AppShowcaseSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import CtaSection from "@/components/CtaSection";
@@ -85,6 +86,7 @@ const Index = () => {
       <Navbar />
       <HeroSection />
       <ProblemsSection />
+      <EarningsCalculatorSection />
       <AppShowcaseSection />
       <WhatIsSection />
       <BusinessModelSection />
