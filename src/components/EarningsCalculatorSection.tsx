@@ -146,6 +146,18 @@ const EarningsCalculatorSection = () => {
               </p>
             </div>
           </div>
+
+          {/* CTA Button */}
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => {
+                document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl"
+            >
+              הירשם עכשיו והתחל להרוויח
+            </button>
+          </div>
         </div>
 
         {/* Additional Context */}
