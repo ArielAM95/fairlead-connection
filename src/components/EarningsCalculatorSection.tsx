@@ -2,13 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import { TrendingUp, Calculator } from "lucide-react";
 
 const EarningsCalculatorSection = () => {
-  const [leads, setLeads] = useState(10);
-  const [avgAmount, setAvgAmount] = useState(5000);
-  const [commission, setCommission] = useState(20);
+  const [leads, setLeads] = useState<string>("10");
+  const [avgAmount, setAvgAmount] = useState<string>("5000");
+  const [commission, setCommission] = useState<string>("20");
   const sectionRef = useRef<HTMLElement>(null);
 
   // Calculate monthly earnings
-  const monthlyEarnings = leads * avgAmount * (commission / 100);
+  const monthlyEarnings = (Number(leads) || 0) * (Number(avgAmount) || 0) * ((Number(commission) || 0) / 100);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -66,7 +66,7 @@ const EarningsCalculatorSection = () => {
                   type="number"
                   min="0"
                   value={leads}
-                  onChange={(e) => setLeads(e.target.value === '' ? 0 : Number(e.target.value))}
+                  onChange={(e) => setLeads(e.target.value)}
                   className="w-full px-4 py-3 bg-background/50 border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                 />
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm pointer-events-none">
@@ -87,7 +87,7 @@ const EarningsCalculatorSection = () => {
                   min="0"
                   step="100"
                   value={avgAmount}
-                  onChange={(e) => setAvgAmount(e.target.value === '' ? 0 : Number(e.target.value))}
+                  onChange={(e) => setAvgAmount(e.target.value)}
                   className="w-full px-4 py-3 bg-background/50 border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
@@ -108,7 +108,7 @@ const EarningsCalculatorSection = () => {
                   min="0"
                   max="100"
                   value={commission}
-                  onChange={(e) => setCommission(e.target.value === '' ? 0 : Number(e.target.value))}
+                  onChange={(e) => setCommission(e.target.value)}
                   className="w-full px-4 py-3 bg-background/50 border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
