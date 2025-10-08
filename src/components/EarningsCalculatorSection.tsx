@@ -66,7 +66,7 @@ const EarningsCalculatorSection = () => {
                   type="number"
                   min="0"
                   value={leads}
-                  onChange={(e) => setLeads(Number(e.target.value))}
+                  onChange={(e) => setLeads(e.target.value === '' ? 0 : Number(e.target.value))}
                   className="w-full px-4 py-3 bg-background/50 border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                 />
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm pointer-events-none">
@@ -87,7 +87,7 @@ const EarningsCalculatorSection = () => {
                   min="0"
                   step="100"
                   value={avgAmount}
-                  onChange={(e) => setAvgAmount(Number(e.target.value))}
+                  onChange={(e) => setAvgAmount(e.target.value === '' ? 0 : Number(e.target.value))}
                   className="w-full px-4 py-3 bg-background/50 border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
@@ -108,7 +108,7 @@ const EarningsCalculatorSection = () => {
                   min="0"
                   max="100"
                   value={commission}
-                  onChange={(e) => setCommission(Number(e.target.value))}
+                  onChange={(e) => setCommission(e.target.value === '' ? 0 : Number(e.target.value))}
                   className="w-full px-4 py-3 bg-background/50 border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
@@ -126,7 +126,7 @@ const EarningsCalculatorSection = () => {
                 הרווח החודשי הפוטנציאלי שלך
               </h3>
             </div>
-            <div className="text-5xl md:text-6xl font-bold bg-gradient-to-l from-primary via-primary-glow to-primary bg-clip-text text-transparent transition-all duration-300">
+            <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-l from-primary via-primary-glow to-primary bg-clip-text text-transparent transition-all duration-300 break-words">
               ₪{monthlyEarnings.toLocaleString('he-IL')}
             </div>
             <p className="text-sm text-muted-foreground mt-2">

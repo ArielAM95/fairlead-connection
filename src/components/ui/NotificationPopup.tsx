@@ -114,7 +114,7 @@ const NotificationPopup = ({
                   🔵 בצע תשלום עכשיו
                 </a>
                 <button 
-                  onClick={() => window.open('tel:+972537779773', '_self')}
+                  onClick={() => window.open('tel:0505577565', '_self')}
                   className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
                 >
                   🔘 דברו איתנו בטלפון
