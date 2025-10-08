@@ -134,6 +134,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
           workRegions: formData.workRegions,
           phone: formData.phone || "00-0000000", // Default value if not provided
           city: formData.city || "לא צוין", // Default value if not provided
+          acceptTerms: true, // Old modal assumes terms are accepted
         }, 
         workFields, 
         workRegions, 

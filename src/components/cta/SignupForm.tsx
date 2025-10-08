@@ -78,11 +78,41 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
 
       <div className="flex items-start gap-2 rtl:space-x-reverse">
         <Checkbox
+          id="acceptTerms"
+          name="acceptTerms"
+          checked={formData.acceptTerms}
+          onCheckedChange={(checked) => {
+            handleChange({
+              target: {
+                name: "acceptTerms",
+                type: "checkbox",
+                checked: !!checked
+              }
+            } as React.ChangeEvent<HTMLInputElement>)
+          }}
+        />
+        <Label
+          htmlFor="acceptTerms"
+          className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+        >
+          אני מאשר/ת את{" "}
+          <a href="/terms" className="text-ofair-900 hover:underline">
+            תנאי השימוש
+          </a>
+          {" "}ואת{" "}
+          <a href="/terms" className="text-ofair-900 hover:underline">
+            מדיניות הפרטיות
+          </a>
+          {" *"}
+        </Label>
+      </div>
+
+      <div className="flex items-start gap-2 rtl:space-x-reverse">
+        <Checkbox
           id="acceptMarketing"
           name="acceptMarketing"
           checked={formData.acceptMarketing}
           onCheckedChange={(checked) => {
-            // Create a synthetic event that mimics an input change event
             handleChange({
               target: {
                 name: "acceptMarketing",
@@ -96,7 +126,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           htmlFor="acceptMarketing"
           className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
         >
-          אני מאשר/ת קבלת עדכונים לגבי ההרשמה שלי, תוכן שיווקי והטבות באמצעות דוא"ל והודעות Whatsapp *
+          אני מאשר/ת קבלת עדכונים לגבי ההרשמה שלי, תוכן שיווקי והטבות באמצעות דוא"ל והודעות Whatsapp (אופציונלי)
         </Label>
       </div>
 
@@ -109,24 +139,13 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
             formData.workFields.length === 0 ||
             formData.workRegions.length === 0 ||
             !formData.experience ||
-            !formData.acceptMarketing ||
+            !formData.acceptTerms ||
             !!errors.email ||
             !!errors.phone
           }
         >
           {isSubmitting ? "מבצע רישום..." : "הירשמו כעת"}
         </Button>
-
-        <p className="text-xs text-center text-muted-foreground mt-4">
-          בלחיצה על הכפתור אני מאשר/ת את
-          <a href="/terms" className="text-ofair-900 hover:underline mx-1">
-            תנאי השימוש
-          </a>
-          ואת
-          <a href="/terms" className="text-ofair-900 hover:underline mx-1">
-            מדיניות הפרטיות
-          </a>
-        </p>
       </div>
     </form>
   );

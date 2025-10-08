@@ -15,6 +15,7 @@ export const useFormState = () => {
     phone: "",
     city: "",
     workRegions: [],
+    acceptTerms: false,
     acceptMarketing: false
   };
 
@@ -22,7 +23,8 @@ export const useFormState = () => {
   const [errors, setErrors] = useState<SignupFormErrors>({
     email: "",
     phone: "",
-    experience: ""
+    experience: "",
+    acceptTerms: ""
   });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -50,7 +52,8 @@ export const useFormState = () => {
     setErrors({
       email: "",
       phone: "",
-      experience: ""
+      experience: "",
+      acceptTerms: ""
     });
   };
 

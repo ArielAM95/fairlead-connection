@@ -51,6 +51,8 @@ export const submitSignupForm = async (
       workFields: workFieldsInHebrew,
       workRegions: workRegionsInHebrew,
       otherWorkField: formData.showOtherWorkField ? formData.otherWorkField : "",
+      acceptTerms: formData.acceptTerms,
+      acceptMarketing: formData.acceptMarketing,
       ...utmParams
     };
 
@@ -102,6 +104,7 @@ export const submitSignupForm = async (
       city: formData.city || "לא צוין",
       location: formData.city || "לא צוין",
       areas: formData.workRegions.join(", "),
+      terms_accepted: formData.acceptTerms,
       marketing_consent: formData.acceptMarketing
     };
     

@@ -10,7 +10,8 @@ export const useFormValidation = () => {
     const errors: SignupFormErrors = {
       email: "",
       phone: "",
-      experience: ""
+      experience: "",
+      acceptTerms: ""
     };
     
     let isValid = true;
@@ -27,6 +28,11 @@ export const useFormValidation = () => {
     
     if (!formData.experience) {
       errors.experience = "נא לבחור ותק";
+      isValid = false;
+    }
+
+    if (!formData.acceptTerms) {
+      errors.acceptTerms = "יש לאשר את תנאי השימוש ומדיניות הפרטיות";
       isValid = false;
     }
 

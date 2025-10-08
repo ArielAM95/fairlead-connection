@@ -263,66 +263,6 @@ export type Database = {
         }
         Relationships: []
       }
-      icount_transactions: {
-        Row: {
-          amount: number
-          confirmation_code: string | null
-          created_at: string | null
-          currency: string | null
-          icount_transaction_id: string | null
-          id: string
-          professional_id: string
-          request_payload: Json | null
-          response_payload: Json | null
-          status: string | null
-          transaction_type: string
-          updated_at: string | null
-        }
-        Insert: {
-          amount: number
-          confirmation_code?: string | null
-          created_at?: string | null
-          currency?: string | null
-          icount_transaction_id?: string | null
-          id?: string
-          professional_id: string
-          request_payload?: Json | null
-          response_payload?: Json | null
-          status?: string | null
-          transaction_type?: string
-          updated_at?: string | null
-        }
-        Update: {
-          amount?: number
-          confirmation_code?: string | null
-          created_at?: string | null
-          currency?: string | null
-          icount_transaction_id?: string | null
-          id?: string
-          professional_id?: string
-          request_payload?: Json | null
-          response_payload?: Json | null
-          status?: string | null
-          transaction_type?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_icount_transactions_professional"
-            columns: ["professional_id"]
-            isOneToOne: false
-            referencedRelation: "professionals"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_icount_transactions_professional"
-            columns: ["professional_id"]
-            isOneToOne: false
-            referencedRelation: "professionals_public_view"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       internal_crm: {
         Row: {
           created_at: string
@@ -330,6 +270,7 @@ export type Database = {
           id: string
           is_super_admin: boolean
           name: string | null
+          password_hash: string | null
           updated_at: string
           user_id: string | null
         }
@@ -339,6 +280,7 @@ export type Database = {
           id?: string
           is_super_admin?: boolean
           name?: string | null
+          password_hash?: string | null
           updated_at?: string
           user_id?: string | null
         }
@@ -348,6 +290,7 @@ export type Database = {
           id?: string
           is_super_admin?: boolean
           name?: string | null
+          password_hash?: string | null
           updated_at?: string
           user_id?: string | null
         }
@@ -410,6 +353,7 @@ export type Database = {
           created_at: string
           final_amount: number
           id: string
+          includes_vat: boolean
           invoice_url: string | null
           lead_id: string
           notes: string | null
@@ -423,6 +367,7 @@ export type Database = {
           created_at?: string
           final_amount: number
           id?: string
+          includes_vat?: boolean
           invoice_url?: string | null
           lead_id: string
           notes?: string | null
@@ -436,6 +381,7 @@ export type Database = {
           created_at?: string
           final_amount?: number
           id?: string
+          includes_vat?: boolean
           invoice_url?: string | null
           lead_id?: string
           notes?: string | null
@@ -488,6 +434,7 @@ export type Database = {
           id: string
           image_url: string | null
           image_urls: string[] | null
+          includes_vat: boolean
           latitude: number | null
           location: string
           longitude: number | null
@@ -512,6 +459,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           image_urls?: string[] | null
+          includes_vat?: boolean
           latitude?: number | null
           location: string
           longitude?: number | null
@@ -536,6 +484,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           image_urls?: string[] | null
+          includes_vat?: boolean
           latitude?: number | null
           location?: string
           longitude?: number | null
@@ -657,66 +606,6 @@ export type Database = {
           user_name?: string | null
         }
         Relationships: []
-      }
-      professional_billing_details: {
-        Row: {
-          address: string | null
-          business_name: string | null
-          city: string | null
-          contact_name: string | null
-          created_at: string | null
-          email: string | null
-          id: string
-          phone: string | null
-          postal_code: string | null
-          professional_id: string
-          updated_at: string | null
-          vat_id: string | null
-        }
-        Insert: {
-          address?: string | null
-          business_name?: string | null
-          city?: string | null
-          contact_name?: string | null
-          created_at?: string | null
-          email?: string | null
-          id?: string
-          phone?: string | null
-          postal_code?: string | null
-          professional_id: string
-          updated_at?: string | null
-          vat_id?: string | null
-        }
-        Update: {
-          address?: string | null
-          business_name?: string | null
-          city?: string | null
-          contact_name?: string | null
-          created_at?: string | null
-          email?: string | null
-          id?: string
-          phone?: string | null
-          postal_code?: string | null
-          professional_id?: string
-          updated_at?: string | null
-          vat_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_billing_details_professional"
-            columns: ["professional_id"]
-            isOneToOne: true
-            referencedRelation: "professionals"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_billing_details_professional"
-            columns: ["professional_id"]
-            isOneToOne: true
-            referencedRelation: "professionals_public_view"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       professional_certificates: {
         Row: {
@@ -887,6 +776,7 @@ export type Database = {
           review_count: number | null
           specialties: string[] | null
           status: string | null
+          terms_accepted: boolean
           updated_at: string | null
           user_id: string | null
           work_hours: string | null
@@ -916,6 +806,7 @@ export type Database = {
           review_count?: number | null
           specialties?: string[] | null
           status?: string | null
+          terms_accepted?: boolean
           updated_at?: string | null
           user_id?: string | null
           work_hours?: string | null
@@ -945,6 +836,7 @@ export type Database = {
           review_count?: number | null
           specialties?: string[] | null
           status?: string | null
+          terms_accepted?: boolean
           updated_at?: string | null
           user_id?: string | null
           work_hours?: string | null
@@ -1039,6 +931,7 @@ export type Database = {
           estimated_completion: string | null
           final_amount: number | null
           id: string
+          includes_vat: boolean
           lead_id: string | null
           lower_price_value: number | null
           lower_price_willing: boolean | null
@@ -1056,6 +949,7 @@ export type Database = {
           estimated_completion?: string | null
           final_amount?: number | null
           id?: string
+          includes_vat?: boolean
           lead_id?: string | null
           lower_price_value?: number | null
           lower_price_willing?: boolean | null
@@ -1073,6 +967,7 @@ export type Database = {
           estimated_completion?: string | null
           final_amount?: number | null
           id?: string
+          includes_vat?: boolean
           lead_id?: string | null
           lower_price_value?: number | null
           lower_price_willing?: boolean | null
@@ -1114,6 +1009,7 @@ export type Database = {
           created_at: string
           final_amount: number
           id: string
+          includes_vat: boolean
           invoice_url: string | null
           notes: string | null
           payment_method: string
@@ -1127,6 +1023,7 @@ export type Database = {
           created_at?: string
           final_amount: number
           id?: string
+          includes_vat?: boolean
           invoice_url?: string | null
           notes?: string | null
           payment_method: string
@@ -1140,6 +1037,7 @@ export type Database = {
           created_at?: string
           final_amount?: number
           id?: string
+          includes_vat?: boolean
           invoice_url?: string | null
           notes?: string | null
           payment_method?: string
@@ -1172,6 +1070,7 @@ export type Database = {
           estimated_time: string | null
           final_amount: number | null
           id: string
+          includes_vat: boolean
           media_urls: string[] | null
           price: string
           professional_id: string
@@ -1189,6 +1088,7 @@ export type Database = {
           estimated_time?: string | null
           final_amount?: number | null
           id?: string
+          includes_vat?: boolean
           media_urls?: string[] | null
           price: string
           professional_id: string
@@ -1206,6 +1106,7 @@ export type Database = {
           estimated_time?: string | null
           final_amount?: number | null
           id?: string
+          includes_vat?: boolean
           media_urls?: string[] | null
           price?: string
           professional_id?: string
@@ -1762,6 +1663,7 @@ export type Database = {
           id: string
           image_url: string | null
           image_urls: string[] | null
+          includes_vat: boolean
           latitude: number | null
           location: string
           longitude: number | null
@@ -1789,6 +1691,7 @@ export type Database = {
           id: string
           image_url: string | null
           image_urls: string[] | null
+          includes_vat: boolean
           latitude: number | null
           location: string
           longitude: number | null
@@ -1832,19 +1735,6 @@ export type Database = {
         Args: { token_param?: string }
         Returns: string
       }
-      get_icount_transactions_secure: {
-        Args: { token_param?: string }
-        Returns: {
-          amount: number
-          confirmation_code: string
-          created_at: string
-          currency: string
-          id: string
-          professional_id: string
-          status: string
-          transaction_type: string
-        }[]
-      }
       get_lead_customer_info_secure: {
         Args: { lead_id_param: string }
         Returns: {
@@ -1863,9 +1753,13 @@ export type Database = {
           invoice_url: string
           lead_description: string
           lead_id: string
+          lead_owner_commission: number
           lead_title: string
+          net_professional_earnings: number
           notes: string
+          ofair_commission: number
           payment_method: string
+          payment_type: string
           professional_id: string
           proposal_id: string
           share_percentage: number
@@ -1887,6 +1781,20 @@ export type Database = {
           rating_value: number
           recommendation: string
           weighted_average: number
+        }[]
+      }
+      get_my_work_completions_secure: {
+        Args: { token_param?: string }
+        Returns: {
+          created_at: string
+          final_amount: number
+          id: string
+          invoice_url: string
+          notes: string
+          payment_method: string
+          professional_id: string
+          proposal_type: string
+          status: string
         }[]
       }
       get_professional_by_identifier: {
@@ -2215,6 +2123,14 @@ export type Database = {
       }
       update_project: {
         Args: { project_data: Json; project_id_param: string }
+        Returns: boolean
+      }
+      update_referral_status_secure: {
+        Args: {
+          new_status: string
+          referral_id_param: string
+          token_param?: string
+        }
         Returns: boolean
       }
       validate_input_length: {
