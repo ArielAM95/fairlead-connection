@@ -39,7 +39,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <a href="#" className="flex items-center px-0">
-              <img alt="oFair Logo" src="/lovable-uploads/ofair-logo.png" className="h-16 w-auto object-contain" />
+              <img alt="oFair Logo" src="/lovable-uploads/ofair-logo.png" className="h-24 w-auto object-contain" />
             </a>
           </div>
 
