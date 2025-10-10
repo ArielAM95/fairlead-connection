@@ -64,7 +64,7 @@ const BusinessModelSection = () => {
         <ScrollFade delay={0}>
           <div className="text-center mb-16">
             <div className="inline-block relative">
-              <h2 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-l from-primary via-accent to-secondary bg-clip-text text-transparent">
+              <h2 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-l from-ofair-900 to-ofair-600 bg-clip-text text-transparent">
                 המודל העסקי שלנו
               </h2>
               <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-primary to-accent rounded-full animate-pulse"></div>
