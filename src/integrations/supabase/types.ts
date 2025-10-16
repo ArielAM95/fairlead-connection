@@ -755,6 +755,7 @@ export type Database = {
         Row: {
           about: string | null
           areas: string | null
+          business_license_number: string | null
           certifications: string[] | null
           city: string | null
           company_name: string | null
@@ -785,6 +786,7 @@ export type Database = {
         Insert: {
           about?: string | null
           areas?: string | null
+          business_license_number?: string | null
           certifications?: string[] | null
           city?: string | null
           company_name?: string | null
@@ -815,6 +817,7 @@ export type Database = {
         Update: {
           about?: string | null
           areas?: string | null
+          business_license_number?: string | null
           certifications?: string[] | null
           city?: string | null
           company_name?: string | null

@@ -98,6 +98,7 @@ export const submitSignupForm = async (
       email: formData.email.toLowerCase().trim(),
       phone_number: formData.phone ? formData.phone.trim() : null,
       company_name: formData.companyName || null,
+      business_license_number: formData.businessLicenseNumber || null,
       experience_years: experienceYearsMap[formData.experience] || '1',
       city: formData.city || "לא צוין",
       location: formData.city || "לא צוין",

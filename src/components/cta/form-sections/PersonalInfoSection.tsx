@@ -6,7 +6,6 @@ interface PersonalInfoSectionProps {
   lastName: string;
   phone: string;
   city: string;
-  companyName: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   phoneError?: string;
 }
@@ -16,7 +15,6 @@ export const PersonalInfoSection = ({
   lastName,
   phone,
   city,
-  companyName,
   onChange,
   phoneError
 }: PersonalInfoSectionProps) => {
@@ -83,19 +81,6 @@ export const PersonalInfoSection = ({
           required
           className="bg-gray-50 border-gray-200"
           placeholder="שם העיר"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">
-          שם חברה (אופציונלי)
-        </label>
-        <Input
-          id="companyName"
-          name="companyName"
-          value={companyName}
-          onChange={onChange}
-          className="bg-gray-50 border-gray-200"
         />
       </div>
     </div>

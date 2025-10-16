@@ -1,5 +1,5 @@
 
-import { validateEmail, validatePhone } from "@/utils/formValidation";
+import { validateEmail, validatePhone, validateBusinessLicense } from "@/utils/formValidation";
 import { SignupFormData, SignupFormErrors } from "@/types/signupForm";
 
 export const useFormValidation = () => {
@@ -11,7 +11,8 @@ export const useFormValidation = () => {
       email: "",
       phone: "",
       experience: "",
-      acceptTerms: ""
+      acceptTerms: "",
+      businessLicenseNumber: ""
     };
     
     let isValid = true;
@@ -33,6 +34,11 @@ export const useFormValidation = () => {
 
     if (!formData.acceptTerms) {
       errors.acceptTerms = "יש לאשר את תנאי השימוש ומדיניות הפרטיות";
+      isValid = false;
+    }
+
+    if (!validateBusinessLicense(formData.businessLicenseNumber)) {
+      errors.businessLicenseNumber = "נא להזין מספר עוסק תקין (ספרות בלבד)";
       isValid = false;
     }
 

@@ -3,6 +3,7 @@ export interface SignupFormData {
   firstName: string;
   lastName: string;
   companyName: string;
+  businessLicenseNumber: string;
   workFields: string[];
   otherWorkField: string;
   showOtherWorkField: boolean;
@@ -20,6 +21,7 @@ export interface SignupFormErrors {
   phone: string;
   experience?: string;
   acceptTerms?: string;
+  businessLicenseNumber?: string;
 }
 
 export interface SignupFormHandlers {

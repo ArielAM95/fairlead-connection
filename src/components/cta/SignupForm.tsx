@@ -2,9 +2,8 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PersonalInfoSection } from "./form-sections/PersonalInfoSection";
-import { WorkFieldsSection } from "./form-sections/WorkFieldsSection";
-import { WorkRegionsSection } from "./form-sections/WorkRegionsSection";
-import { ExperienceSection } from "./form-sections/ExperienceSection";
+import { BusinessDetailsSection } from "./form-sections/BusinessDetailsSection";
+import { OccupationDetailsSection } from "./form-sections/OccupationDetailsSection";
 import { useSignupForm } from "@/hooks/useSignupForm";
 import { SignupFormData } from "@/types/signupForm";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -27,35 +26,53 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
   } = useSignupForm(onSubmit);
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <PersonalInfoSection
-        firstName={formData.firstName}
-        lastName={formData.lastName}
-        phone={formData.phone}
-        city={formData.city}
-        companyName={formData.companyName}
-        onChange={handleChange}
-        phoneError={errors.phone}
-      />
+    <form onSubmit={handleSubmit} className="space-y-8">
+      {/* פרטים אישיים */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold text-ofair-900 border-b-2 border-ofair-300 pb-2">
+          פרטים אישיים
+        </h3>
+        <PersonalInfoSection
+          firstName={formData.firstName}
+          lastName={formData.lastName}
+          phone={formData.phone}
+          city={formData.city}
+          onChange={handleChange}
+          phoneError={errors.phone}
+        />
+      </div>
 
-      <WorkFieldsSection
-        selectedFields={formData.workFields}
-        onToggleField={handleWorkFieldToggle}
-        showOtherWorkField={formData.showOtherWorkField}
-        otherWorkField={formData.otherWorkField}
-        onChange={handleChange}
-      />
+      {/* פרטי העסק */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold text-ofair-900 border-b-2 border-ofair-300 pb-2">
+          פרטי העסק
+        </h3>
+        <BusinessDetailsSection
+          companyName={formData.companyName}
+          businessLicenseNumber={formData.businessLicenseNumber}
+          onChange={handleChange}
+          businessLicenseError={errors.businessLicenseNumber}
+        />
+      </div>
 
-      <WorkRegionsSection
-        selectedRegions={formData.workRegions}
-        onToggleRegion={handleWorkRegionToggle}
-      />
-
-      <ExperienceSection
-        value={formData.experience}
-        onChange={handleExperienceChange}
-        error={errors.experience}
-      />
+      {/* פרטי עיסוק */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold text-ofair-900 border-b-2 border-ofair-300 pb-2">
+          פרטי עיסוק
+        </h3>
+        <OccupationDetailsSection
+          selectedFields={formData.workFields}
+          onToggleField={handleWorkFieldToggle}
+          showOtherWorkField={formData.showOtherWorkField}
+          otherWorkField={formData.otherWorkField}
+          selectedRegions={formData.workRegions}
+          onToggleRegion={handleWorkRegionToggle}
+          experience={formData.experience}
+          onExperienceChange={handleExperienceChange}
+          onChange={handleChange}
+          experienceError={errors.experience}
+        />
+      </div>
 
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -141,7 +158,8 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
             !formData.experience ||
             !formData.acceptTerms ||
             !!errors.email ||
-            !!errors.phone
+            !!errors.phone ||
+            !!errors.businessLicenseNumber
           }
         >
           {isSubmitting ? "מבצע רישום..." : "הירשמו כעת"}

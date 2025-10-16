@@ -14,3 +14,14 @@ export const sanitizeEmail = (email: string): string => {
   // Strip non-Latin characters
   return email.replace(/[^\x00-\x7F]/g, "");
 };
+
+export const validateBusinessLicense = (licenseNumber: string): boolean => {
+  // Check if not empty
+  if (!licenseNumber || licenseNumber.trim() === '') {
+    return false;
+  }
+  
+  // Check if contains only digits (and optionally hyphens/spaces)
+  const licenseRegex = /^[\d\s-]+$/;
+  return licenseRegex.test(licenseNumber);
+};

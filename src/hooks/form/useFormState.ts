@@ -7,6 +7,7 @@ export const useFormState = () => {
     firstName: "",
     lastName: "",
     companyName: "",
+    businessLicenseNumber: "",
     workFields: [],
     otherWorkField: "",
     showOtherWorkField: false,
@@ -24,7 +25,8 @@ export const useFormState = () => {
     email: "",
     phone: "",
     experience: "",
-    acceptTerms: ""
+    acceptTerms: "",
+    businessLicenseNumber: ""
   });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -53,7 +55,8 @@ export const useFormState = () => {
       email: "",
       phone: "",
       experience: "",
-      acceptTerms: ""
+      acceptTerms: "",
+      businessLicenseNumber: ""
     });
   };
 
