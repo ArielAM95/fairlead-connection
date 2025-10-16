@@ -33,17 +33,15 @@ export const submitSignupForm = async (
   try {
     console.log("Starting form submission process with data:", formData);
     
-    // Transform work fields and regions to Hebrew for the webhook
+    // Transform work fields to Hebrew for the webhook
     const workFieldsInHebrew = formData.workFields.map(fieldId => {
       if (fieldId === "other") return formData.otherWorkField || "אחר";
       const field = workFields.find(f => f.id === fieldId);
       return field ? field.label : fieldId;
     }).join(", ");
     
-    const workRegionsInHebrew = formData.workRegions.map(regionId => {
-      const region = workRegions.find(r => r.id === regionId);
-      return region ? region.label : regionId;
-    }).join(", ");
+    // workRegions are already in Hebrew, just join them
+    const workRegionsInHebrew = formData.workRegions.join(", ");
     
     const dataToSubmit = {
       ...formData,
@@ -103,7 +101,7 @@ export const submitSignupForm = async (
       experience_years: experienceYearsMap[formData.experience] || '1',
       city: formData.city || "לא צוין",
       location: formData.city || "לא צוין",
-      areas: formData.workRegions.join(", "),
+      areas: formData.workRegions.join(", "), // Already in Hebrew
       terms_accepted: formData.acceptTerms,
       marketing_consent: formData.acceptMarketing
     };

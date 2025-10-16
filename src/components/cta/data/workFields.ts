@@ -127,28 +127,10 @@ export const experienceOptions = [{
   label: "מעל 10 שנים"
 }];
 
-export const workRegions = [{
-  id: "north",
-  label: "צפון"
-}, {
-  id: "south",
-  label: "דרום"
-}, {
-  id: "center",
-  label: "מרכז"
-}, {
-  id: "samaria",
-  label: "שומרון"
-}, {
-  id: "jerusalem",
-  label: "ירושלים והסביבה"
-}, {
-  id: "eilat",
-  label: "אילת"
-}, {
-  id: "shfela",
-  label: "שפלה"
-}, {
-  id: "sharon",
-  label: "השרון"
-}];
+export const workRegions = [
+  { id: "צפון", label: "צפון" },
+  { id: "דרום", label: "דרום" },
+  { id: "מרכז", label: "מרכז" },
+  { id: "ירושלים והסביבה", label: "ירושלים והסביבה" },
+  { id: "חיפה והסביבה", label: "חיפה והסביבה" }
+];

@@ -63,7 +63,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
     password: "",
     phone: "",
     city: "",
-    workRegions: ["center"], // Default to center region
+    workRegions: ["מרכז"], // Default to center region
     acceptMarketing: false   // New field
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
