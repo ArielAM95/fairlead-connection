@@ -848,8 +848,12 @@ export type Database = {
         Row: {
           client: string
           created_at: string | null
+          description: string | null
           end_date: string
           id: string
+          image_url: string | null
+          location: string | null
+          media_urls: Json | null
           price: number
           professional_id: string
           progress: number
@@ -861,8 +865,12 @@ export type Database = {
         Insert: {
           client: string
           created_at?: string | null
+          description?: string | null
           end_date: string
           id?: string
+          image_url?: string | null
+          location?: string | null
+          media_urls?: Json | null
           price: number
           professional_id: string
           progress: number
@@ -874,8 +882,12 @@ export type Database = {
         Update: {
           client?: string
           created_at?: string | null
+          description?: string | null
           end_date?: string
           id?: string
+          image_url?: string | null
+          location?: string | null
+          media_urls?: Json | null
           price?: number
           professional_id?: string
           progress?: number
@@ -1899,8 +1911,12 @@ export type Database = {
         Returns: {
           client: string
           created_at: string | null
+          description: string | null
           end_date: string
           id: string
+          image_url: string | null
+          location: string | null
+          media_urls: Json | null
           price: number
           professional_id: string
           progress: number

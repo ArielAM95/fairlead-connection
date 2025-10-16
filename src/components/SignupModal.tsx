@@ -38,14 +38,11 @@ const experienceOptions = [
 
 // Define work regions that we need for the submitSignupForm function
 const workRegions = [
-  { id: "north", label: "צפון" },
-  { id: "south", label: "דרום" },
-  { id: "center", label: "מרכז" },
-  { id: "samaria", label: "שומרון" },
-  { id: "jerusalem", label: "ירושלים והסביבה" },
-  { id: "eilat", label: "אילת" },
-  { id: "shfela", label: "שפלה" },
-  { id: "sharon", label: "השרון" },
+  { id: "צפון", label: "צפון" },
+  { id: "דרום", label: "דרום" },
+  { id: "מרכז", label: "מרכז" },
+  { id: "ירושלים והסביבה", label: "ירושלים והסביבה" },
+  { id: "חיפה והסביבה", label: "חיפה והסביבה" }
 ];
 
 const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
