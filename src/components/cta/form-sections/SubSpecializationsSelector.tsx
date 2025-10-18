@@ -59,9 +59,8 @@ export const SubSpecializationsSelector = ({
             />
             <label 
               htmlFor={`spec-${spec.id}`} 
-              className="flex-1 text-sm leading-none cursor-pointer flex items-center gap-2"
+              className="flex-1 text-sm leading-none cursor-pointer"
             >
-              <span className="text-muted-foreground text-xs">{spec.number}</span>
               {spec.label}
             </label>
           </div>

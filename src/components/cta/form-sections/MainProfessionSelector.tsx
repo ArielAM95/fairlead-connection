@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
+import React, { useState, useRef, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search } from 'lucide-react';
-import { professionsWithSpecializations } from '../data/professionsAndSpecializations';
+import { Search, X } from 'lucide-react';
+import { professionsWithSpecializations, getProfessionLabel } from '../data/professionsAndSpecializations';
 
 interface MainProfessionSelectorProps {
   selectedProfession: string;
@@ -18,11 +15,34 @@ export const MainProfessionSelector = ({
   error
 }: MainProfessionSelectorProps) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   
   const filteredProfessions = professionsWithSpecializations.filter(p =>
-    p.label.includes(searchTerm) || 
-    p.number.includes(searchTerm)
+    p.label.includes(searchTerm)
   );
+  
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+  
+  const handleSelectProfession = (professionId: string) => {
+    onProfessionChange(professionId);
+    setSearchTerm("");
+    setIsOpen(false);
+  };
+  
+  const handleRemoveProfession = () => {
+    onProfessionChange("");
+  };
   
   return (
     <div className="space-y-3">
@@ -30,56 +50,58 @@ export const MainProfessionSelector = ({
         מה המקצוע הראשי שלך? *
       </label>
       
-      <div className="relative mb-4">
-        <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={16} />
-        <Input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="חפש מקצוע..."
-          className="pr-10"
-        />
-      </div>
+      {selectedProfession && (
+        <div className="flex items-center gap-2 bg-primary/10 border border-primary/30 p-3 rounded-lg">
+          <span className="flex-1 text-sm font-medium text-foreground">
+            ✅ {getProfessionLabel(selectedProfession)}
+          </span>
+          <button
+            type="button"
+            onClick={handleRemoveProfession}
+            className="text-muted-foreground hover:text-destructive transition-colors"
+            aria-label="הסר מקצוע"
+          >
+            <X size={18} />
+          </button>
+        </div>
+      )}
       
-      <ScrollArea className="h-96 rounded-lg border bg-muted/30 p-4">
-        <RadioGroup 
-          value={selectedProfession} 
-          onValueChange={onProfessionChange}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"
-        >
-          {filteredProfessions.map(profession => (
-            <div 
-              key={profession.id}
-              className={`
-                relative flex items-center space-x-2 space-x-reverse
-                rounded-md border-2 p-3 cursor-pointer transition-all
-                ${selectedProfession === profession.id 
-                  ? 'border-primary bg-background shadow-sm' 
-                  : 'border-border bg-background hover:border-primary/50'
-                }
-              `}
-            >
-              <RadioGroupItem 
-                value={profession.id} 
-                id={`profession-${profession.id}`}
-              />
-              <Label 
-                htmlFor={`profession-${profession.id}`}
-                className="flex-1 cursor-pointer text-sm font-medium flex items-center gap-2"
-              >
-                <span className="text-muted-foreground text-xs">{profession.number}.</span>
-                {profession.label}
-              </Label>
-            </div>
-          ))}
-        </RadioGroup>
+      <div className="relative" ref={wrapperRef}>
+        <div className="relative">
+          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={16} />
+          <Input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setIsOpen(true);
+            }}
+            onFocus={() => setIsOpen(true)}
+            placeholder={selectedProfession ? "שנה מקצוע..." : "חפש מקצוע..."}
+            className="pr-10"
+          />
+        </div>
         
-        {filteredProfessions.length === 0 && (
-          <p className="text-sm text-muted-foreground text-center py-8">
-            לא נמצאו תוצאות עבור "{searchTerm}"
-          </p>
+        {isOpen && searchTerm && (
+          <div className="absolute z-50 w-full mt-1 bg-background border border-border rounded-lg shadow-lg max-h-60 overflow-auto">
+            {filteredProfessions.length > 0 ? (
+              filteredProfessions.map(profession => (
+                <div
+                  key={profession.id}
+                  onClick={() => handleSelectProfession(profession.id)}
+                  className="p-3 hover:bg-muted cursor-pointer transition-colors text-sm border-b border-border last:border-b-0"
+                >
+                  {profession.label}
+                </div>
+              ))
+            ) : (
+              <div className="p-4 text-center text-sm text-muted-foreground">
+                לא נמצאו תוצאות עבור "{searchTerm}"
+              </div>
+            )}
+          </div>
         )}
-      </ScrollArea>
+      </div>
       
       {error && (
         <p className="text-xs text-destructive mt-1">{error}</p>
