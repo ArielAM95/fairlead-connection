@@ -1,9 +1,16 @@
 
-import { WorkFieldsSection } from './WorkFieldsSection';
+import { MainProfessionSelector } from './MainProfessionSelector';
+import { SubSpecializationsSelector } from './SubSpecializationsSelector';
 import { WorkRegionsSection } from './WorkRegionsSection';
 import { ExperienceSection } from './ExperienceSection';
 
 interface OccupationDetailsSectionProps {
+  mainProfession: string;
+  onMainProfessionChange: (id: string) => void;
+  subSpecializations: string[];
+  onSubSpecializationToggle: (id: string) => void;
+  mainProfessionError?: string;
+  subSpecializationsError?: string;
   selectedFields: string[];
   onToggleField: (id: string) => void;
   showOtherWorkField: boolean;
@@ -17,25 +24,31 @@ interface OccupationDetailsSectionProps {
 }
 
 export const OccupationDetailsSection = ({
-  selectedFields,
-  onToggleField,
-  showOtherWorkField,
-  otherWorkField,
+  mainProfession,
+  onMainProfessionChange,
+  subSpecializations,
+  onSubSpecializationToggle,
+  mainProfessionError,
+  subSpecializationsError,
   selectedRegions,
   onToggleRegion,
   experience,
   onExperienceChange,
-  onChange,
   experienceError
 }: OccupationDetailsSectionProps) => {
   return (
-    <>
-      <WorkFieldsSection
-        selectedFields={selectedFields}
-        onToggleField={onToggleField}
-        showOtherWorkField={showOtherWorkField}
-        otherWorkField={otherWorkField}
-        onChange={onChange}
+    <div className="space-y-6">
+      <MainProfessionSelector
+        selectedProfession={mainProfession}
+        onProfessionChange={onMainProfessionChange}
+        error={mainProfessionError}
+      />
+      
+      <SubSpecializationsSelector
+        mainProfession={mainProfession}
+        selectedSpecializations={subSpecializations}
+        onToggleSpecialization={onSubSpecializationToggle}
+        error={subSpecializationsError}
       />
       
       <WorkRegionsSection
@@ -48,6 +61,6 @@ export const OccupationDetailsSection = ({
         onChange={onExperienceChange}
         error={experienceError}
       />
-    </>
+    </div>
   );
 };

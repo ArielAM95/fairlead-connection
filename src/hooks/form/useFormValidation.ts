@@ -1,6 +1,7 @@
 
 import { validateEmail, validatePhone, validateBusinessLicense } from "@/utils/formValidation";
 import { SignupFormData, SignupFormErrors } from "@/types/signupForm";
+import { getSpecializationsByProfession } from '@/components/cta/data/professionsAndSpecializations';
 
 export const useFormValidation = () => {
   const validateForm = (formData: SignupFormData): { 
@@ -12,7 +13,9 @@ export const useFormValidation = () => {
       phone: "",
       experience: "",
       acceptTerms: "",
-      businessLicenseNumber: ""
+      businessLicenseNumber: "",
+      mainProfession: "",
+      subSpecializations: ""
     };
     
     let isValid = true;
@@ -40,6 +43,19 @@ export const useFormValidation = () => {
     if (!validateBusinessLicense(formData.businessLicenseNumber)) {
       errors.businessLicenseNumber = "נא להזין מספר עוסק תקין (ספרות בלבד)";
       isValid = false;
+    }
+
+    if (!formData.mainProfession) {
+      errors.mainProfession = "נא לבחור מקצוע ראשי";
+      isValid = false;
+    }
+
+    if (formData.mainProfession) {
+      const availableSpecs = getSpecializationsByProfession(formData.mainProfession);
+      if (availableSpecs.length > 0 && formData.subSpecializations.length === 0) {
+        errors.subSpecializations = "נא לבחור לפחות תת התמחות אחת";
+        isValid = false;
+      }
     }
 
     return { isValid, errors };

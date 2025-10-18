@@ -22,7 +22,9 @@ export const useSignupForm = (onSubmit: (formData: SignupFormData) => Promise<vo
   const { 
     handleWorkFieldToggle,
     handleWorkRegionToggle,
-    handleExperienceChange 
+    handleExperienceChange,
+    handleMainProfessionChange,
+    handleSubSpecializationToggle
   } = useFieldHandlers(formData, setFormData);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,6 +57,8 @@ export const useSignupForm = (onSubmit: (formData: SignupFormData) => Promise<vo
     handleWorkFieldToggle,
     handleWorkRegionToggle,
     handleExperienceChange,
+    handleMainProfessionChange,
+    handleSubSpecializationToggle,
     handleSubmit
   };
 };

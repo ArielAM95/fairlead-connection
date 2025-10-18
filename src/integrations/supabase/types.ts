@@ -197,6 +197,73 @@ export type Database = {
           },
         ]
       }
+      commissions: {
+        Row: {
+          amount: number
+          commission_date: string
+          created_at: string
+          id: string
+          last_attempt_at: string | null
+          lead_owner_commission: number
+          ofair_commission: number
+          payment_method_id: string
+          professional_id: string
+          retry_count: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          commission_date: string
+          created_at?: string
+          id?: string
+          last_attempt_at?: string | null
+          lead_owner_commission?: number
+          ofair_commission?: number
+          payment_method_id: string
+          professional_id: string
+          retry_count?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          commission_date?: string
+          created_at?: string
+          id?: string
+          last_attempt_at?: string | null
+          lead_owner_commission?: number
+          ofair_commission?: number
+          payment_method_id?: string
+          professional_id?: string
+          retry_count?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commissions_payment_method_id_fkey"
+            columns: ["payment_method_id"]
+            isOneToOne: false
+            referencedRelation: "payment_methods"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contact_access_logs: {
         Row: {
           access_granted: boolean
@@ -229,6 +296,60 @@ export type Database = {
           user_agent?: string | null
         }
         Relationships: []
+      }
+      credit_card_tokens: {
+        Row: {
+          card_expiry: string
+          card_last4: string
+          card_type: string | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          professional_id: string
+          tranzila_index: string | null
+          tranzila_token: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          card_expiry: string
+          card_last4: string
+          card_type?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          professional_id: string
+          tranzila_index?: string | null
+          tranzila_token?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          card_expiry?: string
+          card_last4?: string
+          card_type?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          professional_id?: string
+          tranzila_index?: string | null
+          tranzila_token?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_card_tokens_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credit_card_tokens_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       customer_contact_access_logs: {
         Row: {
@@ -568,6 +689,57 @@ export type Database = {
           },
         ]
       }
+      payment_methods: {
+        Row: {
+          card_last4: string
+          created_at: string
+          expiry_month: number
+          expiry_year: number
+          id: string
+          is_default: boolean
+          professional_id: string
+          token_encrypted: string
+          updated_at: string
+        }
+        Insert: {
+          card_last4: string
+          created_at?: string
+          expiry_month: number
+          expiry_year: number
+          id?: string
+          is_default?: boolean
+          professional_id: string
+          token_encrypted: string
+          updated_at?: string
+        }
+        Update: {
+          card_last4?: string
+          created_at?: string
+          expiry_month?: number
+          expiry_year?: number
+          id?: string
+          is_default?: boolean
+          professional_id?: string
+          token_encrypted?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_methods_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_methods_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       phone_revelations: {
         Row: {
           created_at: string | null
@@ -769,15 +941,19 @@ export type Database = {
           is_verified: boolean | null
           languages: string[]
           location: string
+          main_profession: string | null
           marketing_consent: boolean | null
           name: string
           phone_number: string | null
           profession: string
+          profile_completion_percentage: number | null
           rating: number | null
           review_count: number | null
           specialties: string[] | null
           status: string | null
+          sub_specializations: string[] | null
           terms_accepted: boolean
+          tutorial_completed: boolean | null
           updated_at: string | null
           user_id: string | null
           work_hours: string | null
@@ -800,15 +976,19 @@ export type Database = {
           is_verified?: boolean | null
           languages?: string[]
           location: string
+          main_profession?: string | null
           marketing_consent?: boolean | null
           name: string
           phone_number?: string | null
           profession: string
+          profile_completion_percentage?: number | null
           rating?: number | null
           review_count?: number | null
           specialties?: string[] | null
           status?: string | null
+          sub_specializations?: string[] | null
           terms_accepted?: boolean
+          tutorial_completed?: boolean | null
           updated_at?: string | null
           user_id?: string | null
           work_hours?: string | null
@@ -831,15 +1011,19 @@ export type Database = {
           is_verified?: boolean | null
           languages?: string[]
           location?: string
+          main_profession?: string | null
           marketing_consent?: boolean | null
           name?: string
           phone_number?: string | null
           profession?: string
+          profile_completion_percentage?: number | null
           rating?: number | null
           review_count?: number | null
           specialties?: string[] | null
           status?: string | null
+          sub_specializations?: string[] | null
           terms_accepted?: boolean
+          tutorial_completed?: boolean | null
           updated_at?: string | null
           user_id?: string | null
           work_hours?: string | null
@@ -1308,6 +1492,173 @@ export type Database = {
         }
         Relationships: []
       }
+      subscription_charges: {
+        Row: {
+          amount: number
+          charge_date: string
+          created_at: string | null
+          credit_card_token_id: string
+          currency: string | null
+          error_message: string | null
+          id: string
+          professional_id: string
+          status: string
+          tranzila_confirmation: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          amount: number
+          charge_date: string
+          created_at?: string | null
+          credit_card_token_id: string
+          currency?: string | null
+          error_message?: string | null
+          id?: string
+          professional_id: string
+          status: string
+          tranzila_confirmation?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: number
+          charge_date?: string
+          created_at?: string | null
+          credit_card_token_id?: string
+          currency?: string | null
+          error_message?: string | null
+          id?: string
+          professional_id?: string
+          status?: string
+          tranzila_confirmation?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscription_charges_credit_card_token_id_fkey"
+            columns: ["credit_card_token_id"]
+            isOneToOne: false
+            referencedRelation: "credit_card_tokens"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscription_charges_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscription_charges_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transaction_logs: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          professional_id: string | null
+          related_commission_id: string | null
+          request: Json | null
+          response: Json | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          professional_id?: string | null
+          related_commission_id?: string | null
+          request?: Json | null
+          response?: Json | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          professional_id?: string | null
+          related_commission_id?: string | null
+          request?: Json | null
+          response?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_logs_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_logs_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_logs_related_commission_id_fkey"
+            columns: ["related_commission_id"]
+            isOneToOne: false
+            referencedRelation: "commissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tutorial_progress: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string | null
+          current_step: number | null
+          id: string
+          professional_id: string
+          skipped: boolean | null
+          steps_completed: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          current_step?: number | null
+          id?: string
+          professional_id: string
+          skipped?: boolean | null
+          steps_completed?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          current_step?: number | null
+          id?: string
+          professional_id?: string
+          skipped?: boolean | null
+          steps_completed?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tutorial_progress_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tutorial_progress_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_messages: {
         Row: {
           content: string
@@ -1377,14 +1728,53 @@ export type Database = {
         }
         Relationships: []
       }
+      work_cancellations: {
+        Row: {
+          cancellation_notes: string | null
+          cancellation_reason: string
+          cancelled_at: string
+          created_at: string
+          id: string
+          professional_id: string
+          proposal_id: string | null
+          proposal_type: string
+          referral_id: string | null
+        }
+        Insert: {
+          cancellation_notes?: string | null
+          cancellation_reason: string
+          cancelled_at?: string
+          created_at?: string
+          id?: string
+          professional_id: string
+          proposal_id?: string | null
+          proposal_type: string
+          referral_id?: string | null
+        }
+        Update: {
+          cancellation_notes?: string | null
+          cancellation_reason?: string
+          cancelled_at?: string
+          created_at?: string
+          id?: string
+          professional_id?: string
+          proposal_id?: string | null
+          proposal_type?: string
+          referral_id?: string | null
+        }
+        Relationships: []
+      }
       work_completion_reminders: {
         Row: {
           completion_form_sent: boolean | null
           created_at: string
           id: string
+          last_reminder_sent_at: string | null
+          next_reminder_date: string | null
           proposal_id: string
           proposal_type: string
           reminder_sent: boolean | null
+          reschedule_count: number | null
           scheduled_work_time: string
           updated_at: string
         }
@@ -1392,9 +1782,12 @@ export type Database = {
           completion_form_sent?: boolean | null
           created_at?: string
           id?: string
+          last_reminder_sent_at?: string | null
+          next_reminder_date?: string | null
           proposal_id: string
           proposal_type: string
           reminder_sent?: boolean | null
+          reschedule_count?: number | null
           scheduled_work_time: string
           updated_at?: string
         }
@@ -1402,9 +1795,12 @@ export type Database = {
           completion_form_sent?: boolean | null
           created_at?: string
           id?: string
+          last_reminder_sent_at?: string | null
+          next_reminder_date?: string | null
           proposal_id?: string
           proposal_type?: string
           reminder_sent?: boolean | null
+          reschedule_count?: number | null
           scheduled_work_time?: string
           updated_at?: string
         }
@@ -1598,6 +1994,10 @@ export type Database = {
       }
       calculate_distance_km: {
         Args: { lat1: number; lat2: number; lon1: number; lon2: number }
+        Returns: number
+      }
+      calculate_profile_completion: {
+        Args: { prof_id: string }
         Returns: number
       }
       check_admin_status: {

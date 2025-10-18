@@ -33,19 +33,26 @@ export const submitSignupForm = async (
   try {
     console.log("Starting form submission process with data:", formData);
     
-    // Transform work fields to Hebrew for the webhook
+    const { getProfessionLabel, getSpecializationLabel } = await import('@/components/cta/data/professionsAndSpecializations');
+    
     const workFieldsInHebrew = formData.workFields.map(fieldId => {
       if (fieldId === "other") return formData.otherWorkField || "אחר";
       const field = workFields.find(f => f.id === fieldId);
       return field ? field.label : fieldId;
     }).join(", ");
     
-    // workRegions are already in Hebrew, just join them
     const workRegionsInHebrew = formData.workRegions.join(", ");
+    
+    const mainProfessionLabel = formData.mainProfession ? getProfessionLabel(formData.mainProfession) : "";
+    const subSpecializationsLabels = formData.subSpecializations
+      .map(specId => getSpecializationLabel(formData.mainProfession, specId))
+      .join(", ");
     
     const dataToSubmit = {
       ...formData,
       post_type: "main_signup_form",
+      mainProfession: mainProfessionLabel,
+      subSpecializations: subSpecializationsLabels,
       workFields: workFieldsInHebrew,
       workRegions: workRegionsInHebrew,
       otherWorkField: formData.showOtherWorkField ? formData.otherWorkField : "",
@@ -90,11 +97,13 @@ export const submitSignupForm = async (
     // Convert experience_years to string to match the database schema
     const professionalData = {
       name: `${formData.firstName} ${formData.lastName}`.trim(),
-      profession: formData.workFields[0] ? (() => {
+      main_profession: formData.mainProfession || null,
+      sub_specializations: formData.subSpecializations || [],
+      profession: formData.mainProfession ? getProfessionLabel(formData.mainProfession) : (formData.workFields[0] ? (() => {
         const field = workFields.find(f => f.id === formData.workFields[0]);
         return field ? field.label : formData.workFields[0];
-      })() : "לא צוין",
-      specialties: formData.workFields,
+      })() : "לא צוין"),
+      specialties: formData.subSpecializations.length > 0 ? formData.subSpecializations : formData.workFields,
       email: formData.email.toLowerCase().trim(),
       phone_number: formData.phone ? formData.phone.trim() : null,
       company_name: formData.companyName || null,

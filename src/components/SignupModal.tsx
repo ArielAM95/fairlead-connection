@@ -128,11 +128,13 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
       await submitSignupForm(
         {
           ...formData,
-          businessLicenseNumber: "", // Not used in SignupModal
+          mainProfession: "",
+          subSpecializations: [],
+          businessLicenseNumber: "",
           workRegions: formData.workRegions,
-          phone: formData.phone || "00-0000000", // Default value if not provided
-          city: formData.city || "לא צוין", // Default value if not provided
-          acceptTerms: true, // Old modal assumes terms are accepted
+          phone: formData.phone || "00-0000000",
+          city: formData.city || "לא צוין",
+          acceptTerms: true,
         }, 
         workFields, 
         workRegions, 

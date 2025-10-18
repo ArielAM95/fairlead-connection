@@ -4,6 +4,8 @@ export interface SignupFormData {
   lastName: string;
   companyName: string;
   businessLicenseNumber: string;
+  mainProfession: string;
+  subSpecializations: string[];
   workFields: string[];
   otherWorkField: string;
   showOtherWorkField: boolean;
@@ -22,6 +24,8 @@ export interface SignupFormErrors {
   experience?: string;
   acceptTerms?: string;
   businessLicenseNumber?: string;
+  mainProfession?: string;
+  subSpecializations?: string;
 }
 
 export interface SignupFormHandlers {

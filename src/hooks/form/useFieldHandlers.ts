@@ -36,9 +36,28 @@ export const useFieldHandlers = (
     });
   };
 
+  const handleMainProfessionChange = (professionId: string) => {
+    setFormData({
+      ...formData,
+      mainProfession: professionId,
+      subSpecializations: []
+    });
+  };
+
+  const handleSubSpecializationToggle = (specId: string) => {
+    setFormData({
+      ...formData,
+      subSpecializations: formData.subSpecializations.includes(specId)
+        ? formData.subSpecializations.filter(s => s !== specId)
+        : [...formData.subSpecializations, specId]
+    });
+  };
+
   return {
     handleWorkFieldToggle,
     handleWorkRegionToggle,
-    handleExperienceChange
+    handleExperienceChange,
+    handleMainProfessionChange,
+    handleSubSpecializationToggle
   };
 };

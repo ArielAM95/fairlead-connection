@@ -22,6 +22,8 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
     handleWorkFieldToggle,
     handleWorkRegionToggle,
     handleExperienceChange,
+    handleMainProfessionChange,
+    handleSubSpecializationToggle,
     handleSubmit
   } = useSignupForm(onSubmit);
 
@@ -61,6 +63,12 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           פרטי עיסוק
         </h3>
         <OccupationDetailsSection
+          mainProfession={formData.mainProfession}
+          onMainProfessionChange={handleMainProfessionChange}
+          subSpecializations={formData.subSpecializations}
+          onSubSpecializationToggle={handleSubSpecializationToggle}
+          mainProfessionError={errors.mainProfession}
+          subSpecializationsError={errors.subSpecializations}
           selectedFields={formData.workFields}
           onToggleField={handleWorkFieldToggle}
           showOtherWorkField={formData.showOtherWorkField}
@@ -153,13 +161,15 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           className="w-full bg-ofair-900 hover:bg-ofair-800 text-white py-6"
           disabled={
             isSubmitting ||
-            formData.workFields.length === 0 ||
+            !formData.mainProfession ||
             formData.workRegions.length === 0 ||
             !formData.experience ||
             !formData.acceptTerms ||
             !!errors.email ||
             !!errors.phone ||
-            !!errors.businessLicenseNumber
+            !!errors.businessLicenseNumber ||
+            !!errors.mainProfession ||
+            !!errors.subSpecializations
           }
         >
           {isSubmitting ? "מבצע רישום..." : "הירשמו כעת"}
