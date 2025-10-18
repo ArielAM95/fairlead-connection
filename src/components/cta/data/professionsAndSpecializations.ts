@@ -175,9 +175,9 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     label: "מנקה",
     number: "15",
     specializations: [
-      { id: "apartments", label: "דירות", number: "15.1" },
+      { id: "cleaning-apartments", label: "דירות", number: "15.1" },
       { id: "post-renovation", label: "לאחר שיפוץ", number: "15.2" },
-      { id: "offices", label: "משרדים", number: "15.3" },
+      { id: "cleaning-offices", label: "משרדים", number: "15.3" },
       { id: "upholstery-cleaning", label: "ניקוי ספות", number: "15.4" },
       { id: "polish-wax", label: "פוליש ווקס", number: "15.5" }
     ]
@@ -411,8 +411,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     label: "חברת הובלות",
     number: "44",
     specializations: [
-      { id: "apartment", label: "דירה", number: "44.1" },
-      { id: "offices", label: "משרדים", number: "44.2" },
+      { id: "moving-apartment", label: "דירה", number: "44.1" },
+      { id: "moving-offices", label: "משרדים", number: "44.2" },
       { id: "small-moves", label: "הובלות קטנות", number: "44.3" },
       { id: "storage", label: "אחסון", number: "44.4" }
     ]
