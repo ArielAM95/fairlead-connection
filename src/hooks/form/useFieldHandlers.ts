@@ -36,20 +36,39 @@ export const useFieldHandlers = (
     });
   };
 
-  const handleMainProfessionChange = (professionId: string) => {
-    setFormData({
-      ...formData,
-      mainProfession: professionId,
-      subSpecializations: []
-    });
+  const handleProfessionToggle = (professionId: string) => {
+    const existingIndex = formData.professions.findIndex(p => p.professionId === professionId);
+    
+    if (existingIndex >= 0) {
+      // Remove profession
+      setFormData({
+        ...formData,
+        professions: formData.professions.filter(p => p.professionId !== professionId)
+      });
+    } else {
+      // Add profession with empty specializations
+      setFormData({
+        ...formData,
+        professions: [...formData.professions, { professionId, specializations: [] }]
+      });
+    }
   };
 
-  const handleSubSpecializationToggle = (specId: string) => {
+  const handleSubSpecializationToggle = (professionId: string, specId: string) => {
     setFormData({
       ...formData,
-      subSpecializations: formData.subSpecializations.includes(specId)
-        ? formData.subSpecializations.filter(s => s !== specId)
-        : [...formData.subSpecializations, specId]
+      professions: formData.professions.map(prof => {
+        if (prof.professionId === professionId) {
+          const hasSpec = prof.specializations.includes(specId);
+          return {
+            ...prof,
+            specializations: hasSpec
+              ? prof.specializations.filter(s => s !== specId)
+              : [...prof.specializations, specId]
+          };
+        }
+        return prof;
+      })
     });
   };
 
@@ -57,7 +76,7 @@ export const useFieldHandlers = (
     handleWorkFieldToggle,
     handleWorkRegionToggle,
     handleExperienceChange,
-    handleMainProfessionChange,
+    handleProfessionToggle,
     handleSubSpecializationToggle
   };
 };

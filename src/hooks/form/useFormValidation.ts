@@ -14,8 +14,7 @@ export const useFormValidation = () => {
       experience: "",
       acceptTerms: "",
       businessLicenseNumber: "",
-      mainProfession: "",
-      subSpecializations: ""
+      professions: ""
     };
     
     let isValid = true;
@@ -45,16 +44,18 @@ export const useFormValidation = () => {
       isValid = false;
     }
 
-    if (!formData.mainProfession) {
-      errors.mainProfession = "נא לבחור מקצוע ראשי";
+    if (formData.professions.length === 0) {
+      errors.professions = "נא לבחור לפחות מקצוע אחד";
       isValid = false;
     }
 
-    if (formData.mainProfession) {
-      const availableSpecs = getSpecializationsByProfession(formData.mainProfession);
-      if (availableSpecs.length > 0 && formData.subSpecializations.length === 0) {
-        errors.subSpecializations = "נא לבחור לפחות תת התמחות אחת";
+    // Validate that professions with available specializations have at least one selected
+    for (const profession of formData.professions) {
+      const availableSpecs = getSpecializationsByProfession(profession.professionId);
+      if (availableSpecs.length > 0 && profession.specializations.length === 0) {
+        errors.professions = "נא לבחור לפחות תת התמחות אחת לכל מקצוע שיש לו התמחויות";
         isValid = false;
+        break;
       }
     }
 

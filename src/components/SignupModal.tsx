@@ -128,8 +128,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
       await submitSignupForm(
         {
           ...formData,
-          mainProfession: "",
-          subSpecializations: [],
+          professions: [],
           businessLicenseNumber: "",
           workRegions: formData.workRegions,
           phone: formData.phone || "00-0000000",
@@ -137,7 +136,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
           acceptTerms: true,
         }, 
         workFields, 
-        workRegions, 
+        workRegions,
         utmParams
       );
       

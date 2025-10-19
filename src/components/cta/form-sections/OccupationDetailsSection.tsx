@@ -3,33 +3,25 @@ import { MainProfessionSelector } from './MainProfessionSelector';
 import { SubSpecializationsSelector } from './SubSpecializationsSelector';
 import { WorkRegionsSection } from './WorkRegionsSection';
 import { ExperienceSection } from './ExperienceSection';
+import { ProfessionSelection } from '@/types/signupForm';
 
 interface OccupationDetailsSectionProps {
-  mainProfession: string;
-  onMainProfessionChange: (id: string) => void;
-  subSpecializations: string[];
-  onSubSpecializationToggle: (id: string) => void;
-  mainProfessionError?: string;
-  subSpecializationsError?: string;
-  selectedFields: string[];
-  onToggleField: (id: string) => void;
-  showOtherWorkField: boolean;
-  otherWorkField: string;
+  selectedProfessions: ProfessionSelection[];
+  onProfessionToggle: (professionId: string) => void;
+  onSubSpecializationToggle: (professionId: string, specId: string) => void;
+  professionsError?: string;
   selectedRegions: string[];
   onToggleRegion: (id: string) => void;
   experience: string;
   onExperienceChange: (value: string) => void;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   experienceError?: string;
 }
 
 export const OccupationDetailsSection = ({
-  mainProfession,
-  onMainProfessionChange,
-  subSpecializations,
+  selectedProfessions,
+  onProfessionToggle,
   onSubSpecializationToggle,
-  mainProfessionError,
-  subSpecializationsError,
+  professionsError,
   selectedRegions,
   onToggleRegion,
   experience,
@@ -39,16 +31,15 @@ export const OccupationDetailsSection = ({
   return (
     <div className="space-y-6">
       <MainProfessionSelector
-        selectedProfession={mainProfession}
-        onProfessionChange={onMainProfessionChange}
-        error={mainProfessionError}
+        selectedProfessions={selectedProfessions}
+        onProfessionToggle={onProfessionToggle}
+        error={professionsError}
       />
       
       <SubSpecializationsSelector
-        mainProfession={mainProfession}
-        selectedSpecializations={subSpecializations}
+        selectedProfessions={selectedProfessions}
         onToggleSpecialization={onSubSpecializationToggle}
-        error={subSpecializationsError}
+        error={professionsError}
       />
       
       <WorkRegionsSection

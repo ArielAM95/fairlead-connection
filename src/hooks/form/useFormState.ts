@@ -8,8 +8,7 @@ export const useFormState = () => {
     lastName: "",
     companyName: "",
     businessLicenseNumber: "",
-    mainProfession: "",
-    subSpecializations: [],
+    professions: [],
     workFields: [],
     otherWorkField: "",
     showOtherWorkField: false,
@@ -59,8 +58,7 @@ export const useFormState = () => {
       experience: "",
       acceptTerms: "",
       businessLicenseNumber: "",
-      mainProfession: "",
-      subSpecializations: ""
+      professions: ""
     });
   };
 

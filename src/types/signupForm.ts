@@ -1,11 +1,15 @@
 
+export interface ProfessionSelection {
+  professionId: string;
+  specializations: string[];
+}
+
 export interface SignupFormData {
   firstName: string;
   lastName: string;
   companyName: string;
   businessLicenseNumber: string;
-  mainProfession: string;
-  subSpecializations: string[];
+  professions: ProfessionSelection[];
   workFields: string[];
   otherWorkField: string;
   showOtherWorkField: boolean;
@@ -24,8 +28,7 @@ export interface SignupFormErrors {
   experience?: string;
   acceptTerms?: string;
   businessLicenseNumber?: string;
-  mainProfession?: string;
-  subSpecializations?: string;
+  professions?: string;
 }
 
 export interface SignupFormHandlers {

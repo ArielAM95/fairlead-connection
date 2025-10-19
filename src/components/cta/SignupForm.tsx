@@ -22,7 +22,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
     handleWorkFieldToggle,
     handleWorkRegionToggle,
     handleExperienceChange,
-    handleMainProfessionChange,
+    handleProfessionToggle,
     handleSubSpecializationToggle,
     handleSubmit
   } = useSignupForm(onSubmit);
@@ -63,21 +63,14 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           פרטי עיסוק
         </h3>
         <OccupationDetailsSection
-          mainProfession={formData.mainProfession}
-          onMainProfessionChange={handleMainProfessionChange}
-          subSpecializations={formData.subSpecializations}
+          selectedProfessions={formData.professions}
+          onProfessionToggle={handleProfessionToggle}
           onSubSpecializationToggle={handleSubSpecializationToggle}
-          mainProfessionError={errors.mainProfession}
-          subSpecializationsError={errors.subSpecializations}
-          selectedFields={formData.workFields}
-          onToggleField={handleWorkFieldToggle}
-          showOtherWorkField={formData.showOtherWorkField}
-          otherWorkField={formData.otherWorkField}
+          professionsError={errors.professions}
           selectedRegions={formData.workRegions}
           onToggleRegion={handleWorkRegionToggle}
           experience={formData.experience}
           onExperienceChange={handleExperienceChange}
-          onChange={handleChange}
           experienceError={errors.experience}
         />
       </div>
@@ -161,15 +154,14 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           className="w-full bg-ofair-900 hover:bg-ofair-800 text-white py-6"
           disabled={
             isSubmitting ||
-            !formData.mainProfession ||
+            formData.professions.length === 0 ||
             formData.workRegions.length === 0 ||
             !formData.experience ||
             !formData.acceptTerms ||
             !!errors.email ||
             !!errors.phone ||
             !!errors.businessLicenseNumber ||
-            !!errors.mainProfession ||
-            !!errors.subSpecializations
+            !!errors.professions
           }
         >
           {isSubmitting ? "מבצע רישום..." : "הירשמו כעת"}

@@ -43,16 +43,19 @@ export const submitSignupForm = async (
     
     const workRegionsInHebrew = formData.workRegions.join(", ");
     
-    const mainProfessionLabel = formData.mainProfession ? getProfessionLabel(formData.mainProfession) : "";
-    const subSpecializationsLabels = formData.subSpecializations
-      .map(specId => getSpecializationLabel(formData.mainProfession, specId))
-      .join(", ");
+    // Format professions and specializations for webhook
+    const professionsFormatted = formData.professions.map(prof => {
+      const profLabel = getProfessionLabel(prof.professionId);
+      const specs = prof.specializations
+        .map(specId => getSpecializationLabel(prof.professionId, specId))
+        .join(", ");
+      return specs ? `${profLabel} (${specs})` : profLabel;
+    }).join(" | ");
     
     const dataToSubmit = {
       ...formData,
       post_type: "main_signup_form",
-      mainProfession: mainProfessionLabel,
-      subSpecializations: subSpecializationsLabels,
+      professions: professionsFormatted,
       workFields: workFieldsInHebrew,
       workRegions: workRegionsInHebrew,
       otherWorkField: formData.showOtherWorkField ? formData.otherWorkField : "",
@@ -95,15 +98,22 @@ export const submitSignupForm = async (
 
     // Improved professional data preparation - ensuring required fields are provided
     // Convert experience_years to string to match the database schema
+    // For professions: save first profession as main_profession, all specializations as sub_specializations array
+    const allSpecializations = formData.professions.flatMap(prof => 
+      prof.specializations.map(specId => `${prof.professionId}:${specId}`)
+    );
+    
     const professionalData = {
       name: `${formData.firstName} ${formData.lastName}`.trim(),
-      main_profession: formData.mainProfession || null,
-      sub_specializations: formData.subSpecializations || [],
-      profession: formData.mainProfession ? getProfessionLabel(formData.mainProfession) : (formData.workFields[0] ? (() => {
-        const field = workFields.find(f => f.id === formData.workFields[0]);
-        return field ? field.label : formData.workFields[0];
-      })() : "לא צוין"),
-      specialties: formData.subSpecializations.length > 0 ? formData.subSpecializations : formData.workFields,
+      main_profession: formData.professions.length > 0 ? formData.professions[0].professionId : null,
+      sub_specializations: allSpecializations,
+      profession: formData.professions.length > 0 
+        ? getProfessionLabel(formData.professions[0].professionId) 
+        : (formData.workFields[0] ? (() => {
+          const field = workFields.find(f => f.id === formData.workFields[0]);
+          return field ? field.label : formData.workFields[0];
+        })() : "לא צוין"),
+      specialties: allSpecializations.length > 0 ? allSpecializations : formData.workFields,
       email: formData.email.toLowerCase().trim(),
       phone_number: formData.phone ? formData.phone.trim() : null,
       company_name: formData.companyName || null,

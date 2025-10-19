@@ -23,7 +23,7 @@ export const useSignupForm = (onSubmit: (formData: SignupFormData) => Promise<vo
     handleWorkFieldToggle,
     handleWorkRegionToggle,
     handleExperienceChange,
-    handleMainProfessionChange,
+    handleProfessionToggle,
     handleSubSpecializationToggle
   } = useFieldHandlers(formData, setFormData);
 
@@ -57,7 +57,7 @@ export const useSignupForm = (onSubmit: (formData: SignupFormData) => Promise<vo
     handleWorkFieldToggle,
     handleWorkRegionToggle,
     handleExperienceChange,
-    handleMainProfessionChange,
+    handleProfessionToggle,
     handleSubSpecializationToggle,
     handleSubmit
   };
