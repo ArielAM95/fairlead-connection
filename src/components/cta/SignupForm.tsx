@@ -10,12 +10,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import TranzilaPaymentDialog from "./TranzilaPaymentDialog";
+import PrePaymentDialog from "./PrePaymentDialog";
 
 interface SignupFormProps {
   onSubmit: (formData: SignupFormData) => Promise<void>;
 }
 
 const SignupForm = ({ onSubmit }: SignupFormProps) => {
+  const [showPrePaymentDialog, setShowPrePaymentDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [pendingFormData, setPendingFormData] = useState<SignupFormData | null>(null);
   
@@ -46,8 +48,13 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
       return;
     }
     
-    // Store form data and open payment dialog
+    // Store form data and open pre-payment dialog
     setPendingFormData(formData);
+    setShowPrePaymentDialog(true);
+  };
+
+  const handleProceedToPayment = () => {
+    setShowPrePaymentDialog(false);
     setShowPaymentDialog(true);
   };
 
@@ -223,6 +230,12 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
         )}
       </div>
     </form>
+
+    <PrePaymentDialog
+      open={showPrePaymentDialog}
+      onClose={() => setShowPrePaymentDialog(false)}
+      onProceedToPayment={handleProceedToPayment}
+    />
 
     <TranzilaPaymentDialog
       open={showPaymentDialog}
