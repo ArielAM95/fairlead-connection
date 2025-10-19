@@ -49,8 +49,7 @@ export const SubSpecializationsSelector = ({
         {specializations.map(spec => (
           <div 
             key={spec.id} 
-            className="flex items-center space-x-2 space-x-reverse bg-background p-3 rounded-md border hover:border-primary/50 transition-all cursor-pointer"
-            onClick={() => onToggleSpecialization(spec.id)}
+            className="flex items-center space-x-2 space-x-reverse bg-background p-3 rounded-md border hover:border-primary/50 transition-all"
           >
             <Checkbox
               id={`spec-${spec.id}`}
