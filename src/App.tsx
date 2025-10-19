@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Index from './pages/Index';
 import NotFound from './pages/NotFound';
 import Terms from './pages/Terms';
+import Registration from './pages/Registration';
 import ScrollToTop from './components/ScrollToTop';
 import WhatsAppButton from './components/ui/WhatsAppButton';
 import { Toaster } from "./components/ui/sonner";
@@ -16,6 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/registration" element={<Registration />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <WhatsAppButton />
