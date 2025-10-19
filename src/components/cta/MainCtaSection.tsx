@@ -62,17 +62,6 @@ const MainCtaSection = ({ showNotification }: MainCtaSectionProps) => {
         return Promise.reject(new Error("חסר שדה אימייל"));
       }
       
-      if (formData.workFields.length === 0) {
-        const errorMsg = "נא לבחור לפחות תחום עבודה אחד";
-        if (showNotification) {
-          showNotification("שגיאה בהרשמה", errorMsg);
-        } else {
-          toast.error(errorMsg);
-        }
-        setFormError(errorMsg);
-        return Promise.reject(new Error("חסרים תחומי עבודה"));
-      }
-      
       if (formData.workRegions.length === 0) {
         const errorMsg = "נא לבחור לפחות אזור עבודה אחד";
         if (showNotification) {
@@ -108,48 +97,27 @@ const MainCtaSection = ({ showNotification }: MainCtaSectionProps) => {
       
       console.log("MainCtaSection: Validation passed, submitting form with UTM params:", utmParams);
       
-      try {
-        await submitSignupForm(formData, workFields, workRegions, utmParams);
-        
-        const successMsg = "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה.";
-        
-        // Get the user's full name and phone for the personalized message
-        const userName = `${formData.firstName} ${formData.lastName}`.trim();
-        const userPhone = formData.phone || "";
-        
-        if (showNotification) {
-          showNotification(
-            "הרשמה בוצעה בהצלחה",
-            successMsg,
-            userName,
-            userPhone,
-            true // Show the welcome message
-          );
-        } else {
-          toast.success(successMsg);
-        }
-        
-        console.log("MainCtaSection: Form submission successful");
-        return Promise.resolve();
-      } catch (submitError) {
-        console.error("Error in submitSignupForm:", submitError);
-        
-        const errorMsg = submitError instanceof Error 
-          ? submitError.message 
-          : "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר.";
-          
-        if (showNotification) {
-          showNotification(
-            "שגיאה בהרשמה",
-            errorMsg
-          );
-        } else {
-          toast.error(errorMsg);
-        }
-        
-        setFormError(errorMsg);
-        throw submitError; // Re-throw for outer catch block
+      await submitSignupForm(formData, workFields, workRegions, utmParams);
+      
+      // Success message - only shown if submitSignupForm succeeded
+      const successMsg = "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה.";
+      const userName = `${formData.firstName} ${formData.lastName}`.trim();
+      const userPhone = formData.phone || "";
+      
+      if (showNotification) {
+        showNotification(
+          "הרשמה בוצעה בהצלחה",
+          successMsg,
+          userName,
+          userPhone,
+          true // Show the welcome message
+        );
+      } else {
+        toast.success(successMsg);
       }
+      
+      console.log("MainCtaSection: Form submission successful");
+      return Promise.resolve();
       
     } catch (error) {
       console.error("Error submitting form:", error);
