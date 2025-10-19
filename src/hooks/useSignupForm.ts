@@ -25,7 +25,7 @@ export const useSignupForm = (onSubmit: (formData: SignupFormData) => Promise<vo
     handleExperienceChange,
     handleProfessionToggle,
     handleSubSpecializationToggle
-  } = useFieldHandlers(formData, setFormData);
+  } = useFieldHandlers(formData, setFormData, setErrors);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -1,9 +1,10 @@
 
-import { SignupFormData } from "@/types/signupForm";
+import { SignupFormData, SignupFormErrors } from "@/types/signupForm";
 
 export const useFieldHandlers = (
   formData: SignupFormData,
   setFormData: (data: SignupFormData) => void,
+  setErrors: React.Dispatch<React.SetStateAction<SignupFormErrors>>
 ) => {
   const handleWorkFieldToggle = (id: string) => {
     setFormData({
@@ -30,6 +31,12 @@ export const useFieldHandlers = (
   };
 
   const handleExperienceChange = (value: string) => {
+    // Clear experience error when changed
+    setErrors(prev => ({
+      ...prev,
+      experience: ""
+    }));
+    
     setFormData({
       ...formData,
       experience: value
@@ -37,6 +44,12 @@ export const useFieldHandlers = (
   };
 
   const handleProfessionToggle = (professionId: string) => {
+    // Clear professions error when changed
+    setErrors(prev => ({
+      ...prev,
+      professions: ""
+    }));
+    
     const existingIndex = formData.professions.findIndex(p => p.professionId === professionId);
     
     if (existingIndex >= 0) {
@@ -55,6 +68,12 @@ export const useFieldHandlers = (
   };
 
   const handleSubSpecializationToggle = (professionId: string, specId: string) => {
+    // Clear professions error when changed
+    setErrors(prev => ({
+      ...prev,
+      professions: ""
+    }));
+    
     setFormData({
       ...formData,
       professions: formData.professions.map(prof => {

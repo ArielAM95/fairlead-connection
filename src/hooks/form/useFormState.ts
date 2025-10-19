@@ -35,6 +35,14 @@ export const useFormState = () => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
     
+    // Clear the error for this field when it changes
+    if (name in errors) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ""
+      }));
+    }
+    
     if (type === "checkbox") {
       // For checkbox inputs, use the checked property
       setFormData(prev => ({
