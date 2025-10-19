@@ -166,6 +166,20 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
         >
           {isSubmitting ? "מבצע רישום..." : "הירשמו כעת"}
         </Button>
+        
+        {(errors.email || errors.phone || errors.experience || errors.acceptTerms || errors.businessLicenseNumber || errors.professions) && (
+          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
+            <p className="text-red-700 font-medium mb-2">נא לתקן את השגיאות הבאות:</p>
+            <ul className="list-disc list-inside space-y-1 text-red-600 text-sm">
+              {errors.email && <li>{errors.email}</li>}
+              {errors.phone && <li>{errors.phone}</li>}
+              {errors.businessLicenseNumber && <li>{errors.businessLicenseNumber}</li>}
+              {errors.professions && <li>{errors.professions}</li>}
+              {errors.experience && <li>{errors.experience}</li>}
+              {errors.acceptTerms && <li>{errors.acceptTerms}</li>}
+            </ul>
+          </div>
+        )}
       </div>
     </form>
   );
