@@ -11,6 +11,8 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import TranzilaPaymentDialog from "./TranzilaPaymentDialog";
 import PrePaymentDialog from "./PrePaymentDialog";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface SignupFormProps {
   onSubmit: (formData: SignupFormData) => Promise<void>;
@@ -48,9 +50,29 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
       return;
     }
     
-    // Store form data and open pre-payment dialog
+    // Store form data
     setPendingFormData(formData);
-    setShowPrePaymentDialog(true);
+    
+    try {
+      // Send webhook before showing dialog
+      toast.info('שולח נתונים...');
+      
+      const { error } = await supabase.functions.invoke('send-registration-webhook', {
+        body: formData
+      });
+      
+      if (error) {
+        console.error('Webhook error:', error);
+        toast.error('שגיאה בשליחת הנתונים');
+        return;
+      }
+      
+      // Open pre-payment dialog after successful webhook
+      setShowPrePaymentDialog(true);
+    } catch (error) {
+      console.error('Form submission error:', error);
+      toast.error('שגיאה בתהליך ההרשמה');
+    }
   };
 
   const handleProceedToPayment = () => {
