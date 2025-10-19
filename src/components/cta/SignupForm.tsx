@@ -8,12 +8,17 @@ import { useSignupForm } from "@/hooks/useSignupForm";
 import { SignupFormData } from "@/types/signupForm";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import TranzilaPaymentDialog from "./TranzilaPaymentDialog";
 
 interface SignupFormProps {
   onSubmit: (formData: SignupFormData) => Promise<void>;
 }
 
 const SignupForm = ({ onSubmit }: SignupFormProps) => {
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+  const [pendingFormData, setPendingFormData] = useState<SignupFormData | null>(null);
+  
   const {
     formData,
     errors,
@@ -27,8 +32,44 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
     handleSubmit
   } = useSignupForm(onSubmit);
 
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate form before opening payment dialog
+    const validationErrors: any = {};
+    
+    if (!formData.acceptTerms) {
+      validationErrors.acceptTerms = "חובה לאשר את תנאי השימוש";
+    }
+    
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+    
+    // Store form data and open payment dialog
+    setPendingFormData(formData);
+    setShowPaymentDialog(true);
+  };
+
+  const handlePaymentSuccess = async (paymentData: any) => {
+    if (!pendingFormData) return;
+    
+    // Close dialog
+    setShowPaymentDialog(false);
+    
+    // Combine form data with payment data and submit
+    const completeData = {
+      ...pendingFormData,
+      ...paymentData,
+      registration_amount: 413,
+    };
+    
+    await onSubmit(completeData);
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <>
+      <form onSubmit={handleFormSubmit} className="space-y-8">
       {/* פרטים אישיים */}
       <div className="space-y-4">
         <h3 className="text-xl font-bold text-ofair-900 border-b-2 border-ofair-300 pb-2">
@@ -182,6 +223,17 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
         )}
       </div>
     </form>
+
+    <TranzilaPaymentDialog
+      open={showPaymentDialog}
+      onClose={() => setShowPaymentDialog(false)}
+      onSuccess={handlePaymentSuccess}
+      userDetails={{
+        name: `${formData.firstName} ${formData.lastName}`,
+        idNumber: formData.businessLicenseNumber || '000000000',
+      }}
+    />
+    </>
   );
 };
 
