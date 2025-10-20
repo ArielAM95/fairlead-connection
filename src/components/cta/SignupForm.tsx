@@ -24,7 +24,8 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
     handleExperienceChange,
     handleProfessionToggle,
     handleSubSpecializationToggle,
-    handleSubmit
+    handleSubmit,
+    setFormData
   } = useSignupForm(onSubmit);
 
   return (
@@ -72,6 +73,8 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           experience={formData.experience}
           onExperienceChange={handleExperienceChange}
           experienceError={errors.experience}
+          formData={formData}
+          setFormData={setFormData}
         />
       </div>
 

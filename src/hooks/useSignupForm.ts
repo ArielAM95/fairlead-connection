@@ -59,6 +59,7 @@ export const useSignupForm = (onSubmit: (formData: SignupFormData) => Promise<vo
     handleExperienceChange,
     handleProfessionToggle,
     handleSubSpecializationToggle,
-    handleSubmit
+    handleSubmit,
+    setFormData
   };
 };

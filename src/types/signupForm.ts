@@ -20,6 +20,8 @@ export interface SignupFormData {
   workRegions: string[];
   acceptTerms: boolean;
   acceptMarketing: boolean;
+  otherProfession?: string;
+  otherSpecializations?: Record<string, string>;
 }
 
 export interface SignupFormErrors {

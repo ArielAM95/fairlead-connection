@@ -15,6 +15,8 @@ interface OccupationDetailsSectionProps {
   experience: string;
   onExperienceChange: (value: string) => void;
   experienceError?: string;
+  formData: any;
+  setFormData: (data: any) => void;
 }
 
 export const OccupationDetailsSection = ({
@@ -26,7 +28,9 @@ export const OccupationDetailsSection = ({
   onToggleRegion,
   experience,
   onExperienceChange,
-  experienceError
+  experienceError,
+  formData,
+  setFormData
 }: OccupationDetailsSectionProps) => {
   return (
     <div className="space-y-6">
@@ -34,12 +38,16 @@ export const OccupationDetailsSection = ({
         selectedProfessions={selectedProfessions}
         onProfessionToggle={onProfessionToggle}
         error={professionsError}
+        formData={formData}
+        setFormData={setFormData}
       />
       
       <SubSpecializationsSelector
         selectedProfessions={selectedProfessions}
         onToggleSpecialization={onSubSpecializationToggle}
         error={professionsError}
+        formData={formData}
+        setFormData={setFormData}
       />
       
       <WorkRegionsSection

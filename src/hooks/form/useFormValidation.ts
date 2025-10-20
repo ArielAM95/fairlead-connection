@@ -49,16 +49,6 @@ export const useFormValidation = () => {
       isValid = false;
     }
 
-    // Validate that professions with available specializations have at least one selected
-    for (const profession of formData.professions) {
-      const availableSpecs = getSpecializationsByProfession(profession.professionId);
-      if (availableSpecs.length > 0 && profession.specializations.length === 0) {
-        errors.professions = "נא לבחור לפחות תת התמחות אחת לכל מקצוע שיש לו התמחויות";
-        isValid = false;
-        break;
-      }
-    }
-
     return { isValid, errors };
   };
 

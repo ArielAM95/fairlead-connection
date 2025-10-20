@@ -18,7 +18,9 @@ export const useFormState = () => {
     city: "",
     workRegions: [],
     acceptTerms: false,
-    acceptMarketing: false
+    acceptMarketing: false,
+    otherProfession: "",
+    otherSpecializations: {}
   };
 
   const [formData, setFormData] = useState<SignupFormData>(initialData);

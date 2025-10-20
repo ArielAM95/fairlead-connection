@@ -1,18 +1,23 @@
 import React from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { getSpecializationsByProfession, getProfessionLabel } from '../data/professionsAndSpecializations';
-import { ProfessionSelection } from '@/types/signupForm';
+import { ProfessionSelection, SignupFormData } from '@/types/signupForm';
 
 interface SubSpecializationsSelectorProps {
   selectedProfessions: ProfessionSelection[];
   onToggleSpecialization: (professionId: string, specId: string) => void;
   error?: string;
+  formData: SignupFormData;
+  setFormData: (data: SignupFormData) => void;
 }
 
 export const SubSpecializationsSelector = ({
   selectedProfessions,
   onToggleSpecialization,
-  error
+  error,
+  formData,
+  setFormData
 }: SubSpecializationsSelectorProps) => {
   
   if (selectedProfessions.length === 0) {
@@ -28,7 +33,7 @@ export const SubSpecializationsSelector = ({
   return (
     <div className="space-y-6">
       <label className="block text-sm font-medium text-foreground mb-2">
-        תתי התמחות למקצועות שבחרתם *
+        תתי התמחות למקצועות שבחרתם (אופציונלי)
       </label>
       
       {selectedProfessions.map(profession => {
@@ -53,21 +58,37 @@ export const SubSpecializationsSelector = ({
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {specializations.map(spec => (
-                <div 
-                  key={spec.id} 
-                  className="flex items-center space-x-2 space-x-reverse bg-background p-3 rounded-md border hover:border-primary/50 transition-all"
-                >
-                  <Checkbox
-                    id={`spec-${profession.professionId}-${spec.id}`}
-                    checked={profession.specializations.includes(spec.id)}
-                    onCheckedChange={() => onToggleSpecialization(profession.professionId, spec.id)}
-                  />
-                  <label 
-                    htmlFor={`spec-${profession.professionId}-${spec.id}`} 
-                    className="flex-1 text-sm leading-none cursor-pointer"
+                <div key={spec.id}>
+                  <div 
+                    className="flex items-center space-x-2 space-x-reverse bg-background p-3 rounded-md border hover:border-primary/50 transition-all"
                   >
-                    {spec.label}
-                  </label>
+                    <Checkbox
+                      id={`spec-${profession.professionId}-${spec.id}`}
+                      checked={profession.specializations.includes(spec.id)}
+                      onCheckedChange={() => onToggleSpecialization(profession.professionId, spec.id)}
+                    />
+                    <label 
+                      htmlFor={`spec-${profession.professionId}-${spec.id}`} 
+                      className="flex-1 text-sm leading-none cursor-pointer"
+                    >
+                      {spec.label}
+                    </label>
+                  </div>
+                  {spec.id === "other" && profession.specializations.includes("other") && (
+                    <Input
+                      type="text"
+                      value={formData.otherSpecializations?.[profession.professionId] || ""}
+                      onChange={(e) => setFormData({ 
+                        ...formData, 
+                        otherSpecializations: {
+                          ...formData.otherSpecializations,
+                          [profession.professionId]: e.target.value
+                        }
+                      })}
+                      placeholder="פרט את התת התמחות..."
+                      className="mt-2"
+                    />
+                  )}
                 </div>
               ))}
             </div>
