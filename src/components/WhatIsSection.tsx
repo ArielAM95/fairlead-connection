@@ -60,7 +60,7 @@ const WhatIsSection = () => {
                 </svg>
               </div>
               <h3 className="text-2xl md:text-3xl font-bold mb-4 text-primary">לוח מודעות חכם</h3>
-              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">כל העבודות הפניות שצרכנים/בעלי מקצוע העלו - נכנסים ללוח מודעות חכם אתם רואים,מציעים, עובדים !</p>
+              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">כל העבודות והפניות מצרכנים ובעלי מקצוע מוצגים בלוח מודעות חכם – אתם רואים, מציעים ועובדים! בנוסף, תקבלו התראות WhatsApp ישירות על לידים רלוונטיים לכם עם כל הפרטים וקישור מהיר למודעה באפליקציה.</p>
             </div>
             
             <div className="glass-card text-center md:text-left p-6">
