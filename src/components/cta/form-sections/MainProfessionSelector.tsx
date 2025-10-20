@@ -122,8 +122,11 @@ export const MainProfessionSelector = ({
                 );
               })
             ) : (
-              <div className="p-4 text-center text-sm text-muted-foreground">
-                לא נמצאו תוצאות עבור "{searchTerm}"
+              <div 
+                onClick={() => handleSelectProfession("other-profession")}
+                className="p-3 hover:bg-muted cursor-pointer transition-colors text-sm text-center"
+              >
+                <span className="text-foreground font-medium">🔍 לא מצאתי את המקצוע שלי - הוסף אחר</span>
               </div>
             )}
           </div>

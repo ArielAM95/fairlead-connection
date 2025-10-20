@@ -517,13 +517,6 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "other", label: "אחר" }
     ]
-  },
-  {
-    id: "other-profession",
-    label: "אחר",
-    specializations: [
-      { id: "other-spec", label: "אחר (פרט)" }
-    ]
   }
 ];
 
