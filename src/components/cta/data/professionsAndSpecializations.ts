@@ -527,6 +527,7 @@ export const getSpecializationsByProfession = (professionId: string) => {
 };
 
 export const getProfessionLabel = (professionId: string) => {
+  if (professionId === "other-profession") return "אחר";
   const profession = professionsWithSpecializations.find(p => p.id === professionId);
   return profession ? profession.label : professionId;
 };
