@@ -63,9 +63,7 @@ export const MainProfessionSelector = ({
                 className="flex items-center gap-2 bg-primary/10 border border-primary/30 px-3 py-2 rounded-lg"
               >
                 <span className="text-sm font-medium text-foreground">
-                  ✅ {prof.professionId === "other-profession" 
-                    ? (formData.otherProfession ? `אחר - ${formData.otherProfession}` : "אחר") 
-                    : getProfessionLabel(prof.professionId)}
+                  ✅ {prof.professionId === "other-profession" ? formData.otherProfession || "אחר" : getProfessionLabel(prof.professionId)}
                 </span>
                 <button
                   type="button"
