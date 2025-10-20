@@ -40,7 +40,7 @@ export const useFormValidation = () => {
     }
 
     if (!validateBusinessLicense(formData.businessLicenseNumber)) {
-      errors.businessLicenseNumber = "נא להזין מספר עוסק תקין (ספרות בלבד)";
+      errors.businessLicenseNumber = "נא להזין מספר עוסק תקין (9 ספרות בלבד)";
       isValid = false;
     }
 

@@ -21,9 +21,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     // Handle numeric inputs (for business license numbers)
     const handleNumericInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (props.inputMode === "numeric" && props.pattern === "[\\d\\s-]*") {
-        // Allow only digits, spaces, and hyphens
-        const value = e.target.value.replace(/[^\d\s-]/g, "");
+      if (props.inputMode === "numeric" && props.pattern === "\\d*") {
+        // Allow only digits
+        const value = e.target.value.replace(/[^\d]/g, "");
         e.target.value = value;
       }
     };
