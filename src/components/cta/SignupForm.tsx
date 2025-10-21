@@ -24,6 +24,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
     handleExperienceChange,
     handleProfessionToggle,
     handleSubSpecializationToggle,
+    handleOtherProfessionChange,
     handleSubmit,
     setFormData
   } = useSignupForm(onSubmit);
@@ -68,12 +69,14 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           onProfessionToggle={handleProfessionToggle}
           onSubSpecializationToggle={handleSubSpecializationToggle}
           professionsError={errors.professions}
+          otherProfessionError={errors.otherProfession}
           selectedRegions={formData.workRegions}
           onToggleRegion={handleWorkRegionToggle}
           experience={formData.experience}
           onExperienceChange={handleExperienceChange}
           experienceError={errors.experience}
           formData={formData}
+          onOtherProfessionChange={handleOtherProfessionChange}
           setFormData={setFormData}
         />
       </div>
@@ -164,13 +167,14 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
             !!errors.email ||
             !!errors.phone ||
             !!errors.businessLicenseNumber ||
-            !!errors.professions
+            !!errors.professions ||
+            !!errors.otherProfession
           }
         >
           {isSubmitting ? "מבצע רישום..." : "הירשמו כעת"}
         </Button>
         
-        {(errors.email || errors.phone || errors.experience || errors.acceptTerms || errors.businessLicenseNumber || errors.professions) && (
+        {(errors.email || errors.phone || errors.experience || errors.acceptTerms || errors.businessLicenseNumber || errors.professions || errors.otherProfession) && (
           <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
             <p className="text-red-700 font-medium mb-2">נא לתקן את השגיאות הבאות:</p>
             <ul className="list-disc list-inside space-y-1 text-red-600 text-sm">
@@ -178,6 +182,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
               {errors.phone && <li>{errors.phone}</li>}
               {errors.businessLicenseNumber && <li>{errors.businessLicenseNumber}</li>}
               {errors.professions && <li>{errors.professions}</li>}
+              {errors.otherProfession && <li>{errors.otherProfession}</li>}
               {errors.experience && <li>{errors.experience}</li>}
               {errors.acceptTerms && <li>{errors.acceptTerms}</li>}
             </ul>

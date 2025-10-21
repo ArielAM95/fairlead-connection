@@ -31,6 +31,7 @@ export interface SignupFormErrors {
   acceptTerms?: string;
   businessLicenseNumber?: string;
   professions?: string;
+  otherProfession?: string;
 }
 
 export interface SignupFormHandlers {

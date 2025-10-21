@@ -14,7 +14,8 @@ export const useFormValidation = () => {
       experience: "",
       acceptTerms: "",
       businessLicenseNumber: "",
-      professions: ""
+      professions: "",
+      otherProfession: ""
     };
     
     let isValid = true;
@@ -46,6 +47,13 @@ export const useFormValidation = () => {
 
     if (formData.professions.length === 0) {
       errors.professions = "נא לבחור לפחות מקצוע אחד";
+      isValid = false;
+    }
+
+    // Check if "other" profession is selected and validate the custom profession name
+    const hasOtherProfession = formData.professions.some(p => p.professionId === "other-profession");
+    if (hasOtherProfession && !formData.otherProfession?.trim()) {
+      errors.otherProfession = "נא למלא את שם המקצוע";
       isValid = false;
     }
 

@@ -9,7 +9,8 @@ interface MainProfessionSelectorProps {
   onProfessionToggle: (professionId: string) => void;
   error?: string;
   formData: SignupFormData;
-  setFormData: (data: SignupFormData) => void;
+  onOtherProfessionChange: (value: string) => void;
+  otherProfessionError?: string;
 }
 
 export const MainProfessionSelector = ({
@@ -17,7 +18,8 @@ export const MainProfessionSelector = ({
   onProfessionToggle,
   error,
   formData,
-  setFormData
+  onOtherProfessionChange,
+  otherProfessionError
 }: MainProfessionSelectorProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -75,13 +77,18 @@ export const MainProfessionSelector = ({
                 </button>
               </div>
               {prof.professionId === "other-profession" && (
-                <Input
-                  type="text"
-                  value={formData.otherProfession || ""}
-                  onChange={(e) => setFormData({ ...formData, otherProfession: e.target.value })}
-                  placeholder="פרט את המקצוע שלך..."
-                  className="mt-2"
-                />
+                <div className="mt-2">
+                  <Input
+                    type="text"
+                    value={formData.otherProfession || ""}
+                    onChange={(e) => onOtherProfessionChange(e.target.value)}
+                    placeholder="פרט את המקצוע שלך... *"
+                    className={otherProfessionError ? "border-destructive" : ""}
+                  />
+                  {otherProfessionError && (
+                    <p className="text-xs text-destructive mt-1">{otherProfessionError}</p>
+                  )}
+                </div>
               )}
             </div>
           ))}

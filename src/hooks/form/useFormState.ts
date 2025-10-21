@@ -29,7 +29,8 @@ export const useFormState = () => {
     phone: "",
     experience: "",
     acceptTerms: "",
-    businessLicenseNumber: ""
+    businessLicenseNumber: "",
+    otherProfession: ""
   });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -68,7 +69,8 @@ export const useFormState = () => {
       experience: "",
       acceptTerms: "",
       businessLicenseNumber: "",
-      professions: ""
+      professions: "",
+      otherProfession: ""
     });
   };
 

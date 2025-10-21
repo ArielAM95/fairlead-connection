@@ -10,12 +10,14 @@ interface OccupationDetailsSectionProps {
   onProfessionToggle: (professionId: string) => void;
   onSubSpecializationToggle: (professionId: string, specId: string) => void;
   professionsError?: string;
+  otherProfessionError?: string;
   selectedRegions: string[];
   onToggleRegion: (id: string) => void;
   experience: string;
   onExperienceChange: (value: string) => void;
   experienceError?: string;
   formData: any;
+  onOtherProfessionChange: (value: string) => void;
   setFormData: (data: any) => void;
 }
 
@@ -24,12 +26,14 @@ export const OccupationDetailsSection = ({
   onProfessionToggle,
   onSubSpecializationToggle,
   professionsError,
+  otherProfessionError,
   selectedRegions,
   onToggleRegion,
   experience,
   onExperienceChange,
   experienceError,
   formData,
+  onOtherProfessionChange,
   setFormData
 }: OccupationDetailsSectionProps) => {
   return (
@@ -38,8 +42,9 @@ export const OccupationDetailsSection = ({
         selectedProfessions={selectedProfessions}
         onProfessionToggle={onProfessionToggle}
         error={professionsError}
+        otherProfessionError={otherProfessionError}
         formData={formData}
-        setFormData={setFormData}
+        onOtherProfessionChange={onOtherProfessionChange}
       />
       
       <SubSpecializationsSelector
