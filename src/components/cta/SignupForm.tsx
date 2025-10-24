@@ -83,7 +83,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
 
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-          אימייל *
+          אימייל (אופציונלי)
         </label>
         <Input
           id="email"
@@ -91,7 +91,6 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           type="email"
           value={formData.email}
           onChange={handleChange}
-          required
           className="bg-gray-50 border-gray-200"
           dir="ltr"
           placeholder="your@email.com"
@@ -164,7 +163,6 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
             formData.workRegions.length === 0 ||
             !formData.experience ||
             !formData.acceptTerms ||
-            !!errors.email ||
             !!errors.phone ||
             !!errors.businessLicenseNumber ||
             !!errors.professions ||

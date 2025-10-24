@@ -20,7 +20,8 @@ export const useFormValidation = () => {
     
     let isValid = true;
 
-    if (!validateEmail(formData.email)) {
+    // Email validation only if provided
+    if (formData.email && !validateEmail(formData.email)) {
       errors.email = "נא להזין כתובת אימייל תקינה";
       isValid = false;
     }
