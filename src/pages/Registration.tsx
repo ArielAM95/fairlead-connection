@@ -91,16 +91,14 @@ export default function Registration() {
 
     try {
       const hostedFieldsInstance = window.TzlaHostedFields.create({
-        token: handshakeToken,
-        supplier: terminal,
-        hostedFieldsNames: {
-          ccno: 'hosted-card-number',
-          cvv: 'hosted-cvv',
-          expdate: 'hosted-expiry',
-        },
-        invalidInputEventHandler: (field: string) => {
-          console.log('Invalid field:', field);
-        },
+        sandbox: false,
+        terminal_name: terminal,
+        handshake_token: handshakeToken,
+        fields: {
+          credit_card_number: { selector: '#hosted-card-number' },
+          cvv: { selector: '#hosted-cvv' },
+          expiry: { selector: '#hosted-expiry' }
+        }
       });
 
       hostedFieldsInstance.on('ready', () => {
