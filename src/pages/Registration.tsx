@@ -22,6 +22,8 @@ export default function Registration() {
   const [sdkLoaded, setSdkLoaded] = useState(false);
   const [fieldsReady, setFieldsReady] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [handshakeToken, setHandshakeToken] = useState<string>('');
+  const [terminalName, setTerminalName] = useState<string>('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -59,8 +61,11 @@ export default function Registration() {
         throw error;
       }
 
-      const { handshakeToken, terminal } = data;
+      const { handshakeToken: token, terminal } = data;
       console.log('Handshake token received, terminal:', terminal);
+
+      setHandshakeToken(token);
+      setTerminalName(terminal);
 
       // Load Tranzila SDK script
       const script = document.createElement('script');
@@ -101,12 +106,12 @@ export default function Registration() {
         }
       });
 
-      hostedFieldsInstance.on('ready', () => {
+      hostedFieldsInstance.onEvent('ready', () => {
         console.log('Tranzila Hosted Fields ready');
         setFieldsReady(true);
       });
 
-      hostedFieldsInstance.on('validityChange', (event: any) => {
+      hostedFieldsInstance.onEvent('validityChange', (event: any) => {
         console.log('Field validity changed:', event);
       });
 
@@ -153,27 +158,43 @@ export default function Registration() {
 
       console.log('Charging registration fee via Tranzila...');
 
-      // Charge with Tranzila (includes tokenization)
-      const chargeResult = await tranzilaInstance.charge({
-        sum: REGISTRATION_FEE.toFixed(2),
-        currency: '1', // ILS
-        cred_type: '1', // Regular payment
-        tranmode: 'A', // Authorization + Capture
-        pdesc: `דמי הרשמה - ${formData.name}`,
-        id: formData.idNumber,
-        createtoken: '1', // טוקניזציה
+      // Charge with Tranzila (includes tokenization) - Using callback pattern from docs
+      const chargeResult = await new Promise<any>((resolve, reject) => {
+        tranzilaInstance.charge(
+          {
+            terminal_name: terminalName,
+            thtk: handshakeToken,
+            amount: REGISTRATION_FEE.toFixed(2),
+            currency_code: 'ILS',
+            tran_mode: 'A', // Authorization + Capture
+            tokenize: true  // Enable tokenization
+          },
+          (err: any, response: any) => {
+            if (err) {
+              console.error('Charge error:', err);
+              reject(err);
+            } else {
+              console.log('Charge response:', response);
+              resolve(response);
+            }
+          }
+        );
       });
 
       console.log('Tranzila charge result:', chargeResult);
 
-      if (!chargeResult || chargeResult.error) {
-        throw new Error(chargeResult?.error || 'Charge failed');
+      // Extract token from response according to docs
+      const txnResponse = chargeResult.transaction_response;
+      if (!txnResponse?.success || txnResponse.processor_response_code !== '000') {
+        throw new Error('Charge failed: ' + (txnResponse?.processor_response_message || 'Unknown error'));
       }
 
-      // Parse expiry from Tranzila format (MMYY)
-      const expdate = chargeResult.expdate; // e.g., "0431" = April 2031
-      const expiry_month = parseInt(expdate.substring(0, 2), 10);
-      const expiry_year = 2000 + parseInt(expdate.substring(2, 4), 10);
+      const tranzilaToken = txnResponse.token;
+      const last4 = String(txnResponse.credit_card_last_4_digits).padStart(4, '0').slice(-4);
+
+      // Parse expiry from response
+      const expiry_month = Number(txnResponse.expiry_month);
+      const expiry_year = Number(txnResponse.expiry_year);
 
       // Call new registration payment function
       const { data: saveData, error: saveError } = await supabase.functions.invoke(
@@ -181,11 +202,11 @@ export default function Registration() {
         {
           body: {
             phone_number: formData.phone,
-            tranzila_token: chargeResult.TranzilaToken,
-            card_last4: chargeResult.ccno_4,
+            tranzila_token: tranzilaToken,
+            card_last4: last4,
             expiry_month,
             expiry_year,
-            confirmation_code: chargeResult.ConfirmationCode,
+            confirmation_code: txnResponse.confirmation_code || '',
             amount: REGISTRATION_FEE
           }
         }

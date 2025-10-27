@@ -48,6 +48,8 @@ export default function TranzilaPaymentDialog({
   const [sdkLoaded, setSdkLoaded] = useState(false);
   const [fieldsReady, setFieldsReady] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [handshakeToken, setHandshakeToken] = useState<string>('');
+  const [terminalName, setTerminalName] = useState<string>('');
 
   // 🔒 Disconnect Supabase realtime (למניעת שגיאת JSON.parse)
   useEffect(() => {
@@ -76,8 +78,11 @@ export default function TranzilaPaymentDialog({
         throw error;
       }
 
-      const { handshakeToken, terminal } = data;
+      const { handshakeToken: token, terminal } = data;
       console.log('Handshake token received, terminal:', terminal);
+
+      setHandshakeToken(token);
+      setTerminalName(terminal);
 
       // Load Tranzila SDK script
       const script = document.createElement('script');
@@ -118,12 +123,12 @@ export default function TranzilaPaymentDialog({
         }
       });
 
-      hostedFieldsInstance.on('ready', () => {
+      hostedFieldsInstance.onEvent('ready', () => {
         console.log('Tranzila Hosted Fields ready');
         setFieldsReady(true);
       });
 
-      hostedFieldsInstance.on('validityChange', (event: any) => {
+      hostedFieldsInstance.onEvent('validityChange', (event: any) => {
         console.log('Field validity changed:', event);
       });
 
@@ -161,33 +166,50 @@ export default function TranzilaPaymentDialog({
 
       console.log('Charging registration fee via Tranzila...');
 
-      // Charge with Tranzila (includes tokenization)
-      const chargeResult = await tranzilaInstance.charge({
-        sum: REGISTRATION_FEE.toFixed(2),
-        currency: '1', // ILS
-        cred_type: '1', // Regular payment
-        tranmode: 'A', // Authorization + Capture
-        pdesc: `דמי הרשמה - ${userDetails.name}`,
-        id: userDetails.idNumber,
-        createtoken: '1', // טוקניזציה
+      // Charge with Tranzila (includes tokenization) - Using callback pattern from docs
+      const chargeResult = await new Promise<any>((resolve, reject) => {
+        tranzilaInstance.charge(
+          {
+            terminal_name: terminalName,
+            thtk: handshakeToken,
+            amount: REGISTRATION_FEE.toFixed(2),
+            currency_code: 'ILS',
+            tran_mode: 'A', // Authorization + Capture
+            tokenize: true  // Enable tokenization
+          },
+          (err: any, response: any) => {
+            if (err) {
+              console.error('Charge error:', err);
+              reject(err);
+            } else {
+              console.log('Charge response:', response);
+              resolve(response);
+            }
+          }
+        );
       });
 
       console.log('Tranzila charge result:', chargeResult);
 
-      if (!chargeResult || chargeResult.error) {
-        throw new Error(chargeResult?.error || 'Charge failed');
+      // Extract token from response according to docs
+      const txnResponse = chargeResult.transaction_response;
+      if (!txnResponse?.success || txnResponse.processor_response_code !== '000') {
+        throw new Error('Charge failed: ' + (txnResponse?.processor_response_message || 'Unknown error'));
       }
+
+      const tranzilaToken = txnResponse.token;
+      const last4 = String(txnResponse.credit_card_last_4_digits).padStart(4, '0').slice(-4);
+      const expiry_month = Number(txnResponse.expiry_month);
+      const expiry_year = Number(txnResponse.expiry_year);
 
       toast.success(`תשלום בסך ₪${REGISTRATION_FEE} בוצע בהצלחה!`);
 
-      // Return payment data to parent
+      // Return payment data to parent - format for SignupForm compatibility
       onSuccess({
-        tranzila_token: chargeResult.TranzilaToken,
-        tranzila_index: chargeResult.index,
-        card_last4: chargeResult.ccno_4,
-        card_expiry: chargeResult.expdate,
-        card_type: chargeResult.issuer || 'unknown',
-        confirmation_code: chargeResult.ConfirmationCode,
+        tranzila_token: tranzilaToken,
+        card_last4: last4,
+        card_expiry: `${String(expiry_month).padStart(2, '0')}${String(expiry_year).slice(-2)}`, // MMYY format
+        confirmation_code: txnResponse.confirmation_code || '',
       });
 
     } catch (error: any) {
