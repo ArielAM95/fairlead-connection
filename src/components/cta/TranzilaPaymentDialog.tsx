@@ -20,7 +20,7 @@ declare global {
   }
 }
 
-const REGISTRATION_FEE = 413; // ₪ כולל מע"מ
+const REGISTRATION_FEE = 1; // ₪ FOR TESTING - Change back to 413 for production
 
 interface TranzilaPaymentDialogProps {
   open: boolean;
