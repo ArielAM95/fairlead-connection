@@ -68,7 +68,8 @@ export default function TranzilaPaymentDialog({
     try {
       console.log('Getting handshake token...');
 
-      const { data, error } = await supabase.functions.invoke('tranzila-handshake');
+      // Use public handshake (no auth required for registration)
+      const { data, error } = await supabase.functions.invoke('tranzila-handshake-public');
 
       if (error) {
         console.error('Handshake error:', error);
