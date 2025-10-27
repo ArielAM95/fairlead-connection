@@ -81,19 +81,58 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
   };
 
   const handlePaymentSuccess = async (paymentData: any) => {
-    if (!pendingFormData) return;
-    
-    // Close dialog
+    if (!pendingFormData) {
+      toast.error('נתוני טופס לא נמצאו');
+      return;
+    }
+
+    // Close payment dialog
     setShowPaymentDialog(false);
-    
-    // Combine form data with payment data and submit
-    const completeData = {
-      ...pendingFormData,
-      ...paymentData,
-      registration_amount: 413,
-    };
-    
-    await onSubmit(completeData);
+
+    try {
+      toast.info('שומר פרטי תשלום...');
+
+      // Parse expiry from Tranzila format (MMYY)
+      const expdate = paymentData.card_expiry; // e.g., "0431" = April 2031
+      const expiry_month = parseInt(expdate.substring(0, 2), 10);
+      const expiry_year = 2000 + parseInt(expdate.substring(2, 4), 10);
+
+      // Call new registration payment function
+      const { data, error } = await supabase.functions.invoke(
+        'tranzila-registration-payment',
+        {
+          body: {
+            phone_number: pendingFormData.phone,
+            tranzila_token: paymentData.tranzila_token,
+            card_last4: paymentData.card_last4,
+            expiry_month,
+            expiry_year,
+            confirmation_code: paymentData.confirmation_code,
+            amount: 413
+          }
+        }
+      );
+
+      if (error) {
+        console.error('Save token error:', error);
+        toast.error('שגיאה בשמירת פרטי התשלום');
+        return;
+      }
+
+      console.log('Payment method saved successfully:', data);
+      toast.success('ההרשמה והתשלום הושלמו בהצלחה!');
+
+      // Call original onSubmit for any additional processing
+      await onSubmit({
+        ...pendingFormData,
+        payment_completed: true,
+        registration_amount: 413,
+      });
+
+    } catch (error) {
+      console.error('Payment completion error:', error);
+      toast.error('שגיאה בסיום התהליך');
+    }
   };
 
   return (
