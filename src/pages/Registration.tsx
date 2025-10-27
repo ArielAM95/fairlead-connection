@@ -15,7 +15,7 @@ declare global {
   }
 }
 
-const REGISTRATION_FEE = 413; // ₪ כולל מע"מ
+const REGISTRATION_FEE = 1; // ₪ FOR TESTING - Change back to 413 for production
 
 export default function Registration() {
   const navigate = useNavigate();
@@ -51,8 +51,8 @@ export default function Registration() {
     try {
       console.log('Getting handshake token...');
 
-      // קריאה לפונקציה הקיימת: tranzila-handshake
-      const { data, error } = await supabase.functions.invoke('tranzila-handshake');
+      // Use public handshake (no auth required for registration)
+      const { data, error } = await supabase.functions.invoke('tranzila-handshake-public');
 
       if (error) {
         console.error('Handshake error:', error);
@@ -172,31 +172,24 @@ export default function Registration() {
         throw new Error(chargeResult?.error || 'Charge failed');
       }
 
-      // קריאה לפונקציה הקיימת: tranzila-save-token
+      // Parse expiry from Tranzila format (MMYY)
+      const expdate = chargeResult.expdate; // e.g., "0431" = April 2031
+      const expiry_month = parseInt(expdate.substring(0, 2), 10);
+      const expiry_year = 2000 + parseInt(expdate.substring(2, 4), 10);
+
+      // Call new registration payment function
       const { data: saveData, error: saveError } = await supabase.functions.invoke(
-        'tranzila-save-token',
+        'tranzila-registration-payment',
         {
           body: {
-            // פרטי המשתמש (יישמר ב-professionals)
-            name: formData.name,
-            email: formData.email,
             phone_number: formData.phone,
-            profession: formData.profession,
-            location: formData.location,
-
-            // פרטי התשלום מטרנזילה
             tranzila_token: chargeResult.TranzilaToken,
-            tranzila_index: chargeResult.index,
             card_last4: chargeResult.ccno_4,
-            card_expiry: chargeResult.expdate,
-            card_type: chargeResult.issuer || 'unknown',
-
-            // סכום ההרשמה
-            registration_amount: REGISTRATION_FEE,
-
-            // קוד אישור מטרנזילה
+            expiry_month,
+            expiry_year,
             confirmation_code: chargeResult.ConfirmationCode,
-          },
+            amount: REGISTRATION_FEE
+          }
         }
       );
 
@@ -206,7 +199,7 @@ export default function Registration() {
       }
 
       console.log('Registration successful:', saveData);
-      toast.success('ההרשמה הושלמה בהצלחה! ₪413 חוייבו');
+      toast.success(`ההרשמה הושלמה בהצלחה! ₪${REGISTRATION_FEE} חוייבו`);
 
       // Navigate to success page or dashboard
       setTimeout(() => {
