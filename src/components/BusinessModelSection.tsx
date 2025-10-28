@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Link } from 'react-router-dom';
+import { Calculator, ArrowLeft } from 'lucide-react';
 import { ScrollFade } from "@/utils/ScrollObserver";
 const BusinessModelSection = () => {
   const [animatedValue, setAnimatedValue] = useState(350);
@@ -127,15 +129,17 @@ const BusinessModelSection = () => {
             
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {[{
-              percent: "10%",
+              percent: "5-10%",
               title: "בקשות מצרכנים",
               subtitle: "גם אם זה רק עלות ביקור",
+              extraText: "תלוי בסכום העסקה ובמקצוע",
               color: "primary",
               delay: 0
             }, {
-              percent: "5%",
+              percent: "3-5%",
               title: "לידים שהועברו",
               subtitle: "ממקבלי העבודה",
+              extraText: "תלוי בסכום",
               color: "accent",
               delay: 200
             }].map((commission, index) => <div key={index} className="group relative">
@@ -148,6 +152,11 @@ const BusinessModelSection = () => {
                     <p className="text-muted-foreground">
                       {commission.subtitle}
                     </p>
+                    {commission.extraText && (
+                      <p className="text-xs text-muted-foreground/70 italic mt-2">
+                        {commission.extraText}
+                      </p>
+                    )}
                     <div className={`mt-4 h-1 w-full bg-gradient-to-r from-${commission.color}/20 to-${commission.color}/60 rounded-full`}>
                       <div className={`h-full bg-gradient-to-r from-${commission.color} to-${commission.color}/80 rounded-full w-0 group-hover:w-full transition-all duration-1000 ease-out`}></div>
                     </div>
@@ -156,12 +165,21 @@ const BusinessModelSection = () => {
             </div>
             
             <div className="text-center mt-12">
-              <div className="inline-flex items-center gap-4 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full px-8 py-4 backdrop-blur-sm border border-primary/20">
+              <div className="inline-flex items-center gap-4 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full px-8 py-4 backdrop-blur-sm border border-primary/20 mb-8">
                 <div className="text-2xl animate-spin">⭐</div>
                 <p className="text-xl font-medium text-primary">
                   אנחנו מרוויחים רק כשאתם מרוויחים!
                 </p>
               </div>
+
+              <Link 
+                to="/commission-calculator"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-500 via-emerald-600 to-green-500 text-white font-bold text-lg rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 group"
+              >
+                <Calculator className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+                <span>💡 לחצו למחשבון העמלות שלנו</span>
+                <ArrowLeft className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </div>
           </div>
         </ScrollFade>
