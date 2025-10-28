@@ -62,7 +62,7 @@ const ProfessionSelector = ({ value, onChange }: ProfessionSelectorProps) => {
                 <SelectItem 
                   key={profession.professionId} 
                   value={profession.professionId}
-                  className="text-right py-3 px-4 hover:bg-accent/10 cursor-pointer rounded-md my-1"
+                  className="text-right py-3 px-4 hover:bg-accent/10 cursor-pointer rounded-md my-1 flex justify-end"
                 >
                   {profession.professionLabel}
                 </SelectItem>
