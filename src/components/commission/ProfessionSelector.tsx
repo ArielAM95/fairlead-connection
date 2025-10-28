@@ -45,7 +45,7 @@ const ProfessionSelector = ({ value, onChange }: ProfessionSelectorProps) => {
               placeholder="חפש מקצוע..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pr-10 bg-background"
+              className="pr-10 bg-background text-right"
               onClick={(e) => e.stopPropagation()}
             />
           </div>
