@@ -42,11 +42,14 @@ const ProfessionSelector = ({ value, onChange }: ProfessionSelectorProps) => {
           <div className="relative">
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
+              type="text"
               placeholder="חפש מקצוע..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => e.stopPropagation()}
               className="pr-10 bg-background text-right"
               onClick={(e) => e.stopPropagation()}
+              autoFocus
             />
           </div>
         </div>
