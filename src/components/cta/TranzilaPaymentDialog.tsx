@@ -156,14 +156,6 @@ export default function TranzilaPaymentDialog({
         throw new Error('Tranzila instance not found');
       }
 
-      // Validate card fields
-      const validation = await tranzilaInstance.validate();
-      if (!validation.valid) {
-        toast.error('פרטי כרטיס אינם תקינים');
-        setIsProcessing(false);
-        return;
-      }
-
       console.log('Charging registration fee via Tranzila...');
 
       // Charge with Tranzila (includes tokenization) - Using callback pattern from docs
