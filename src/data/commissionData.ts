@@ -255,6 +255,190 @@ export const commissionsData: CommissionInfo[] = [
     explanation: 'גנן משלם עמלה קבועה של 10% על כל עסקה.',
     clientRetentionDays: 60
   },
+  {
+    professionId: 'surveyor',
+    professionLabel: 'מודד מוסמך',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'מודד מוסמך משלם עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'landscape-architect',
+    professionLabel: 'אדריכל נוף',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'אדריכל נוף משלם עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'psychometric-instructor',
+    professionLabel: 'מדריך פסיכומטרי',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'מדריך פסיכומטרי משלם עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'arts-teacher',
+    professionLabel: 'מורה לאומנויות',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'מורה לאומנויות משלם עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'private-nanny',
+    professionLabel: 'גננת פרטית / מטפלת',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'גננת פרטית / מטפלת משלמת עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'personal-trainer',
+    professionLabel: 'מאמן אישי',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'מאמן אישי משלם עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'cosmetician',
+    professionLabel: 'קוסמטיקאית',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'קוסמטיקאית משלמת עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'hairdresser',
+    professionLabel: 'ספר / מעצב שיער',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'ספר / מעצב שיער משלם עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'makeup-artist',
+    professionLabel: 'מאפרת',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'מאפרת משלמת עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'nail-tech',
+    professionLabel: 'בניית ציפורניים',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'בניית ציפורניים משלמת עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'brow-designer',
+    professionLabel: 'עיצוב גבות',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'עיצוב גבות משלם עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'seo-specialist',
+    professionLabel: 'מקדם אתרים SEO',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'מקדם אתרים SEO משלם עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'ppc-manager',
+    professionLabel: 'מנהל קמפיינים ממומנים',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'מנהל קמפיינים ממומנים משלם עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'social-media-manager',
+    professionLabel: 'ניהול סושיאל',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'ניהול סושיאל משלם עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'content-writer',
+    professionLabel: 'כתיבת תוכן',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'כתיבת תוכן משלמת עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'magnet-photography',
+    professionLabel: 'צילום מגנטים',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'צילום מגנטים משלם עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'event-production',
+    professionLabel: 'הפקת אירועים',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'הפקת אירועים משלמת עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'event-host',
+    professionLabel: 'מנחה אירועים',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'מנחה אירועים משלם עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'catering',
+    professionLabel: 'שירותי קייטרינג',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'שירותי קייטרינג משלמים עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'active-bar',
+    professionLabel: 'בר אקטיבי',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'בר אקטיבי משלם עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'kids-entertainment',
+    professionLabel: 'הפעלות לילדים',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'הפעלות לילדים משלמות עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'inflatables',
+    professionLabel: 'מתנפחים',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'מתנפחים משלמים עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
+  {
+    professionId: 'balloon-decor',
+    professionLabel: 'עיצוב בלונים',
+    category: 'A',
+    calculateCommission: calculateFixed10,
+    explanation: 'עיצוב בלונים משלם עמלה קבועה של 10% על כל עסקה.',
+    clientRetentionDays: 60
+  },
 
   // Category B - מדורג 5,000, 30 ימים
   {
@@ -287,6 +471,22 @@ export const commissionsData: CommissionInfo[] = [
     category: 'B',
     calculateCommission: calculateTiered5000,
     explanation: 'חברת הובלות משלמת 10% על עסקאות עד 5,000 ₪ ו-5% על עסקאות מעל 5,001 ₪.',
+    clientRetentionDays: 30
+  },
+  {
+    professionId: 'garage',
+    professionLabel: 'מוסך',
+    category: 'B',
+    calculateCommission: calculateTiered5000,
+    explanation: 'מוסך משלם 10% על עסקאות עד 5,000 ₪ ו-5% על עסקאות מעל 5,001 ₪.',
+    clientRetentionDays: 30
+  },
+  {
+    professionId: 'car-wash',
+    professionLabel: 'שטיפת רכבים',
+    category: 'B',
+    calculateCommission: calculateTiered5000,
+    explanation: 'שטיפת רכבים משלמת 10% על עסקאות עד 5,000 ₪ ו-5% על עסקאות מעל 5,001 ₪.',
     clientRetentionDays: 30
   },
 
