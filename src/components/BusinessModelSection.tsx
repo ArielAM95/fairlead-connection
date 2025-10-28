@@ -174,6 +174,7 @@ const BusinessModelSection = () => {
 
               <Link 
                 to="/commission-calculator"
+                onClick={() => window.scrollTo(0, 0)}
                 className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-500 via-emerald-600 to-green-500 text-white font-bold text-lg rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 group"
               >
                 <Calculator className="w-6 h-6 group-hover:rotate-12 transition-transform" />
