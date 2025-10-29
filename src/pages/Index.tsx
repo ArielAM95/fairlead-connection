@@ -10,7 +10,7 @@ import EarningsCalculatorSection from "@/components/EarningsCalculatorSection";
 import AppShowcaseSection from "@/components/AppShowcaseSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import CtaSection from "@/components/CtaSection";
-import ContactSection from "@/components/ContactSection";
+import ContactSection from "@/components/contact/ContactSection";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import NotificationPopup from "@/components/ui/NotificationPopup";
