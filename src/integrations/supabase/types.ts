@@ -202,42 +202,51 @@ export type Database = {
           amount: number
           commission_date: string
           created_at: string
+          failure_reason: string | null
           id: string
           last_attempt_at: string | null
           lead_owner_commission: number
           ofair_commission: number
+          paid_at: string | null
           payment_method_id: string
           professional_id: string
           retry_count: number
           status: string
+          transaction_reference: string | null
           updated_at: string
         }
         Insert: {
           amount: number
           commission_date: string
           created_at?: string
+          failure_reason?: string | null
           id?: string
           last_attempt_at?: string | null
           lead_owner_commission?: number
           ofair_commission?: number
+          paid_at?: string | null
           payment_method_id: string
           professional_id: string
           retry_count?: number
           status?: string
+          transaction_reference?: string | null
           updated_at?: string
         }
         Update: {
           amount?: number
           commission_date?: string
           created_at?: string
+          failure_reason?: string | null
           id?: string
           last_attempt_at?: string | null
           lead_owner_commission?: number
           ofair_commission?: number
+          paid_at?: string | null
           payment_method_id?: string
           professional_id?: string
           retry_count?: number
           status?: string
+          transaction_reference?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -272,7 +281,7 @@ export type Database = {
           accessed_professional_id: string
           accessor_professional_id: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           user_agent: string | null
         }
         Insert: {
@@ -282,7 +291,7 @@ export type Database = {
           accessed_professional_id: string
           accessor_professional_id?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
         }
         Update: {
@@ -292,8 +301,44 @@ export type Database = {
           accessed_professional_id?: string
           accessor_professional_id?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
+        }
+        Relationships: []
+      }
+      contact_inquiries: {
+        Row: {
+          created_at: string | null
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          message: string | null
+          phone_number: string
+          source: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          message?: string | null
+          phone_number: string
+          source?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          message?: string | null
+          phone_number?: string
+          source?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -358,7 +403,7 @@ export type Database = {
           accessed_at: string | null
           accessor_professional_id: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           lead_id: string
           user_agent: string | null
         }
@@ -368,7 +413,7 @@ export type Database = {
           accessed_at?: string | null
           accessor_professional_id?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           lead_id: string
           user_agent?: string | null
         }
@@ -378,7 +423,7 @@ export type Database = {
           accessed_at?: string | null
           accessor_professional_id?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           lead_id?: string
           user_agent?: string | null
         }
@@ -635,6 +680,36 @@ export type Database = {
           },
         ]
       }
+      main_professions: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          id: string
+          is_active: boolean | null
+          label: string
+          profession_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          label: string
+          profession_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          label?: string
+          profession_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           client_details: Json | null
@@ -699,6 +774,7 @@ export type Database = {
           is_default: boolean
           professional_id: string
           token_encrypted: string
+          token_index: string | null
           updated_at: string
         }
         Insert: {
@@ -710,6 +786,7 @@ export type Database = {
           is_default?: boolean
           professional_id: string
           token_encrypted: string
+          token_index?: string | null
           updated_at?: string
         }
         Update: {
@@ -721,6 +798,7 @@ export type Database = {
           is_default?: boolean
           professional_id?: string
           token_encrypted?: string
+          token_index?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -750,7 +828,7 @@ export type Database = {
           revealed_at: string | null
           user_agent: string | null
           user_id: string
-          user_ip: unknown | null
+          user_ip: unknown
           user_name: string | null
         }
         Insert: {
@@ -762,7 +840,7 @@ export type Database = {
           revealed_at?: string | null
           user_agent?: string | null
           user_id: string
-          user_ip?: unknown | null
+          user_ip?: unknown
           user_name?: string | null
         }
         Update: {
@@ -774,7 +852,7 @@ export type Database = {
           revealed_at?: string | null
           user_agent?: string | null
           user_id?: string
-          user_ip?: unknown | null
+          user_ip?: unknown
           user_name?: string | null
         }
         Relationships: []
@@ -823,6 +901,117 @@ export type Database = {
           },
           {
             foreignKeyName: "fk_professional_certificates_professional_id"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      professional_leads_crm: {
+        Row: {
+          assigned_to: string | null
+          closed_at: string | null
+          closed_reason: string | null
+          contacted: boolean | null
+          contacted_at: string | null
+          contacted_by: string | null
+          created_at: string
+          id: string
+          inquiry_id: string | null
+          internal_notes: string | null
+          lead_type: string | null
+          notes: string | null
+          paid: boolean | null
+          paid_at: string | null
+          payment_amount: number | null
+          priority: string | null
+          professional_id: string | null
+          status: string | null
+          tags: string[] | null
+          updated_at: string
+          uploaded_invoice: boolean | null
+          uploaded_invoice_at: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          closed_at?: string | null
+          closed_reason?: string | null
+          contacted?: boolean | null
+          contacted_at?: string | null
+          contacted_by?: string | null
+          created_at?: string
+          id?: string
+          inquiry_id?: string | null
+          internal_notes?: string | null
+          lead_type?: string | null
+          notes?: string | null
+          paid?: boolean | null
+          paid_at?: string | null
+          payment_amount?: number | null
+          priority?: string | null
+          professional_id?: string | null
+          status?: string | null
+          tags?: string[] | null
+          updated_at?: string
+          uploaded_invoice?: boolean | null
+          uploaded_invoice_at?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          closed_at?: string | null
+          closed_reason?: string | null
+          contacted?: boolean | null
+          contacted_at?: string | null
+          contacted_by?: string | null
+          created_at?: string
+          id?: string
+          inquiry_id?: string | null
+          internal_notes?: string | null
+          lead_type?: string | null
+          notes?: string | null
+          paid?: boolean | null
+          paid_at?: string | null
+          payment_amount?: number | null
+          priority?: string | null
+          professional_id?: string | null
+          status?: string | null
+          tags?: string[] | null
+          updated_at?: string
+          uploaded_invoice?: boolean | null
+          uploaded_invoice_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "professional_leads_crm_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "internal_crm"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professional_leads_crm_contacted_by_fkey"
+            columns: ["contacted_by"]
+            isOneToOne: false
+            referencedRelation: "internal_crm"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professional_leads_crm_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "contact_inquiries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professional_leads_crm_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professional_leads_crm_professional_id_fkey"
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals_public_view"
@@ -1465,7 +1654,7 @@ export type Database = {
           action: string
           created_at: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           record_id: string | null
           table_name: string
           user_agent: string | null
@@ -1475,7 +1664,7 @@ export type Database = {
           action: string
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           record_id?: string | null
           table_name: string
           user_agent?: string | null
@@ -1485,22 +1674,63 @@ export type Database = {
           action?: string
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           record_id?: string | null
           table_name?: string
           user_agent?: string | null
         }
         Relationships: []
       }
+      sub_specializations: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          id: string
+          is_active: boolean | null
+          label: string
+          main_profession_id: string
+          specialization_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          label: string
+          main_profession_id: string
+          specialization_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          label?: string
+          main_profession_id?: string
+          specialization_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sub_specializations_main_profession_id_fkey"
+            columns: ["main_profession_id"]
+            isOneToOne: false
+            referencedRelation: "main_professions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subscription_charges: {
         Row: {
           amount: number
           charge_date: string
           created_at: string | null
-          credit_card_token_id: string
           currency: string | null
           error_message: string | null
           id: string
+          payment_method_id: string
           professional_id: string
           status: string
           tranzila_confirmation: string | null
@@ -1510,10 +1740,10 @@ export type Database = {
           amount: number
           charge_date: string
           created_at?: string | null
-          credit_card_token_id: string
           currency?: string | null
           error_message?: string | null
           id?: string
+          payment_method_id: string
           professional_id: string
           status: string
           tranzila_confirmation?: string | null
@@ -1523,10 +1753,10 @@ export type Database = {
           amount?: number
           charge_date?: string
           created_at?: string | null
-          credit_card_token_id?: string
           currency?: string | null
           error_message?: string | null
           id?: string
+          payment_method_id?: string
           professional_id?: string
           status?: string
           tranzila_confirmation?: string | null
@@ -1534,10 +1764,10 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "subscription_charges_credit_card_token_id_fkey"
-            columns: ["credit_card_token_id"]
+            foreignKeyName: "subscription_charges_payment_method_id_fkey"
+            columns: ["payment_method_id"]
             isOneToOne: false
-            referencedRelation: "credit_card_tokens"
+            referencedRelation: "payment_methods"
             referencedColumns: ["id"]
           },
           {
@@ -2000,26 +2230,16 @@ export type Database = {
         Args: { prof_id: string }
         Returns: number
       }
-      check_admin_status: {
-        Args: { user_id_param: string }
-        Returns: boolean
-      }
+      check_admin_status: { Args: { user_id_param: string }; Returns: boolean }
       check_auth_token_for_professional: {
         Args: { professional_id_param: string }
         Returns: boolean
       }
-      check_internal_email: {
-        Args: { email_param: string }
-        Returns: Json
-      }
-      check_is_admin_user: {
-        Args: { user_id_param: string }
-        Returns: boolean
-      }
-      check_is_super_admin: {
-        Args: Record<PropertyKey, never> | { user_id_param: string }
-        Returns: boolean
-      }
+      check_internal_email: { Args: { email_param: string }; Returns: Json }
+      check_is_admin_user: { Args: { user_id_param: string }; Returns: boolean }
+      check_is_super_admin:
+        | { Args: never; Returns: boolean }
+        | { Args: { user_id_param: string }; Returns: boolean }
       check_is_super_admin_user: {
         Args: { user_id_param: string }
         Returns: boolean
@@ -2036,10 +2256,7 @@ export type Database = {
         Args: { user_id_param: string }
         Returns: boolean
       }
-      check_user_is_admin: {
-        Args: { user_id_param: string }
-        Returns: boolean
-      }
+      check_user_is_admin: { Args: { user_id_param: string }; Returns: boolean }
       check_user_is_internal_super_admin: {
         Args: { user_id_param: string }
         Returns: boolean
@@ -2048,10 +2265,7 @@ export type Database = {
         Args: { user_id_param: string }
         Returns: boolean
       }
-      cleanup_expired_tokens: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      cleanup_expired_tokens: { Args: never; Returns: undefined }
       create_first_internal_super_admin: {
         Args: { admin_email: string; admin_name?: string }
         Returns: string
@@ -2065,7 +2279,7 @@ export type Database = {
         Returns: string
       }
       fetch_active_leads: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           budget: number | null
           category: string | null
@@ -2091,9 +2305,15 @@ export type Database = {
           work_date: string | null
           work_time: string | null
         }[]
+        SetofOptions: {
+          from: "*"
+          to: "leads"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       get_active_leads: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           budget: number | null
           category: string | null
@@ -2119,17 +2339,26 @@ export type Database = {
           work_date: string | null
           work_time: string | null
         }[]
+        SetofOptions: {
+          from: "*"
+          to: "leads"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
-      get_client_details_for_proposal: {
-        Args:
-          | { proposal_id_param: string; proposal_type_param: string }
-          | {
+      get_client_details_for_proposal:
+        | {
+            Args: {
               proposal_id_param: string
               proposal_type_param: string
               token_param?: string
             }
-        Returns: Json
-      }
+            Returns: Json
+          }
+        | {
+            Args: { proposal_id_param: string; proposal_type_param: string }
+            Returns: Json
+          }
       get_clients_history_secure: {
         Args: { token_param?: string }
         Returns: {
@@ -2328,29 +2557,52 @@ export type Database = {
           title: string
           updated_at: string | null
         }[]
+        SetofOptions: {
+          from: "*"
+          to: "projects"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
-      get_proposals_secure: {
-        Args:
-          | { lead_id_param?: string; professional_id_param?: string }
-          | { token_param?: string }
-        Returns: {
-          created_at: string
-          description: string
-          estimated_completion: string
-          id: string
-          lead_id: string
-          price: number
-          professional_id: string
-          professional_location: string
-          professional_name: string
-          professional_profession: string
-          professional_rating: number
-          professional_verified: boolean
-          status: string
-        }[]
-      }
+      get_proposals_secure:
+        | {
+            Args: { token_param?: string }
+            Returns: {
+              created_at: string
+              description: string
+              estimated_completion: string
+              id: string
+              lead_id: string
+              price: number
+              professional_id: string
+              professional_location: string
+              professional_name: string
+              professional_profession: string
+              professional_rating: number
+              professional_verified: boolean
+              status: string
+            }[]
+          }
+        | {
+            Args: { lead_id_param?: string; professional_id_param?: string }
+            Returns: {
+              created_at: string
+              description: string
+              estimated_completion: string
+              id: string
+              lead_id: string
+              price: number
+              professional_id: string
+              professional_location: string
+              professional_name: string
+              professional_profession: string
+              professional_rating: number
+              professional_verified: boolean
+              status: string
+            }[]
+          }
       get_public_leads_secure: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           budget: number
           constraints: string
@@ -2372,7 +2624,7 @@ export type Database = {
         }[]
       }
       get_public_professional_data: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           about: string
           experience_range: string
@@ -2388,7 +2640,7 @@ export type Database = {
         }[]
       }
       get_public_professionals_basic_info: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           about: string
           experience_range: string
@@ -2405,7 +2657,7 @@ export type Database = {
         }[]
       }
       get_public_professionals_secure: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           about: string
           areas: string
@@ -2441,10 +2693,7 @@ export type Database = {
           status: string
         }[]
       }
-      get_security_status: {
-        Args: Record<PropertyKey, never>
-        Returns: Json
-      }
+      get_security_status: { Args: never; Returns: Json }
       insert_lead: {
         Args: {
           p_budget: number
@@ -2456,10 +2705,7 @@ export type Database = {
         }
         Returns: string
       }
-      insert_project: {
-        Args: { project_data: Json }
-        Returns: string
-      }
+      insert_project: { Args: { project_data: Json }; Returns: string }
       insert_proposal: {
         Args: {
           p_description: string
@@ -2470,34 +2716,13 @@ export type Database = {
         }
         Returns: string
       }
-      is_admin_check: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      is_admin_safe: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      is_internal_super_admin_check: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      is_internal_user_check: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      is_super_admin_check: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      is_super_admin_safe: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      sanitize_phone_number: {
-        Args: { phone_input: string }
-        Returns: string
-      }
+      is_admin_check: { Args: never; Returns: boolean }
+      is_admin_safe: { Args: never; Returns: boolean }
+      is_internal_super_admin_check: { Args: never; Returns: boolean }
+      is_internal_user_check: { Args: never; Returns: boolean }
+      is_super_admin_check: { Args: never; Returns: boolean }
+      is_super_admin_safe: { Args: never; Returns: boolean }
+      sanitize_phone_number: { Args: { phone_input: string }; Returns: string }
       submit_lead: {
         Args: {
           p_budget: number
