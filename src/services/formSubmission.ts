@@ -11,6 +11,7 @@ export const submitContactForm = async (formData: ContactFormData): Promise<void
     post_type: "contact_form" // Hidden field to identify the form type
   };
   
+  // 1. שליחה ל-webhook
   const response = await fetch(WEBHOOK_URL, {
     method: "POST",
     headers: {
@@ -21,6 +22,28 @@ export const submitContactForm = async (formData: ContactFormData): Promise<void
   
   if (!response.ok) {
     throw new Error("שגיאה בשליחת הטופס");
+  }
+
+  // 2. שמירה ב-Supabase
+  try {
+    const { error: dbError } = await supabase
+      .from('contact_inquiries' as any)
+      .insert({
+        first_name: formData.firstName,
+        last_name: formData.lastName || "-",
+        email: formData.email,
+        phone_number: formData.phone,
+        message: formData.message || "",
+        source: 'website'
+      });
+
+    if (dbError) {
+      console.error('Error saving contact inquiry to database:', dbError);
+      // לא זורק שגיאה כי ה-webhook הצליח
+    }
+  } catch (dbException) {
+    console.error('Exception saving to database:', dbException);
+    // לא זורק שגיאה כי ה-webhook הצליח
   }
 };
 
