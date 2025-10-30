@@ -58,18 +58,10 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
     try {
       toast.info('שומר פרטים...');
 
-      // Step 1: Create professional record in DB (REQUIRED before payment)
+      // Create professional record in DB + send webhook (handled by onSubmit)
       await onSubmit(formData);
 
-      // Step 2: Send webhook to Make.com (parallel operation, non-blocking)
-      supabase.functions.invoke('send-registration-webhook', {
-        body: formData
-      }).catch(error => {
-        console.error('Webhook error (non-critical):', error);
-        // Don't block flow if webhook fails
-      });
-
-      // Step 3: Open pre-payment dialog after professional is created
+      // Open pre-payment dialog after professional is created
       toast.success('הפרטים נשמרו! עבור לתשלום');
       setShowPrePaymentDialog(true);
     } catch (error) {
