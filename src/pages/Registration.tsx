@@ -25,14 +25,7 @@ export default function Registration() {
   const [handshakeToken, setHandshakeToken] = useState<string>('');
   const [terminalName, setTerminalName] = useState<string>('');
 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    profession: '',
-    location: '',
-    idNumber: '',
-  });
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   // 🔒 Disconnect Supabase realtime (למניעת שגיאת JSON.parse)
   useEffect(() => {
@@ -127,10 +120,9 @@ export default function Registration() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate form
-    if (!formData.name || !formData.email || !formData.phone || 
-        !formData.profession || !formData.location || !formData.idNumber) {
-      toast.error('נא למלא את כל השדות');
+    // Validate phone number
+    if (!phoneNumber || !/^0[2-9]\d{7,8}$/.test(phoneNumber)) {
+      toast.error('נא להזין מספר טלפון תקין');
       return;
     }
 
@@ -191,7 +183,7 @@ export default function Registration() {
       const expiry_year = twoDigitYear < 100 ? 2000 + twoDigitYear : twoDigitYear;
 
       const paymentData = {
-        phone_number: formData.phone,
+        phone_number: phoneNumber,
         tranzila_token: tranzilaToken,
         card_last4: last4,
         expiry_month,
@@ -249,85 +241,29 @@ export default function Registration() {
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Header */}
           <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold text-foreground">הרשמה למערכת</h1>
+            <h1 className="text-3xl font-bold text-foreground">דף בדיקה - תשלום הרשמה</h1>
             <p className="text-lg text-muted-foreground">דמי הרשמה: ₪{REGISTRATION_FEE} כולל מע"מ</p>
+            <p className="text-sm text-muted-foreground">הזן מספר טלפון של משתמש קיים במערכת</p>
           </div>
 
-          {/* פרטים אישיים */}
+          {/* Phone number only */}
           <div className="bg-card p-6 rounded-lg border border-border space-y-4">
-            <h2 className="text-xl font-semibold text-card-foreground">פרטים אישיים</h2>
-            
-            <div className="space-y-2">
-              <Label htmlFor="name">שם מלא *</Label>
-              <Input
-                id="name"
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="הכנס שם מלא"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">אימייל *</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="example@email.com"
-                required
-              />
-            </div>
+            <h2 className="text-xl font-semibold text-card-foreground">מספר טלפון</h2>
 
             <div className="space-y-2">
               <Label htmlFor="phone">טלפון *</Label>
               <Input
                 id="phone"
                 type="tel"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
                 placeholder="050-1234567"
+                dir="ltr"
                 required
               />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="profession">מקצוע *</Label>
-              <Input
-                id="profession"
-                type="text"
-                value={formData.profession}
-                onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
-                placeholder="למשל: אינסטלטור, חשמלאי"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="location">מיקום *</Label>
-              <Input
-                id="location"
-                type="text"
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                placeholder="עיר"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="idNumber">תעודת זהות *</Label>
-              <Input
-                id="idNumber"
-                type="text"
-                value={formData.idNumber}
-                onChange={(e) => setFormData({ ...formData, idNumber: e.target.value })}
-                placeholder="9 ספרות"
-                maxLength={9}
-                required
-              />
+              <p className="text-sm text-muted-foreground">
+                המספר חייב להיות קיים בטבלת professionals
+              </p>
             </div>
           </div>
 
