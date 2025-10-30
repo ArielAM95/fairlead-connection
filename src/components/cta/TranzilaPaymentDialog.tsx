@@ -159,16 +159,22 @@ export default function TranzilaPaymentDialog({
       console.log('Charging registration fee via Tranzila...');
 
       // Charge with Tranzila (includes tokenization) - Using callback pattern from docs
+      const chargeParams = {
+        terminal_name: terminalName,
+        thtk: handshakeToken,
+        amount: REGISTRATION_FEE.toFixed(2),
+        currency_code: 'ILS',
+        tran_mode: 'A', // Authorization + Capture
+        tokenize: true  // Enable tokenization
+      };
+
+      console.log('Charging with params:', chargeParams);
+      console.log('Terminal name:', terminalName, 'Type:', typeof terminalName);
+      console.log('Handshake token:', handshakeToken, 'Type:', typeof handshakeToken);
+
       const chargeResult = await new Promise<any>((resolve, reject) => {
         tranzilaInstance.charge(
-          {
-            terminal_name: terminalName,
-            thtk: handshakeToken,
-            amount: REGISTRATION_FEE.toFixed(2),
-            currency_code: 'ILS',
-            tran_mode: 'A', // Authorization + Capture
-            tokenize: true  // Enable tokenization
-          },
+          chargeParams,
           (err: any, response: any) => {
             if (err) {
               console.error('Charge error:', err);
