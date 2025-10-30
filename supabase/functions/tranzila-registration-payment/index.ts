@@ -188,6 +188,24 @@ Deno.serve(async (req) => {
 
     console.log('Payment method saved successfully, ID:', paymentMethod.id);
 
+    // Update professional registration payment status
+    console.log('Updating professional registration payment status...');
+    const { error: updateError } = await supabase
+      .from('professionals')
+      .update({
+        registration_payment_status: 'completed',
+        registration_paid_at: new Date().toISOString(),
+        registration_amount: amount || 413
+      })
+      .eq('id', professional.id);
+
+    if (updateError) {
+      console.error('Failed to update registration payment status:', updateError);
+      // Non-critical - don't fail the request
+    } else {
+      console.log('Registration payment status updated to completed');
+    }
+
     // Log successful transaction
     await supabase.from('transaction_logs').insert({
       professional_id: professional.id,

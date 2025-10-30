@@ -166,7 +166,10 @@ export const submitSignupForm = async (
       location: formData.city || "לא צוין",
       areas: formData.workRegions.join(", "), // Already in Hebrew
       terms_accepted: formData.acceptTerms,
-      marketing_consent: formData.acceptMarketing
+      marketing_consent: formData.acceptMarketing,
+      registration_payment_status: 'pending',
+      registration_paid_at: null,
+      registration_amount: null
     };
     
     console.log("Prepared professional data for Supabase:", professionalData);
