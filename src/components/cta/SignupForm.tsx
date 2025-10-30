@@ -40,40 +40,41 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate form before opening payment dialog
     const validationErrors: any = {};
-    
+
     if (!formData.acceptTerms) {
       validationErrors.acceptTerms = "חובה לאשר את תנאי השימוש";
     }
-    
+
     if (Object.keys(validationErrors).length > 0) {
       return;
     }
-    
+
     // Store form data
     setPendingFormData(formData);
-    
+
     try {
-      // Send webhook before showing dialog
-      toast.info('שולח נתונים...');
-      
-      const { error } = await supabase.functions.invoke('send-registration-webhook', {
+      toast.info('שומר פרטים...');
+
+      // Step 1: Create professional record in DB (REQUIRED before payment)
+      await onSubmit(formData);
+
+      // Step 2: Send webhook to Make.com (parallel operation, non-blocking)
+      supabase.functions.invoke('send-registration-webhook', {
         body: formData
+      }).catch(error => {
+        console.error('Webhook error (non-critical):', error);
+        // Don't block flow if webhook fails
       });
-      
-      if (error) {
-        console.error('Webhook error:', error);
-        toast.error('שגיאה בשליחת הנתונים');
-        return;
-      }
-      
-      // Open pre-payment dialog after successful webhook
+
+      // Step 3: Open pre-payment dialog after professional is created
+      toast.success('הפרטים נשמרו! עבור לתשלום');
       setShowPrePaymentDialog(true);
     } catch (error) {
       console.error('Form submission error:', error);
-      toast.error('שגיאה בתהליך ההרשמה');
+      toast.error('שגיאה בשמירת הפרטים');
     }
   };
 
@@ -99,7 +100,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
       const expiry_month = parseInt(expdate.substring(0, 2), 10);
       const expiry_year = 2000 + parseInt(expdate.substring(2, 4), 10);
 
-      // Call new registration payment function
+      // Save payment token (professional already exists in DB)
       const { data, error } = await supabase.functions.invoke(
         'tranzila-registration-payment',
         {
@@ -124,12 +125,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
       console.log('Payment method saved successfully:', data);
       toast.success('ההרשמה והתשלום הושלמו בהצלחה!');
 
-      // Call original onSubmit for any additional processing
-      await onSubmit({
-        ...pendingFormData,
-        payment_completed: true,
-        registration_amount: 1, // FOR TESTING - Change back to 413 for production
-      });
+      // Payment complete - no need to call onSubmit again (already created)
 
     } catch (error) {
       console.error('Payment completion error:', error);
