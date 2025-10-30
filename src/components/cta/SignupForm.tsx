@@ -299,6 +299,10 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
       userDetails={{
         name: `${formData.firstName} ${formData.lastName}`,
         idNumber: formData.businessLicenseNumber || '000000000',
+        phone: formData.phone,
+        email: formData.email,
+        city: formData.city,
+        companyName: formData.companyName,
       }}
     />
     </>

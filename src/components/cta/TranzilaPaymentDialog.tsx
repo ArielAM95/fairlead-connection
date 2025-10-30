@@ -36,6 +36,10 @@ interface TranzilaPaymentDialogProps {
   userDetails: {
     name: string;
     idNumber: string;
+    phone?: string;
+    email?: string;
+    city?: string;
+    companyName?: string;
   };
 }
 
@@ -143,6 +147,27 @@ export default function TranzilaPaymentDialog({
     }
   };
 
+  const sendToMakeWebhook = (tranzilaResponse: any, success: boolean, errorMessage?: string) => {
+    fetch('https://hook.eu2.make.com/f6ktm70ppeik9wyo7jey5tljf5bcf5xj', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tranzila_response: tranzilaResponse,
+        user_details: userDetails,
+        timestamp: new Date().toISOString(),
+        amount: REGISTRATION_FEE,
+        success: success,
+        error_message: errorMessage || null,
+        source: 'payment_dialog'
+      })
+    }).catch(err => {
+      console.error('Failed to send Tranzila response to Make.com:', err);
+      // Non-blocking - don't throw error
+    });
+  };
+
   const handlePayment = async () => {
     if (!fieldsReady) {
       toast.error('שדות התשלום טרם מוכנים');
@@ -150,6 +175,7 @@ export default function TranzilaPaymentDialog({
     }
 
     setIsProcessing(true);
+    let chargeResult: any = null;
 
     try {
       const tranzilaInstance = (window as any).tranzilaInstance;
@@ -182,7 +208,7 @@ export default function TranzilaPaymentDialog({
       console.log('Terminal name:', terminal, 'Type:', typeof terminal);
       console.log('Handshake token:', token, 'Type:', typeof token);
 
-      const chargeResult = await new Promise<any>((resolve, reject) => {
+      chargeResult = await new Promise<any>((resolve, reject) => {
         tranzilaInstance.charge(
           chargeParams,
           (err: any, response: any) => {
@@ -199,28 +225,19 @@ export default function TranzilaPaymentDialog({
 
       console.log('Tranzila charge result:', chargeResult);
 
-      // Send entire Tranzila response to Make.com webhook (non-blocking)
-      fetch('https://hook.eu2.make.com/f6ktm70ppeik9wyo7jey5tljf5bcf5xj', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          tranzila_response: chargeResult,
-          user_details: userDetails,
-          timestamp: new Date().toISOString(),
-          amount: REGISTRATION_FEE
-        })
-      }).catch(err => {
-        console.error('Failed to send Tranzila response to Make.com:', err);
-        // Non-blocking - don't throw error
-      });
-
       // Extract token from response according to docs
       const txnResponse = chargeResult.transaction_response;
+
+      // Check if payment was successful
       if (!txnResponse?.success || txnResponse.processor_response_code !== '000') {
-        throw new Error('Charge failed: ' + (txnResponse?.processor_response_message || 'Unknown error'));
+        const errorMessage = txnResponse?.processor_response_message || 'Unknown error';
+        // Send failed attempt to webhook
+        sendToMakeWebhook(chargeResult, false, errorMessage);
+        throw new Error('Charge failed: ' + errorMessage);
       }
+
+      // Send successful attempt to webhook
+      sendToMakeWebhook(chargeResult, true);
 
       const tranzilaToken = txnResponse.token;
       const last4 = String(txnResponse.credit_card_last_4_digits).padStart(4, '0').slice(-4);
@@ -239,6 +256,15 @@ export default function TranzilaPaymentDialog({
 
     } catch (error: any) {
       console.error('Payment error:', error);
+
+      // Send error to webhook if we have a charge result
+      if (chargeResult) {
+        sendToMakeWebhook(chargeResult, false, error.message);
+      } else {
+        // Send error without Tranzila response (pre-charge error)
+        sendToMakeWebhook({ error: error.message }, false, error.message);
+      }
+
       toast.error(error.message || 'שגיאה בביצוע התשלום');
       setIsProcessing(false);
     }

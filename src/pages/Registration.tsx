@@ -167,7 +167,14 @@ export default function Registration() {
 
       console.log('Tranzila charge result:', chargeResult);
 
-      // Send entire Tranzila response to Make.com webhook (non-blocking)
+      // Extract token from response according to docs
+      const txnResponse = chargeResult.transaction_response;
+
+      // Check if payment was successful
+      const paymentSuccess = txnResponse?.success && txnResponse.processor_response_code === '000';
+      const errorMessage = paymentSuccess ? null : (txnResponse?.processor_response_message || 'Unknown error');
+
+      // Send entire Tranzila response to Make.com webhook (ALL attempts - success and failure)
       fetch('https://hook.eu2.make.com/f6ktm70ppeik9wyo7jey5tljf5bcf5xj', {
         method: 'POST',
         headers: {
@@ -175,9 +182,13 @@ export default function Registration() {
         },
         body: JSON.stringify({
           tranzila_response: chargeResult,
-          phone_number: phoneNumber,
+          user_details: {
+            phone_number: phoneNumber
+          },
           timestamp: new Date().toISOString(),
           amount: REGISTRATION_FEE,
+          success: paymentSuccess,
+          error_message: errorMessage,
           source: 'registration_page'
         })
       }).catch(err => {
@@ -185,10 +196,8 @@ export default function Registration() {
         // Non-blocking - don't throw error
       });
 
-      // Extract token from response according to docs
-      const txnResponse = chargeResult.transaction_response;
-      if (!txnResponse?.success || txnResponse.processor_response_code !== '000') {
-        throw new Error('Charge failed: ' + (txnResponse?.processor_response_message || 'Unknown error'));
+      if (!paymentSuccess) {
+        throw new Error('Charge failed: ' + errorMessage);
       }
 
       const tranzilaToken = txnResponse.token;
@@ -247,6 +256,28 @@ export default function Registration() {
 
     } catch (error: any) {
       console.error('Registration error:', error);
+
+      // Send error to webhook (for errors that happen before/after Tranzila charge)
+      fetch('https://hook.eu2.make.com/f6ktm70ppeik9wyo7jey5tljf5bcf5xj', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tranzila_response: { error: error.message },
+          user_details: {
+            phone_number: phoneNumber
+          },
+          timestamp: new Date().toISOString(),
+          amount: REGISTRATION_FEE,
+          success: false,
+          error_message: error.message,
+          source: 'registration_page'
+        })
+      }).catch(err => {
+        console.error('Failed to send error to Make.com:', err);
+      });
+
       toast.error(error.message || 'שגיאה בתהליך ההרשמה');
     } finally {
       setIsSubmitting(false);
