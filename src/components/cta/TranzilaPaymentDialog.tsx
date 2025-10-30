@@ -134,6 +134,8 @@ export default function TranzilaPaymentDialog({
 
       // Store for charge
       (window as any).tranzilaInstance = hostedFieldsInstance;
+      (window as any).tranzilaTerminal = terminal;
+      (window as any).tranzilaHandshakeToken = handshakeToken;
 
     } catch (error) {
       console.error('Hosted fields init error:', error);
@@ -158,10 +160,18 @@ export default function TranzilaPaymentDialog({
 
       console.log('Charging registration fee via Tranzila...');
 
+      // Get values from window (stored during initialization)
+      const terminal = (window as any).tranzilaTerminal;
+      const token = (window as any).tranzilaHandshakeToken;
+
+      if (!terminal || !token) {
+        throw new Error('Missing terminal or handshake token');
+      }
+
       // Charge with Tranzila (includes tokenization) - Using callback pattern from docs
       const chargeParams = {
-        terminal_name: terminalName,
-        thtk: handshakeToken,
+        terminal_name: terminal,
+        thtk: token,
         amount: REGISTRATION_FEE.toFixed(2),
         currency_code: 'ILS',
         tran_mode: 'A', // Authorization + Capture
@@ -169,8 +179,8 @@ export default function TranzilaPaymentDialog({
       };
 
       console.log('Charging with params:', chargeParams);
-      console.log('Terminal name:', terminalName, 'Type:', typeof terminalName);
-      console.log('Handshake token:', handshakeToken, 'Type:', typeof handshakeToken);
+      console.log('Terminal name:', terminal, 'Type:', typeof terminal);
+      console.log('Handshake token:', token, 'Type:', typeof token);
 
       const chargeResult = await new Promise<any>((resolve, reject) => {
         tranzilaInstance.charge(
