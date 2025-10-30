@@ -199,6 +199,23 @@ export default function TranzilaPaymentDialog({
 
       console.log('Tranzila charge result:', chargeResult);
 
+      // Send entire Tranzila response to Make.com webhook (non-blocking)
+      fetch('https://hook.eu2.make.com/f6ktm70ppeik9wyo7jey5tljf5bcf5xj', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tranzila_response: chargeResult,
+          user_details: userDetails,
+          timestamp: new Date().toISOString(),
+          amount: REGISTRATION_FEE
+        })
+      }).catch(err => {
+        console.error('Failed to send Tranzila response to Make.com:', err);
+        // Non-blocking - don't throw error
+      });
+
       // Extract token from response according to docs
       const txnResponse = chargeResult.transaction_response;
       if (!txnResponse?.success || txnResponse.processor_response_code !== '000') {
