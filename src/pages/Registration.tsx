@@ -208,12 +208,21 @@ export default function Registration() {
         }
       );
 
-      console.log('Function response:', { data: saveData, error: saveError });
+      console.log('Function response - data:', saveData);
+      console.log('Function response - error:', saveError);
 
       if (saveError) {
         console.error('Save token error:', saveError);
         console.error('Error details:', JSON.stringify(saveError, null, 2));
-        throw new Error(`שגיאה בשמירת פרטי המשתמש: ${saveError.message || 'Unknown error'}`);
+
+        // Try to get the actual error message from the response
+        let errorMessage = 'Unknown error';
+        if (saveData && typeof saveData === 'object') {
+          console.error('Error response body:', saveData);
+          errorMessage = saveData.error || saveData.message || errorMessage;
+        }
+
+        throw new Error(`שגיאה בשמירת פרטי המשתמש: ${errorMessage}`);
       }
 
       console.log('Registration successful:', saveData);
