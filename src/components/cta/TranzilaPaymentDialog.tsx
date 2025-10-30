@@ -91,7 +91,7 @@ export default function TranzilaPaymentDialog({
       script.onload = () => {
         console.log('Tranzila SDK loaded');
         setSdkLoaded(true);
-        initHostedFields(handshakeToken, terminal);
+        initHostedFields(token, terminal);
       };
       script.onerror = () => {
         console.error('Failed to load Tranzila SDK');
