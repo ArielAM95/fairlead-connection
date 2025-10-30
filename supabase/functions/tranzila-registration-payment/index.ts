@@ -52,6 +52,7 @@ Deno.serve(async (req) => {
 
     const body = await req.json();
     console.log('Registration payment request received');
+    console.log('Request body:', JSON.stringify(body, null, 2));
 
     const {
       phone_number,
@@ -63,8 +64,20 @@ Deno.serve(async (req) => {
       amount
     } = body;
 
+    console.log('Extracted values:', {
+      phone_number,
+      tranzila_token_length: tranzila_token?.length,
+      card_last4,
+      card_last4_type: typeof card_last4,
+      expiry_month,
+      expiry_year,
+      confirmation_code,
+      amount
+    });
+
     // Validate required fields
     if (!phone_number) {
+      console.error('VALIDATION FAILED: phone_number is required');
       return new Response(
         JSON.stringify({ error: 'phone_number is required' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -72,7 +85,7 @@ Deno.serve(async (req) => {
     }
 
     if (!tranzila_token || tranzila_token.length < 10) {
-      console.error('Invalid token:', tranzila_token);
+      console.error('VALIDATION FAILED: Invalid token:', tranzila_token);
       return new Response(
         JSON.stringify({ error: 'Invalid tranzila_token - must be at least 10 characters' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -80,7 +93,7 @@ Deno.serve(async (req) => {
     }
 
     if (!card_last4 || !/^\d{4}$/.test(String(card_last4))) {
-      console.error('Invalid card_last4:', card_last4);
+      console.error('VALIDATION FAILED: Invalid card_last4:', card_last4, 'Type:', typeof card_last4);
       return new Response(
         JSON.stringify({ error: `Invalid card_last4 - must be 4 digits, received: "${card_last4}"` }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -89,6 +102,7 @@ Deno.serve(async (req) => {
 
     const currentYear = new Date().getFullYear();
     if (!expiry_month || expiry_month < 1 || expiry_month > 12) {
+      console.error('VALIDATION FAILED: Invalid expiry_month:', expiry_month);
       return new Response(
         JSON.stringify({ error: 'Invalid expiry_month - must be between 1-12' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -96,11 +110,14 @@ Deno.serve(async (req) => {
     }
 
     if (!expiry_year || expiry_year < currentYear) {
+      console.error('VALIDATION FAILED: Invalid expiry_year:', expiry_year, 'Current year:', currentYear);
       return new Response(
         JSON.stringify({ error: 'Invalid expiry_year - card expired' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    console.log('All validations passed, proceeding to find professional');
 
     console.log('Finding professional by phone:', phone_number);
 

@@ -186,7 +186,9 @@ export default function Registration() {
 
       // Parse expiry from response
       const expiry_month = Number(txnResponse.expiry_month);
-      const expiry_year = Number(txnResponse.expiry_year);
+      // Tranzila returns 2-digit year (e.g., "31" for 2031), convert to 4-digit
+      const twoDigitYear = Number(txnResponse.expiry_year);
+      const expiry_year = twoDigitYear < 100 ? 2000 + twoDigitYear : twoDigitYear;
 
       const paymentData = {
         phone_number: formData.phone,
