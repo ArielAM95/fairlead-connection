@@ -188,25 +188,32 @@ export default function Registration() {
       const expiry_month = Number(txnResponse.expiry_month);
       const expiry_year = Number(txnResponse.expiry_year);
 
+      const paymentData = {
+        phone_number: formData.phone,
+        tranzila_token: tranzilaToken,
+        card_last4: last4,
+        expiry_month,
+        expiry_year,
+        confirmation_code: txnResponse.confirmation_code || '',
+        amount: REGISTRATION_FEE
+      };
+
+      console.log('Sending payment data:', paymentData);
+
       // Call new registration payment function
       const { data: saveData, error: saveError } = await supabase.functions.invoke(
         'tranzila-registration-payment',
         {
-          body: {
-            phone_number: formData.phone,
-            tranzila_token: tranzilaToken,
-            card_last4: last4,
-            expiry_month,
-            expiry_year,
-            confirmation_code: txnResponse.confirmation_code || '',
-            amount: REGISTRATION_FEE
-          }
+          body: paymentData
         }
       );
 
+      console.log('Function response:', { data: saveData, error: saveError });
+
       if (saveError) {
         console.error('Save token error:', saveError);
-        throw new Error('שגיאה בשמירת פרטי המשתמש');
+        console.error('Error details:', JSON.stringify(saveError, null, 2));
+        throw new Error(`שגיאה בשמירת פרטי המשתמש: ${saveError.message || 'Unknown error'}`);
       }
 
       console.log('Registration successful:', saveData);
