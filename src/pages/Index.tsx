@@ -10,10 +10,11 @@ import EarningsCalculatorSection from "@/components/EarningsCalculatorSection";
 import AppShowcaseSection from "@/components/AppShowcaseSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import CtaSection from "@/components/CtaSection";
-import ContactSection from "@/components/ContactSection";
+import ContactSection from "@/components/contact/ContactSection";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import NotificationPopup from "@/components/ui/NotificationPopup";
+import FloatingCTAButton from "@/components/FloatingCTAButton";
 
 // Define the notification context to be used across components
 export interface NotificationState {
@@ -96,6 +97,7 @@ const Index = () => {
       <ContactSection showNotification={showNotification} />
       <Footer />
       <ScrollToTop />
+      <FloatingCTAButton />
       <NotificationPopup
         title={notification.title}
         description={notification.description}

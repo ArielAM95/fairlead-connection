@@ -14,10 +14,10 @@ export const BusinessDetailsSection = ({
   onChange,
   businessLicenseError
 }: BusinessDetailsSectionProps) => {
-  // Handler to allow only numbers in business license field
+  // Handler to allow only numbers in business license field (max 9 digits)
   const handleBusinessLicenseInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Allow only digits, spaces, and hyphens
-    const value = e.target.value.replace(/[^\d\s-]/g, '');
+    // Allow only digits, limit to 9 characters
+    const value = e.target.value.replace(/[^\d]/g, '').slice(0, 9);
     e.target.value = value;
     onChange(e);
   };
@@ -48,7 +48,8 @@ export const BusinessDetailsSection = ({
           name="businessLicenseNumber"
           type="text"
           inputMode="numeric"
-          pattern="[\d\s-]*"
+          pattern="\d*"
+          maxLength={9}
           value={businessLicenseNumber}
           onChange={handleBusinessLicenseInput}
           placeholder="הזן מספר עוסק"
@@ -59,7 +60,7 @@ export const BusinessDetailsSection = ({
           dir="ltr"
         />
         <p className="text-xs text-gray-500 mt-1">
-          מספרים בלבד
+          9 ספרות בלבד
         </p>
       </div>
     </>

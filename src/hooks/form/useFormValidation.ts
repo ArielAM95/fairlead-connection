@@ -14,12 +14,14 @@ export const useFormValidation = () => {
       experience: "",
       acceptTerms: "",
       businessLicenseNumber: "",
-      professions: ""
+      professions: "",
+      otherProfession: ""
     };
     
     let isValid = true;
 
-    if (!validateEmail(formData.email)) {
+    // Email validation only if provided
+    if (formData.email && !validateEmail(formData.email)) {
       errors.email = "נא להזין כתובת אימייל תקינה";
       isValid = false;
     }
@@ -40,7 +42,7 @@ export const useFormValidation = () => {
     }
 
     if (!validateBusinessLicense(formData.businessLicenseNumber)) {
-      errors.businessLicenseNumber = "נא להזין מספר עוסק תקין (ספרות בלבד)";
+      errors.businessLicenseNumber = "נא להזין מספר עוסק תקין (9 ספרות בלבד)";
       isValid = false;
     }
 
@@ -49,14 +51,11 @@ export const useFormValidation = () => {
       isValid = false;
     }
 
-    // Validate that professions with available specializations have at least one selected
-    for (const profession of formData.professions) {
-      const availableSpecs = getSpecializationsByProfession(profession.professionId);
-      if (availableSpecs.length > 0 && profession.specializations.length === 0) {
-        errors.professions = "נא לבחור לפחות תת התמחות אחת לכל מקצוע שיש לו התמחויות";
-        isValid = false;
-        break;
-      }
+    // Check if "other" profession is selected and validate the custom profession name
+    const hasOtherProfession = formData.professions.some(p => p.professionId === "other-profession");
+    if (hasOtherProfession && !formData.otherProfession?.trim()) {
+      errors.otherProfession = "נא למלא את שם המקצוע";
+      isValid = false;
     }
 
     return { isValid, errors };

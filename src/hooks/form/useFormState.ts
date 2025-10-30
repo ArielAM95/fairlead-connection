@@ -18,7 +18,9 @@ export const useFormState = () => {
     city: "",
     workRegions: [],
     acceptTerms: false,
-    acceptMarketing: false
+    acceptMarketing: false,
+    otherProfession: "",
+    otherSpecializations: {}
   };
 
   const [formData, setFormData] = useState<SignupFormData>(initialData);
@@ -27,7 +29,8 @@ export const useFormState = () => {
     phone: "",
     experience: "",
     acceptTerms: "",
-    businessLicenseNumber: ""
+    businessLicenseNumber: "",
+    otherProfession: ""
   });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -66,7 +69,8 @@ export const useFormState = () => {
       experience: "",
       acceptTerms: "",
       businessLicenseNumber: "",
-      professions: ""
+      professions: "",
+      otherProfession: ""
     });
   };
 

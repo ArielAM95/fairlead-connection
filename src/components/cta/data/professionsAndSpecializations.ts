@@ -16,7 +16,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
       { id: "unclogging", label: "פתיחת סתימות" },
       { id: "fixture-replacement", label: "החלפת כלים סניטריים" },
       { id: "pipe-installation", label: "התקנת צנרת" },
-      { id: "greywater-systems", label: "התקנת מערכות מים אפורים" }
+      { id: "greywater-systems", label: "התקנת מערכות מים אפורים" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -28,7 +29,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
       { id: "lighting-installation", label: "התקנת גופי תאורה" },
       { id: "safety-checks", label: "בדיקות תקינות" },
       { id: "panel-installation", label: "התקנת לוחות חשמל" },
-      { id: "smart-electricity", label: "חשמל חכם" }
+      { id: "smart-electricity", label: "חשמל חכם" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -41,7 +43,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
       { id: "flooring", label: "ריצוף" },
       { id: "tiling", label: "חיפוי" },
       { id: "wall-breaking", label: "שבירת קירות" },
-      { id: "finish-repairs", label: "תיקוני גמר" }
+      { id: "finish-repairs", label: "תיקוני גמר" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -53,7 +56,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
       { id: "vrf", label: "VRF" },
       { id: "ac-repair", label: "תיקוני מזגנים" },
       { id: "internal-cleaning", label: "ניקוי פנימי" },
-      { id: "ventilation-systems", label: "מערכות אוורור" }
+      { id: "ventilation-systems", label: "מערכות אוורור" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -63,7 +67,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
       { id: "door-opening", label: "פריצת דלתות" },
       { id: "cylinder-replacement", label: "החלפת צילינדר" },
       { id: "car-lockout", label: "פריצת רכבים" },
-      { id: "smart-lock-installation", label: "התקנת מנעולים חכמים" }
+      { id: "smart-lock-installation", label: "התקנת מנעולים חכמים" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -72,7 +77,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "heater-repair", label: "תיקון דודים" },
       { id: "heater-installation", label: "התקנה" },
-      { id: "heater-maintenance", label: "תחזוקה" }
+      { id: "heater-maintenance", label: "תחזוקה" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -83,7 +89,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
       { id: "dishwashers", label: "מדיחי כלים" },
       { id: "ovens", label: "תנורים" },
       { id: "dryers", label: "מייבשים" },
-      { id: "refrigerators", label: "מקררים" }
+      { id: "refrigerators", label: "מקררים" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -94,7 +101,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
       { id: "finish", label: "גמר" },
       { id: "turnkey", label: "מפתח" },
       { id: "earthwork", label: "עבודות עפר" },
-      { id: "construction", label: "קונסטרוקציה" }
+      { id: "construction", label: "קונסטרוקציה" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -103,7 +111,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "home-inspection", label: "בדק בית" },
       { id: "engineering-opinion", label: "חוות דעת הנדסית" },
-      { id: "planning-permits", label: "תכנונים ואישורים" }
+      { id: "planning-permits", label: "תכנונים ואישורים" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -112,7 +121,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "area-surveyor", label: "מודד שטחים" },
       { id: "construction-surveying", label: "מדידות לבנייה" },
-      { id: "surveying-files", label: "תיקי מדידה" }
+      { id: "surveying-files", label: "תיקי מדידה" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -121,7 +131,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "house-planning", label: "תכנון בתים" },
       { id: "building-additions", label: "תוספות בניה" },
-      { id: "municipal-submissions", label: "הגשות לעירייה" }
+      { id: "municipal-submissions", label: "הגשות לעירייה" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -129,7 +140,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     label: "אדריכל נוף",
     specializations: [
       { id: "gardens", label: "גינות" },
-      { id: "environmental-development", label: "פיתוח סביבתי" }
+      { id: "environmental-development", label: "פיתוח סביבתי" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -140,7 +152,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
       { id: "garden-maintenance", label: "תחזוקה" },
       { id: "synthetic-grass", label: "דשא סינטטי" },
       { id: "automatic-irrigation", label: "השקיה אוטומטית" },
-      { id: "decks-pergolas", label: "דקים ופרגולות" }
+      { id: "decks-pergolas", label: "דקים ופרגולות" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -151,7 +164,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
       { id: "termites", label: "טרמיטים" },
       { id: "rodents", label: "מכרסמים" },
       { id: "cockroaches", label: "תיקנים" },
-      { id: "mosquitoes", label: "יתושים" }
+      { id: "mosquitoes", label: "יתושים" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -162,7 +176,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
       { id: "post-renovation", label: "לאחר שיפוץ" },
       { id: "cleaning-offices", label: "משרדים" },
       { id: "upholstery-cleaning", label: "ניקוי ספות" },
-      { id: "polish-wax", label: "פוליש ווקס" }
+      { id: "polish-wax", label: "פוליש ווקס" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -171,7 +186,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "annual-reports", label: "דוחות שנתיים" },
       { id: "bookkeeping", label: "הנהלת חשבונות" },
-      { id: "business-registration", label: "פתיחת עוסק" }
+      { id: "business-registration", label: "פתיחת עוסק" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -179,7 +195,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     label: "יועץ מס",
     specializations: [
       { id: "tax-returns", label: "החזרי מס" },
-      { id: "tax-planning", label: "תכנון מס" }
+      { id: "tax-planning", label: "תכנון מס" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -190,7 +207,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
       { id: "family-law", label: "דיני משפחה" },
       { id: "criminal", label: "פלילי" },
       { id: "execution", label: "הוצאה לפועל" },
-      { id: "contracts", label: "חוזים" }
+      { id: "contracts", label: "חוזים" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -198,7 +216,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     label: "שמאי מקרקעין",
     specializations: [
       { id: "apartment-appraisals", label: "שומות לדירות" },
-      { id: "property-value-opinion", label: "חוות דעת שווי נכס" }
+      { id: "property-value-opinion", label: "חוות דעת שווי נכס" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -206,7 +225,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     label: "מגשר",
     specializations: [
       { id: "divorce", label: "גירושין" },
-      { id: "business-disputes", label: "סכסוכים עסקיים" }
+      { id: "business-disputes", label: "סכסוכים עסקיים" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -216,7 +236,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
       { id: "life-insurance", label: "ביטוח חיים" },
       { id: "health-insurance", label: "ביטוח בריאות" },
       { id: "home-insurance", label: "ביטוח דירה" },
-      { id: "car-insurance", label: "ביטוח רכב" }
+      { id: "car-insurance", label: "ביטוח רכב" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -225,7 +246,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "clinical", label: "קליני" },
       { id: "children", label: "ילדים" },
-      { id: "youth", label: "נוער" }
+      { id: "youth", label: "נוער" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -234,7 +256,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "cbt", label: "CBT" },
       { id: "nlp", label: "NLP" },
-      { id: "couples-therapy", label: "טיפול זוגי" }
+      { id: "couples-therapy", label: "טיפול זוגי" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -243,7 +266,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "career", label: "קריירה" },
       { id: "relationships", label: "זוגיות" },
-      { id: "personal-development", label: "התפתחות אישית" }
+      { id: "personal-development", label: "התפתחות אישית" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -252,13 +276,16 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "math", label: "מתמטיקה" },
       { id: "english", label: "אנגלית" },
-      { id: "bagrut-prep", label: "הכנה לבגרויות" }
+      { id: "bagrut-prep", label: "הכנה לבגרויות" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
     id: "psychometric-instructor",
     label: "מדריך פסיכומטרי",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "arts-teacher",
@@ -266,13 +293,16 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "drawing", label: "ציור" },
       { id: "sculpture", label: "פיסול" },
-      { id: "drama", label: "דרמה" }
+      { id: "drama", label: "דרמה" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
     id: "private-nanny",
     label: "גננת פרטית / מטפלת",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "cosmetician",
@@ -280,7 +310,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "facial-treatments", label: "טיפולי פנים" },
       { id: "hair-removal", label: "הסרת שיער" },
-      { id: "peeling", label: "פילינג" }
+      { id: "peeling", label: "פילינג" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -289,23 +320,30 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "women", label: "נשים" },
       { id: "men", label: "גברים" },
-      { id: "bridal-hair", label: "תסרוקות כלה" }
+      { id: "bridal-hair", label: "תסרוקות כלה" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
     id: "makeup-artist",
     label: "מאפרת",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "nail-tech",
     label: "בניית ציפורניים",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "brow-designer",
     label: "עיצוב גבות",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "photographer",
@@ -313,53 +351,72 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "events", label: "אירועים" },
       { id: "studio", label: "סטודיו" },
-      { id: "branding", label: "תדמית" }
+      { id: "branding", label: "תדמית" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
     id: "video-editor",
     label: "עורך וידאו",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "graphic-designer",
     label: "גרפיקאי",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "web-developer",
     label: "בונה אתרים",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "seo-specialist",
     label: "מקדם אתרים (SEO)",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "ppc-manager",
     label: "מנהל קמפיינים ממומנים",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "social-media-manager",
     label: "ניהול סושיאל",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "content-writer",
     label: "כתיבת תוכן",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "ux-ui-designer",
     label: "מעצב UX/UI",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "freelance-developer",
     label: "מתכנת פרילנסר",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "moving-company",
@@ -368,7 +425,8 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
       { id: "moving-apartment", label: "דירה" },
       { id: "moving-offices", label: "משרדים" },
       { id: "small-moves", label: "הובלות קטנות" },
-      { id: "storage", label: "אחסון" }
+      { id: "storage", label: "אחסון" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
@@ -377,66 +435,88 @@ export const professionsWithSpecializations: ProfessionWithSpecializations[] = [
     specializations: [
       { id: "mobile-garage", label: "מוסך נייד" },
       { id: "repairs", label: "תיקונים" },
-      { id: "routine-treatments", label: "טיפולים שוטפים" }
+      { id: "routine-treatments", label: "טיפולים שוטפים" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
     id: "towing-service",
     label: "שירותי גרירה",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "car-wash",
     label: "שטיפת רכבים",
     specializations: [
       { id: "home-service", label: "עד הבית" },
-      { id: "exterior-interior", label: "חוץ ופנים" }
+      { id: "exterior-interior", label: "חוץ ופנים" },
+      { id: "other", label: "אחר" }
     ]
   },
   {
     id: "dj",
     label: "DJ",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "catering",
     label: "שירותי קייטרינג",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "active-bar",
     label: "בר אקטיבי",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "kids-entertainment",
     label: "הפעלות לילדים",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "inflatables",
     label: "מתנפחים",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "balloon-decor",
     label: "עיצוב בלונים",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "magnet-photography",
     label: "צילום מגנטים",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "event-production",
     label: "הפקת אירועים",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   },
   {
     id: "event-host",
     label: "מנחה אירועים",
-    specializations: []
+    specializations: [
+      { id: "other", label: "אחר" }
+    ]
   }
 ];
 
@@ -447,6 +527,7 @@ export const getSpecializationsByProfession = (professionId: string) => {
 };
 
 export const getProfessionLabel = (professionId: string) => {
+  if (professionId === "other-profession") return "אחר";
   const profession = professionsWithSpecializations.find(p => p.id === professionId);
   return profession ? profession.label : professionId;
 };

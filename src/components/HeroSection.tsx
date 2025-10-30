@@ -84,7 +84,7 @@ const HeroSection = () => {
               
               {/* Key Points scattered on background */}
               <div className="mobile-hero-item">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
                   <div className="text-center transform hover:scale-105 transition-transform duration-300">
                     <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">זה רק FAIR</h3>
                     <p className="text-white/90 text-lg drop-shadow-md">
@@ -96,6 +96,13 @@ const HeroSection = () => {
                     <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">💰 רק על עבודות שבוצעו</h3>
                     <p className="text-white/90 text-lg drop-shadow-md">
                       שתפו לידים לא רלוונטיים עם בעלי מקצוע אחרים והרוויחו
+                    </p>
+                  </div>
+                  
+                  <div className="text-center transform hover:scale-105 transition-transform duration-300">
+                    <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">📱 התראות בזמן אמת</h3>
+                    <p className="text-white/90 text-lg drop-shadow-md">
+                      קבלו הודעות WhatsApp ישירות על לידים רלוונטיים עם קישור מהיר למודעה
                     </p>
                   </div>
                   
@@ -153,7 +160,7 @@ const HeroSection = () => {
               
               {/* Key Points scattered on background */}
               <div className="desktop-hero-item">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
                   <div className="text-center transform hover:scale-105 transition-transform duration-300">
                     <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">זה רק FAIR</h3>
                     <p className="text-white/90 text-lg drop-shadow-md">
@@ -165,6 +172,13 @@ const HeroSection = () => {
                     <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">💰 רק על עבודות שבוצעו</h3>
                     <p className="text-white/90 text-lg drop-shadow-md">
                       שתפו לידים לא רלוונטיים עם בעלי מקצוע אחרים והרוויחו
+                    </p>
+                  </div>
+                  
+                  <div className="text-center transform hover:scale-105 transition-transform duration-300">
+                    <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">📱 התראות בזמן אמת</h3>
+                    <p className="text-white/90 text-lg drop-shadow-md">
+                      קבלו הודעות WhatsApp ישירות על לידים רלוונטיים עם קישור מהיר למודעה
                     </p>
                   </div>
                   

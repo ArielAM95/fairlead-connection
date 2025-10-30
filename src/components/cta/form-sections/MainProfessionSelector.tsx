@@ -2,18 +2,24 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
 import { Search, X } from 'lucide-react';
 import { professionsWithSpecializations, getProfessionLabel } from '../data/professionsAndSpecializations';
-import { ProfessionSelection } from '@/types/signupForm';
+import { ProfessionSelection, SignupFormData } from '@/types/signupForm';
 
 interface MainProfessionSelectorProps {
   selectedProfessions: ProfessionSelection[];
   onProfessionToggle: (professionId: string) => void;
   error?: string;
+  formData: SignupFormData;
+  onOtherProfessionChange: (value: string) => void;
+  otherProfessionError?: string;
 }
 
 export const MainProfessionSelector = ({
   selectedProfessions,
   onProfessionToggle,
-  error
+  error,
+  formData,
+  onOtherProfessionChange,
+  otherProfessionError
 }: MainProfessionSelectorProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -54,21 +60,36 @@ export const MainProfessionSelector = ({
       {selectedProfessions.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-3">
           {selectedProfessions.map(prof => (
-            <div 
-              key={prof.professionId}
-              className="flex items-center gap-2 bg-primary/10 border border-primary/30 px-3 py-2 rounded-lg"
-            >
-              <span className="text-sm font-medium text-foreground">
-                ✅ {getProfessionLabel(prof.professionId)}
-              </span>
-              <button
-                type="button"
-                onClick={() => handleRemoveProfession(prof.professionId)}
-                className="text-muted-foreground hover:text-destructive transition-colors"
-                aria-label="הסר מקצוע"
+            <div key={prof.professionId}>
+              <div 
+                className="flex items-center gap-2 bg-primary/10 border border-primary/30 px-3 py-2 rounded-lg"
               >
-                <X size={16} />
-              </button>
+                <span className="text-sm font-medium text-foreground">
+                  ✅ {prof.professionId === "other-profession" ? formData.otherProfession || "אחר" : getProfessionLabel(prof.professionId)}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveProfession(prof.professionId)}
+                  className="text-muted-foreground hover:text-destructive transition-colors"
+                  aria-label="הסר מקצוע"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+              {prof.professionId === "other-profession" && (
+                <div className="mt-2">
+                  <Input
+                    type="text"
+                    value={formData.otherProfession || ""}
+                    onChange={(e) => onOtherProfessionChange(e.target.value)}
+                    placeholder="פרט את המקצוע שלך... *"
+                    className={otherProfessionError ? "border-destructive" : ""}
+                  />
+                  {otherProfessionError && (
+                    <p className="text-xs text-destructive mt-1">{otherProfessionError}</p>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -108,8 +129,11 @@ export const MainProfessionSelector = ({
                 );
               })
             ) : (
-              <div className="p-4 text-center text-sm text-muted-foreground">
-                לא נמצאו תוצאות עבור "{searchTerm}"
+              <div 
+                onClick={() => handleSelectProfession("other-profession")}
+                className="p-3 hover:bg-muted cursor-pointer transition-colors text-sm text-center"
+              >
+                <span className="text-foreground font-medium">🔍 לא מצאתי את המקצוע שלי - הוסף אחר</span>
               </div>
             )}
           </div>

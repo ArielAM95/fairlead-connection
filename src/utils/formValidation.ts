@@ -16,12 +16,10 @@ export const sanitizeEmail = (email: string): string => {
 };
 
 export const validateBusinessLicense = (licenseNumber: string): boolean => {
-  // Check if not empty
-  if (!licenseNumber || licenseNumber.trim() === '') {
-    return false;
-  }
+  // Remove spaces and hyphens for validation
+  const cleanNumber = licenseNumber.replace(/[\s-]/g, '');
   
-  // Check if contains only digits (and optionally hyphens/spaces)
-  const licenseRegex = /^[\d\s-]+$/;
-  return licenseRegex.test(licenseNumber);
+  // Check if exactly 9 digits
+  const licenseRegex = /^\d{9}$/;
+  return licenseRegex.test(cleanNumber);
 };

@@ -33,7 +33,9 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
     handleExperienceChange,
     handleProfessionToggle,
     handleSubSpecializationToggle,
-    handleSubmit
+    handleOtherProfessionChange,
+    handleSubmit,
+    setFormData
   } = useSignupForm(onSubmit);
 
   const handleFormSubmit = async (e: React.FormEvent) => {
@@ -176,17 +178,21 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           onProfessionToggle={handleProfessionToggle}
           onSubSpecializationToggle={handleSubSpecializationToggle}
           professionsError={errors.professions}
+          otherProfessionError={errors.otherProfession}
           selectedRegions={formData.workRegions}
           onToggleRegion={handleWorkRegionToggle}
           experience={formData.experience}
           onExperienceChange={handleExperienceChange}
           experienceError={errors.experience}
+          formData={formData}
+          onOtherProfessionChange={handleOtherProfessionChange}
+          setFormData={setFormData}
         />
       </div>
 
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-          אימייל *
+          אימייל (אופציונלי)
         </label>
         <Input
           id="email"
@@ -194,7 +200,6 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           type="email"
           value={formData.email}
           onChange={handleChange}
-          required
           className="bg-gray-50 border-gray-200"
           dir="ltr"
           placeholder="your@email.com"
@@ -253,7 +258,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           htmlFor="acceptMarketing"
           className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
         >
-          אני מאשר/ת קבלת עדכונים לגבי ההרשמה שלי, תוכן שיווקי והטבות באמצעות דוא"ל והודעות Whatsapp (אופציונלי)
+          אני מאשר/ת קבלת עדכונים לגבי ההרשמה שלי, תוכן שיווקי והטבות באמצעות דוא"ל והודעות Whatsapp (חובה)
         </Label>
       </div>
 
@@ -267,16 +272,16 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
             formData.workRegions.length === 0 ||
             !formData.experience ||
             !formData.acceptTerms ||
-            !!errors.email ||
             !!errors.phone ||
             !!errors.businessLicenseNumber ||
-            !!errors.professions
+            !!errors.professions ||
+            !!errors.otherProfession
           }
         >
           {isSubmitting ? "מבצע רישום..." : "הירשמו כעת"}
         </Button>
         
-        {(errors.email || errors.phone || errors.experience || errors.acceptTerms || errors.businessLicenseNumber || errors.professions) && (
+        {(errors.email || errors.phone || errors.experience || errors.acceptTerms || errors.businessLicenseNumber || errors.professions || errors.otherProfession) && (
           <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
             <p className="text-red-700 font-medium mb-2">נא לתקן את השגיאות הבאות:</p>
             <ul className="list-disc list-inside space-y-1 text-red-600 text-sm">
@@ -284,6 +289,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
               {errors.phone && <li>{errors.phone}</li>}
               {errors.businessLicenseNumber && <li>{errors.businessLicenseNumber}</li>}
               {errors.professions && <li>{errors.professions}</li>}
+              {errors.otherProfession && <li>{errors.otherProfession}</li>}
               {errors.experience && <li>{errors.experience}</li>}
               {errors.acceptTerms && <li>{errors.acceptTerms}</li>}
             </ul>

@@ -11,6 +11,7 @@ export const submitContactForm = async (formData: ContactFormData): Promise<void
     post_type: "contact_form" // Hidden field to identify the form type
   };
   
+  // 1. שליחה ל-webhook
   const response = await fetch(WEBHOOK_URL, {
     method: "POST",
     headers: {
@@ -21,6 +22,28 @@ export const submitContactForm = async (formData: ContactFormData): Promise<void
   
   if (!response.ok) {
     throw new Error("שגיאה בשליחת הטופס");
+  }
+
+  // 2. שמירה ב-Supabase
+  try {
+    const { error: dbError } = await supabase
+      .from('contact_inquiries' as any)
+      .insert({
+        first_name: formData.firstName,
+        last_name: formData.lastName || "-",
+        email: formData.email,
+        phone_number: formData.phone,
+        message: formData.message || "",
+        source: 'website'
+      });
+
+    if (dbError) {
+      console.error('Error saving contact inquiry to database:', dbError);
+      // לא זורק שגיאה כי ה-webhook הצליח
+    }
+  } catch (dbException) {
+    console.error('Exception saving to database:', dbException);
+    // לא זורק שגיאה כי ה-webhook הצליח
   }
 };
 
@@ -105,15 +128,35 @@ export const submitSignupForm = async (
     
     const professionalData = {
       name: `${formData.firstName} ${formData.lastName}`.trim(),
-      main_profession: formData.professions.length > 0 ? formData.professions[0].professionId : null,
-      sub_specializations: allSpecializations,
+      main_profession: formData.professions.length > 0 
+        ? (formData.professions[0].professionId === "other-profession" && formData.otherProfession
+          ? formData.otherProfession
+          : getProfessionLabel(formData.professions[0].professionId))
+        : null,
+      sub_specializations: allSpecializations.map(spec => {
+        const [profId, specId] = spec.split(':');
+        if (specId === 'other' && formData.otherSpecializations?.[profId]) {
+          return `${profId}:${formData.otherSpecializations[profId]}`;
+        }
+        return getSpecializationLabel(profId, specId);
+      }),
       profession: formData.professions.length > 0 
-        ? getProfessionLabel(formData.professions[0].professionId) 
+        ? (formData.professions[0].professionId === "other-profession" && formData.otherProfession
+          ? formData.otherProfession
+          : getProfessionLabel(formData.professions[0].professionId))
         : (formData.workFields[0] ? (() => {
           const field = workFields.find(f => f.id === formData.workFields[0]);
           return field ? field.label : formData.workFields[0];
         })() : "לא צוין"),
-      specialties: allSpecializations.length > 0 ? allSpecializations : formData.workFields,
+      specialties: allSpecializations.length > 0 
+        ? allSpecializations.map(spec => {
+            const [profId, specId] = spec.split(':');
+            if (specId === 'other' && formData.otherSpecializations?.[profId]) {
+              return formData.otherSpecializations[profId];
+            }
+            return getSpecializationLabel(profId, specId);
+          })
+        : formData.workFields,
       email: formData.email.toLowerCase().trim(),
       phone_number: formData.phone ? formData.phone.trim() : null,
       company_name: formData.companyName || null,

@@ -44,20 +44,27 @@ export const useFieldHandlers = (
   };
 
   const handleProfessionToggle = (professionId: string) => {
-    // Clear professions error when changed
+    // Clear professions and otherProfession errors when changed
     setErrors(prev => ({
       ...prev,
-      professions: ""
+      professions: "",
+      otherProfession: ""
     }));
     
     const existingIndex = formData.professions.findIndex(p => p.professionId === professionId);
     
     if (existingIndex >= 0) {
-      // Remove profession
-      setFormData({
+      // Remove profession - also clear otherProfession if removing "other-profession"
+      const updatedFormData = {
         ...formData,
         professions: formData.professions.filter(p => p.professionId !== professionId)
-      });
+      };
+      
+      if (professionId === "other-profession") {
+        updatedFormData.otherProfession = "";
+      }
+      
+      setFormData(updatedFormData);
     } else {
       // Add profession with empty specializations
       setFormData({
@@ -91,11 +98,25 @@ export const useFieldHandlers = (
     });
   };
 
+  const handleOtherProfessionChange = (value: string) => {
+    // Clear otherProfession error when typing
+    setErrors(prev => ({
+      ...prev,
+      otherProfession: ""
+    }));
+    
+    setFormData({
+      ...formData,
+      otherProfession: value
+    });
+  };
+
   return {
     handleWorkFieldToggle,
     handleWorkRegionToggle,
     handleExperienceChange,
     handleProfessionToggle,
-    handleSubSpecializationToggle
+    handleSubSpecializationToggle,
+    handleOtherProfessionChange
   };
 };
