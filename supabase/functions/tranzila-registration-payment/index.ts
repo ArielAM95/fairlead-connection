@@ -207,7 +207,7 @@ Deno.serve(async (req) => {
     }
 
     // Log successful transaction
-    await supabase.from('transaction_logs').insert({
+    const { data: transactionLog } = await supabase.from('transaction_logs').insert({
       professional_id: professional.id,
       action: 'tokenize',
       request: {
@@ -222,9 +222,33 @@ Deno.serve(async (req) => {
         confirmation_code: confirmation_code || null,
         payment_method_id: paymentMethod.id
       }
-    });
+    }).select('id').single();
 
     console.log('Registration payment completed successfully');
+
+    // Generate invoice (non-blocking - don't fail payment if invoice fails)
+    try {
+      console.log('Generating invoice for registration payment...');
+
+      const invoiceResponse = await supabase.functions.invoke('tranzila-create-invoice', {
+        body: {
+          professional_id: professional.id,
+          transaction_log_id: transactionLog?.id || null,
+          invoice_type: 'registration',
+          total_amount: amount || 413,
+          description: `דמי הרשמה - oFair - ${professional.name}`
+        }
+      });
+
+      if (invoiceResponse.error) {
+        console.error('Invoice generation failed (non-blocking):', invoiceResponse.error);
+      } else {
+        console.log('Invoice generated successfully:', invoiceResponse.data);
+      }
+    } catch (invoiceError) {
+      console.error('Invoice generation exception (non-blocking):', invoiceError);
+      // Don't throw - invoice generation failures shouldn't break payment
+    }
 
     return new Response(
       JSON.stringify({
