@@ -85,37 +85,61 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
     setShowPaymentDialog(false);
 
     try {
-      toast.info('שומר פרטי תשלום...');
+      // Check if user wants to save the card
+      if (paymentData.save_card) {
+        toast.info('שומר פרטי תשלום...');
 
-      // Parse expiry from Tranzila format (MMYY)
-      const expdate = paymentData.card_expiry; // e.g., "0431" = April 2031
-      const expiry_month = parseInt(expdate.substring(0, 2), 10);
-      const expiry_year = 2000 + parseInt(expdate.substring(2, 4), 10);
+        // Parse expiry from Tranzila format (MMYY)
+        const expdate = paymentData.card_expiry; // e.g., "0431" = April 2031
+        const expiry_month = parseInt(expdate.substring(0, 2), 10);
+        const expiry_year = 2000 + parseInt(expdate.substring(2, 4), 10);
 
-      // Save payment token (professional already exists in DB)
-      const { data, error } = await supabase.functions.invoke(
-        'tranzila-registration-payment',
-        {
-          body: {
-            phone_number: pendingFormData.phone,
-            tranzila_token: paymentData.tranzila_token,
-            card_last4: paymentData.card_last4,
-            expiry_month,
-            expiry_year,
-            confirmation_code: paymentData.confirmation_code,
-            amount: 1 // FOR TESTING - Change back to 413 for production
+        // Save payment token (professional already exists in DB)
+        const { data, error } = await supabase.functions.invoke(
+          'tranzila-registration-payment',
+          {
+            body: {
+              phone_number: pendingFormData.phone,
+              tranzila_token: paymentData.tranzila_token,
+              card_last4: paymentData.card_last4,
+              expiry_month,
+              expiry_year,
+              confirmation_code: paymentData.confirmation_code,
+              amount: 1 // FOR TESTING - Change back to 413 for production
+            }
           }
+        );
+
+        if (error) {
+          console.error('Save token error:', error);
+          toast.error('שגיאה בשמירת פרטי התשלום');
+          return;
         }
-      );
 
-      if (error) {
-        console.error('Save token error:', error);
-        toast.error('שגיאה בשמירת פרטי התשלום');
-        return;
+        console.log('Payment method saved successfully:', data);
+        toast.success('ההרשמה והתשלום הושלמו בהצלחה!');
+      } else {
+        // User chose NOT to save card - just update payment status
+        console.log('User chose not to save card, updating payment status only');
+
+        const { error } = await supabase
+          .from('professionals')
+          .update({
+            registration_payment_status: 'completed',
+            registration_paid_at: new Date().toISOString(),
+            registration_amount: 1 // FOR TESTING - Change back to 413 for production
+          })
+          .eq('phone_number', pendingFormData.phone);
+
+        if (error) {
+          console.error('Error updating payment status:', error);
+          toast.error('שגיאה בעדכון סטטוס התשלום');
+          return;
+        }
+
+        toast.success('התשלום בוצע בהצלחה!');
+        console.log('Payment completed without saving card');
       }
-
-      console.log('Payment method saved successfully:', data);
-      toast.success('ההרשמה והתשלום הושלמו בהצלחה!');
 
       // Payment complete - no need to call onSubmit again (already created)
 

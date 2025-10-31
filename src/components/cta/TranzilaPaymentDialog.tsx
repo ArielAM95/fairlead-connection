@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import {
   Dialog,
@@ -54,6 +55,7 @@ export default function TranzilaPaymentDialog({
   const [isProcessing, setIsProcessing] = useState(false);
   const [handshakeToken, setHandshakeToken] = useState<string>('');
   const [terminalName, setTerminalName] = useState<string>('');
+  const [saveCard, setSaveCard] = useState(true); // Default: checked
 
   // 🔒 Disconnect Supabase realtime (למניעת שגיאת JSON.parse)
   useEffect(() => {
@@ -252,6 +254,7 @@ export default function TranzilaPaymentDialog({
         card_last4: last4,
         card_expiry: `${String(expiry_month).padStart(2, '0')}${String(expiry_year).slice(-2)}`, // MMYY format
         confirmation_code: txnResponse.confirmation_code || '',
+        save_card: saveCard, // User's choice to save card
       });
 
     } catch (error: any) {
@@ -308,6 +311,22 @@ export default function TranzilaPaymentDialog({
                 />
               </div>
             </div>
+          </div>
+
+          {/* שמירת כרטיס לשימוש עתידי */}
+          <div className="flex items-center gap-2 rtl:gap-x-reverse">
+            <Checkbox
+              id="save-card"
+              checked={saveCard}
+              onCheckedChange={(checked) => setSaveCard(checked as boolean)}
+              disabled={isProcessing}
+            />
+            <Label
+              htmlFor="save-card"
+              className="text-sm font-normal cursor-pointer leading-tight"
+            >
+              שמור את פרטי הכרטיס לשימוש עתידי באפליקציה
+            </Label>
           </div>
 
           {/* הודעת אבטחה */}

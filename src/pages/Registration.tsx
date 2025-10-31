@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,6 +25,7 @@ export default function Registration() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [handshakeToken, setHandshakeToken] = useState<string>('');
   const [terminalName, setTerminalName] = useState<string>('');
+  const [saveCard, setSaveCard] = useState(true); // Default: checked
 
   const [phoneNumber, setPhoneNumber] = useState('');
 
@@ -209,45 +211,68 @@ export default function Registration() {
       const twoDigitYear = Number(txnResponse.expiry_year);
       const expiry_year = twoDigitYear < 100 ? 2000 + twoDigitYear : twoDigitYear;
 
-      const paymentData = {
-        phone_number: phoneNumber,
-        tranzila_token: tranzilaToken,
-        card_last4: last4,
-        expiry_month,
-        expiry_year,
-        confirmation_code: txnResponse.confirmation_code || '',
-        amount: REGISTRATION_FEE
-      };
+      // Check if user wants to save the card
+      if (saveCard) {
+        const paymentData = {
+          phone_number: phoneNumber,
+          tranzila_token: tranzilaToken,
+          card_last4: last4,
+          expiry_month,
+          expiry_year,
+          confirmation_code: txnResponse.confirmation_code || '',
+          amount: REGISTRATION_FEE
+        };
 
-      console.log('Sending payment data:', paymentData);
+        console.log('Sending payment data:', paymentData);
 
-      // Call new registration payment function
-      const { data: saveData, error: saveError } = await supabase.functions.invoke(
-        'tranzila-registration-payment',
-        {
-          body: paymentData
+        // Call new registration payment function
+        const { data: saveData, error: saveError } = await supabase.functions.invoke(
+          'tranzila-registration-payment',
+          {
+            body: paymentData
+          }
+        );
+
+        console.log('Function response - data:', saveData);
+        console.log('Function response - error:', saveError);
+
+        if (saveError) {
+          console.error('Save token error:', saveError);
+          console.error('Error details:', JSON.stringify(saveError, null, 2));
+
+          // Try to get the actual error message from the response
+          let errorMessage = 'Unknown error';
+          if (saveData && typeof saveData === 'object') {
+            console.error('Error response body:', saveData);
+            errorMessage = saveData.error || saveData.message || errorMessage;
+          }
+
+          throw new Error(`שגיאה בשמירת פרטי המשתמש: ${errorMessage}`);
         }
-      );
 
-      console.log('Function response - data:', saveData);
-      console.log('Function response - error:', saveError);
+        console.log('Registration successful with saved card:', saveData);
+        toast.success(`ההרשמה הושלמה בהצלחה! ₪${REGISTRATION_FEE} חוייבו`);
+      } else {
+        // User chose NOT to save card - just update payment status
+        console.log('User chose not to save card, updating payment status only');
 
-      if (saveError) {
-        console.error('Save token error:', saveError);
-        console.error('Error details:', JSON.stringify(saveError, null, 2));
+        const { error } = await supabase
+          .from('professionals')
+          .update({
+            registration_payment_status: 'completed',
+            registration_paid_at: new Date().toISOString(),
+            registration_amount: REGISTRATION_FEE
+          })
+          .eq('phone_number', phoneNumber);
 
-        // Try to get the actual error message from the response
-        let errorMessage = 'Unknown error';
-        if (saveData && typeof saveData === 'object') {
-          console.error('Error response body:', saveData);
-          errorMessage = saveData.error || saveData.message || errorMessage;
+        if (error) {
+          console.error('Error updating payment status:', error);
+          throw new Error('שגיאה בעדכון סטטוס התשלום');
         }
 
-        throw new Error(`שגיאה בשמירת פרטי המשתמש: ${errorMessage}`);
+        console.log('Registration successful without saving card');
+        toast.success(`התשלום בוצע בהצלחה! ₪${REGISTRATION_FEE} חוייבו`);
       }
-
-      console.log('Registration successful:', saveData);
-      toast.success(`ההרשמה הושלמה בהצלחה! ₪${REGISTRATION_FEE} חוייבו`);
 
       // Navigate to success page or dashboard
       setTimeout(() => {
@@ -345,6 +370,22 @@ export default function Registration() {
                 />
               </div>
             </div>
+          </div>
+
+          {/* שמירת כרטיס לשימוש עתידי */}
+          <div className="flex items-center gap-2 rtl:gap-x-reverse">
+            <Checkbox
+              id="save-card"
+              checked={saveCard}
+              onCheckedChange={(checked) => setSaveCard(checked as boolean)}
+              disabled={isSubmitting}
+            />
+            <Label
+              htmlFor="save-card"
+              className="text-sm font-normal cursor-pointer leading-tight"
+            >
+              שמור את פרטי הכרטיס לשימוש עתידי באפליקציה
+            </Label>
           </div>
 
           {/* הודעת אבטחה */}
