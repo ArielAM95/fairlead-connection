@@ -33,6 +33,7 @@ interface TranzilaPaymentDialogProps {
     card_expiry: string;
     card_type: string;
     confirmation_code: string;
+    save_card?: boolean;
   }) => void;
   userDetails: {
     name: string;
@@ -251,8 +252,10 @@ export default function TranzilaPaymentDialog({
       // Return payment data to parent - format for SignupForm compatibility
       onSuccess({
         tranzila_token: tranzilaToken,
+        tranzila_index: txnResponse.token_index || '',
         card_last4: last4,
         card_expiry: `${String(expiry_month).padStart(2, '0')}${String(expiry_year).slice(-2)}`, // MMYY format
+        card_type: txnResponse.credit_card_type || 'unknown',
         confirmation_code: txnResponse.confirmation_code || '',
         save_card: saveCard, // User's choice to save card
       });
