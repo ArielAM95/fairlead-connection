@@ -462,6 +462,107 @@ export type Database = {
         }
         Relationships: []
       }
+      invoices: {
+        Row: {
+          amount: number
+          commission_id: string | null
+          created_at: string | null
+          description: string
+          error_message: string | null
+          id: string
+          invoice_date: string
+          invoice_number: string
+          invoice_type: string
+          pdf_url: string | null
+          professional_id: string
+          status: string
+          total_amount: number
+          transaction_log_id: string | null
+          tranzila_document_number: string | null
+          tranzila_invoice_id: string | null
+          tranzila_response: Json | null
+          updated_at: string | null
+          vat_amount: number
+          webhook_response: Json | null
+          webhook_sent_at: string | null
+        }
+        Insert: {
+          amount: number
+          commission_id?: string | null
+          created_at?: string | null
+          description: string
+          error_message?: string | null
+          id?: string
+          invoice_date?: string
+          invoice_number: string
+          invoice_type: string
+          pdf_url?: string | null
+          professional_id: string
+          status?: string
+          total_amount: number
+          transaction_log_id?: string | null
+          tranzila_document_number?: string | null
+          tranzila_invoice_id?: string | null
+          tranzila_response?: Json | null
+          updated_at?: string | null
+          vat_amount: number
+          webhook_response?: Json | null
+          webhook_sent_at?: string | null
+        }
+        Update: {
+          amount?: number
+          commission_id?: string | null
+          created_at?: string | null
+          description?: string
+          error_message?: string | null
+          id?: string
+          invoice_date?: string
+          invoice_number?: string
+          invoice_type?: string
+          pdf_url?: string | null
+          professional_id?: string
+          status?: string
+          total_amount?: number
+          transaction_log_id?: string | null
+          tranzila_document_number?: string | null
+          tranzila_invoice_id?: string | null
+          tranzila_response?: Json | null
+          updated_at?: string | null
+          vat_amount?: number
+          webhook_response?: Json | null
+          webhook_sent_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_commission_id_fkey"
+            columns: ["commission_id"]
+            isOneToOne: false
+            referencedRelation: "commissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_transaction_log_id_fkey"
+            columns: ["transaction_log_id"]
+            isOneToOne: false
+            referencedRelation: "transaction_logs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       issue_reports: {
         Row: {
           admin_response: string | null
@@ -859,34 +960,40 @@ export type Database = {
       }
       professional_certificates: {
         Row: {
+          business_license_type: string | null
           certificate_name: string
           certificate_url: string
           created_at: string
           file_name: string
           file_size: number | null
           id: string
+          is_business_license: boolean
           professional_id: string
           updated_at: string
           upload_date: string
         }
         Insert: {
+          business_license_type?: string | null
           certificate_name: string
           certificate_url: string
           created_at?: string
           file_name: string
           file_size?: number | null
           id?: string
+          is_business_license?: boolean
           professional_id: string
           updated_at?: string
           upload_date?: string
         }
         Update: {
+          business_license_type?: string | null
           certificate_name?: string
           certificate_url?: string
           created_at?: string
           file_name?: string
           file_size?: number | null
           id?: string
+          is_business_license?: boolean
           professional_id?: string
           updated_at?: string
           upload_date?: string
@@ -982,13 +1089,6 @@ export type Database = {
           uploaded_invoice_at?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "professional_leads_crm_assigned_to_fkey"
-            columns: ["assigned_to"]
-            isOneToOne: false
-            referencedRelation: "internal_crm"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "professional_leads_crm_contacted_by_fkey"
             columns: ["contacted_by"]
@@ -1124,9 +1224,11 @@ export type Database = {
           email: string | null
           experience_range: string | null
           experience_years: string | null
+          facebook_url: string | null
           id: string
           image: string | null
           image_url: string | null
+          instagram_url: string | null
           is_verified: boolean | null
           languages: string[]
           location: string
@@ -1137,11 +1239,15 @@ export type Database = {
           profession: string
           profile_completion_percentage: number | null
           rating: number | null
+          registration_amount: number | null
+          registration_paid_at: string | null
+          registration_payment_status: string | null
           review_count: number | null
           specialties: string[] | null
           status: string | null
           sub_specializations: string[] | null
           terms_accepted: boolean
+          tiktok_url: string | null
           tutorial_completed: boolean | null
           updated_at: string | null
           user_id: string | null
@@ -1159,9 +1265,11 @@ export type Database = {
           email?: string | null
           experience_range?: string | null
           experience_years?: string | null
+          facebook_url?: string | null
           id?: string
           image?: string | null
           image_url?: string | null
+          instagram_url?: string | null
           is_verified?: boolean | null
           languages?: string[]
           location: string
@@ -1172,11 +1280,15 @@ export type Database = {
           profession: string
           profile_completion_percentage?: number | null
           rating?: number | null
+          registration_amount?: number | null
+          registration_paid_at?: string | null
+          registration_payment_status?: string | null
           review_count?: number | null
           specialties?: string[] | null
           status?: string | null
           sub_specializations?: string[] | null
           terms_accepted?: boolean
+          tiktok_url?: string | null
           tutorial_completed?: boolean | null
           updated_at?: string | null
           user_id?: string | null
@@ -1194,9 +1306,11 @@ export type Database = {
           email?: string | null
           experience_range?: string | null
           experience_years?: string | null
+          facebook_url?: string | null
           id?: string
           image?: string | null
           image_url?: string | null
+          instagram_url?: string | null
           is_verified?: boolean | null
           languages?: string[]
           location?: string
@@ -1207,11 +1321,15 @@ export type Database = {
           profession?: string
           profile_completion_percentage?: number | null
           rating?: number | null
+          registration_amount?: number | null
+          registration_paid_at?: string | null
+          registration_payment_status?: string | null
           review_count?: number | null
           specialties?: string[] | null
           status?: string | null
           sub_specializations?: string[] | null
           terms_accepted?: boolean
+          tiktok_url?: string | null
           tutorial_completed?: boolean | null
           updated_at?: string | null
           user_id?: string | null
@@ -2580,6 +2698,7 @@ export type Database = {
               professional_profession: string
               professional_rating: number
               professional_verified: boolean
+              share_percentage: number
               status: string
             }[]
           }

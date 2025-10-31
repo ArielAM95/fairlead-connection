@@ -15,13 +15,13 @@ serve(async (req) => {
 
   try {
     const formData = await req.json();
-    
+
     console.log('Sending webhook for registration:', formData);
-    
+
     // Prepare data for webhook - data comes already formatted from frontend
     const dataToSubmit = {
       ...formData,
-      post_type: "main_signup_form_initial"
+      post_type: "main_signup_form"
     };
     
     // Send to webhook

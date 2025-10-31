@@ -8,12 +8,21 @@ import { useSignupForm } from "@/hooks/useSignupForm";
 import { SignupFormData } from "@/types/signupForm";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import TranzilaPaymentDialog from "./TranzilaPaymentDialog";
+import PrePaymentDialog from "./PrePaymentDialog";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface SignupFormProps {
   onSubmit: (formData: SignupFormData) => Promise<void>;
 }
 
 const SignupForm = ({ onSubmit }: SignupFormProps) => {
+  const [showPrePaymentDialog, setShowPrePaymentDialog] = useState(false);
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+  const [pendingFormData, setPendingFormData] = useState<SignupFormData | null>(null);
+  
   const {
     formData,
     errors,
@@ -29,8 +38,120 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
     setFormData
   } = useSignupForm(onSubmit);
 
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate form before opening payment dialog
+    const validationErrors: any = {};
+
+    if (!formData.acceptTerms) {
+      validationErrors.acceptTerms = "חובה לאשר את תנאי השימוש";
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+
+    // Store form data
+    setPendingFormData(formData);
+
+    try {
+      toast.info('שומר פרטים...');
+
+      // Create professional record in DB + send webhook (handled by onSubmit)
+      await onSubmit(formData);
+
+      // Open pre-payment dialog after professional is created
+      toast.success('הפרטים נשמרו! עבור לתשלום');
+      setShowPrePaymentDialog(true);
+    } catch (error) {
+      console.error('Form submission error:', error);
+      toast.error('שגיאה בשמירת הפרטים');
+    }
+  };
+
+  const handleProceedToPayment = () => {
+    setShowPrePaymentDialog(false);
+    setShowPaymentDialog(true);
+  };
+
+  const handlePaymentSuccess = async (paymentData: any) => {
+    if (!pendingFormData) {
+      toast.error('נתוני טופס לא נמצאו');
+      return;
+    }
+
+    // Close payment dialog
+    setShowPaymentDialog(false);
+
+    try {
+      // Check if user wants to save the card
+      if (paymentData.save_card) {
+        toast.info('שומר פרטי תשלום...');
+
+        // Parse expiry from Tranzila format (MMYY)
+        const expdate = paymentData.card_expiry; // e.g., "0431" = April 2031
+        const expiry_month = parseInt(expdate.substring(0, 2), 10);
+        const expiry_year = 2000 + parseInt(expdate.substring(2, 4), 10);
+
+        // Save payment token (professional already exists in DB)
+        const { data, error } = await supabase.functions.invoke(
+          'tranzila-registration-payment',
+          {
+            body: {
+              phone_number: pendingFormData.phone,
+              tranzila_token: paymentData.tranzila_token,
+              card_last4: paymentData.card_last4,
+              expiry_month,
+              expiry_year,
+              confirmation_code: paymentData.confirmation_code,
+              amount: 1 // FOR TESTING - Change back to 413 for production
+            }
+          }
+        );
+
+        if (error) {
+          console.error('Save token error:', error);
+          toast.error('שגיאה בשמירת פרטי התשלום');
+          return;
+        }
+
+        console.log('Payment method saved successfully:', data);
+        toast.success('ההרשמה והתשלום הושלמו בהצלחה!');
+      } else {
+        // User chose NOT to save card - just update payment status
+        console.log('User chose not to save card, updating payment status only');
+
+        const { error } = await supabase
+          .from('professionals')
+          .update({
+            registration_payment_status: 'completed',
+            registration_paid_at: new Date().toISOString(),
+            registration_amount: 1 // FOR TESTING - Change back to 413 for production
+          })
+          .eq('phone_number', pendingFormData.phone);
+
+        if (error) {
+          console.error('Error updating payment status:', error);
+          toast.error('שגיאה בעדכון סטטוס התשלום');
+          return;
+        }
+
+        toast.success('התשלום בוצע בהצלחה!');
+        console.log('Payment completed without saving card');
+      }
+
+      // Payment complete - no need to call onSubmit again (already created)
+
+    } catch (error) {
+      console.error('Payment completion error:', error);
+      toast.error('שגיאה בסיום התהליך');
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <>
+      <form onSubmit={handleFormSubmit} className="space-y-8">
       {/* פרטים אישיים */}
       <div className="space-y-4">
         <h3 className="text-xl font-bold text-ofair-900 border-b-2 border-ofair-300 pb-2">
@@ -188,6 +309,27 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
         )}
       </div>
     </form>
+
+    <PrePaymentDialog
+      open={showPrePaymentDialog}
+      onClose={() => setShowPrePaymentDialog(false)}
+      onProceedToPayment={handleProceedToPayment}
+    />
+
+    <TranzilaPaymentDialog
+      open={showPaymentDialog}
+      onClose={() => setShowPaymentDialog(false)}
+      onSuccess={handlePaymentSuccess}
+      userDetails={{
+        name: `${formData.firstName} ${formData.lastName}`,
+        idNumber: formData.businessLicenseNumber || '000000000',
+        phone: formData.phone,
+        email: formData.email,
+        city: formData.city,
+        companyName: formData.companyName,
+      }}
+    />
+    </>
   );
 };
 
