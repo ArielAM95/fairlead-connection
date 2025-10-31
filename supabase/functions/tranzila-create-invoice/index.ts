@@ -6,8 +6,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
  * Handles both registration payments and commission charges
  */
 
-const MAKE_WEBHOOK_URL = 'https://hook.eu2.make.com/91wtmvcqm30g888p3wrixjhbqtaxwzhm';
-const TRANZILA_API_URL = 'https://direct.tranzila.com/cgi-bin/tranzila71u.cgi';
+const MAKE_WEBHOOK_URL = 'https://hook.eu2.make.com/91wtmvcqm30g988p3wrixjhbqtaxwzhm';
+const TRANZILA_API_URL = 'https://secure.tranzila.com/cgi-bin/tranzila71u.cgi';
 
 interface InvoiceRequest {
   professional_id: string;
@@ -94,7 +94,7 @@ Deno.serve(async (req) => {
     // Using document API (tranmode: VK) as per https://docs.tranzila.com/docs/invoices/27ffheryfv066-create-document
     const tranzilaParams = new URLSearchParams({
       supplier: terminalName,
-      tranzilaTK: terminalPassword,
+      TranzilaPW: terminalPassword, // Use TranzilaPW for document API (not tranzilaTK)
       tranmode: 'VK', // Create document
       sum: total_amount.toFixed(2),
       currency: '1', // ILS
