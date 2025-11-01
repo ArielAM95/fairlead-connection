@@ -7,7 +7,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
  */
 
 const MAKE_WEBHOOK_URL = 'https://hook.eu2.make.com/91wtmvcqm30g988p3wrixjhbqtaxwzhm';
-const TRANZILA_API_URL = 'https://secure.tranzila.com/cgi-bin/tranzila71u.cgi';
+const TRANZILA_API_URL = 'https://secure5.tranzila.com/cgi-bin/tranzila71u.cgi';
 
 interface InvoiceRequest {
   professional_id: string;
