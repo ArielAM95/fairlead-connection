@@ -226,13 +226,10 @@ Deno.serve(async (req) => {
 
     console.log('Registration payment completed successfully');
 
-    // TODO: Enable invoice generation after Tranzila activates Document API
     // Generate invoice (non-blocking - don't fail payment if invoice fails)
-    // DISABLED: Tranzila Document API returns HTML error - feature not enabled on terminal
-    // Contact Tranzila support to enable Document API (tranmode: VK)
-    /*
+    // Note: Tranzila Document API may not be enabled yet - failures are logged but don't break payment
     try {
-      console.log('Generating invoice for registration payment...');
+      console.log('Attempting invoice generation for registration payment...');
 
       const invoiceResponse = await supabase.functions.invoke('tranzila-create-invoice', {
         body: {
@@ -253,8 +250,6 @@ Deno.serve(async (req) => {
       console.error('Invoice generation exception (non-blocking):', invoiceError);
       // Don't throw - invoice generation failures shouldn't break payment
     }
-    */
-    console.log('Invoice generation disabled - waiting for Tranzila Document API activation');
 
     return new Response(
       JSON.stringify({
