@@ -1,14 +1,20 @@
-# Tranzila Document API Integration Issue
+# ✅ RESOLVED: Tranzila Document API Integration
 
 **Date:** November 1, 2025
 **Terminal Name:** [Your Terminal Name]
-**Issue:** Document API returns HTML error page instead of creating invoices
+**Status:** ✅ WORKING - Issue Resolved
 
 ---
 
 ## Summary
 
-We successfully integrated Tranzila payment processing using the CGI endpoint and Hosted Fields SDK. **Payments work perfectly.** However, when attempting to use the Document API (`tranmode: VK`) to generate tax invoices, we receive an HTML error page instead of a proper API response.
+✅ **ISSUE RESOLVED!** The problem was using the wrong endpoint.
+
+**Root Cause:** We were using the payment API endpoint (`secure5.tranzila.com`) for document generation.
+
+**Solution:** Use the dedicated billing API endpoint: `https://billing5.tranzila.com`
+
+**Result:** Invoices now generate successfully with PDF URLs!
 
 ---
 
