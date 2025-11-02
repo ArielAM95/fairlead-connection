@@ -290,7 +290,7 @@ export default function TranzilaPaymentDialog({
           {/* פרטי תשלום - Hosted Fields */}
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>מספר כרטיס *</Label>
+              <Label className="text-right block">מספר כרטיס *</Label>
               <div 
                 id="hosted-card-number" 
                 className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
@@ -299,7 +299,7 @@ export default function TranzilaPaymentDialog({
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>תוקף (MM/YY) *</Label>
+                <Label className="text-right block">תוקף (MM/YY) *</Label>
                 <div 
                   id="hosted-expiry" 
                   className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
@@ -307,7 +307,7 @@ export default function TranzilaPaymentDialog({
               </div>
 
               <div className="space-y-2">
-                <Label>CVV *</Label>
+                <Label className="text-right block">CVV *</Label>
                 <div 
                   id="hosted-cvv" 
                   className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"

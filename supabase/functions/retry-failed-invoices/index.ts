@@ -155,7 +155,7 @@ Deno.serve(async (req) => {
         results.details.push({
           invoice_number: invoice.invoice_number,
           status: 'error',
-          error: error.message
+          error: error instanceof Error ? error.message : String(error)
         });
       }
     }
@@ -174,7 +174,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Retry error:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
