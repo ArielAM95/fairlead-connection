@@ -1,20 +1,31 @@
 # ✅ RESOLVED: Tranzila Document API Integration
 
-**Date:** November 1, 2025
+**Date:** November 2, 2025
 **Terminal Name:** [Your Terminal Name]
-**Status:** ✅ WORKING - Issue Resolved
+**Status:** ✅ RESOLVED - Using correct billing API with JSON format
 
 ---
 
 ## Summary
 
-✅ **ISSUE RESOLVED!** The problem was using the wrong endpoint.
+✅ **ISSUE RESOLVED!** The billing API uses a completely different structure than the payment API.
 
-**Root Cause:** We were using the payment API endpoint (`secure5.tranzila.com`) for document generation.
+**Root Cause:** Tranzila has TWO separate APIs with different architectures:
+1. **Payment API** (CGI-based): `secure5.tranzila.com/cgi-bin/tranzila71u.cgi` - URL-encoded, uses `TranzilaPW`
+2. **Billing API** (REST-based): `billing5.tranzila.com/api/documents_db/create_document` - JSON, uses API keys
 
-**Solution:** Use the dedicated billing API endpoint: `https://billing5.tranzila.com`
+**Discovery Timeline:**
+1. **First attempt**: Used payment API endpoint for documents → Returned HTML error (wrong API)
+2. **Second attempt**: Used `billing5.tranzila.com` (domain only) → 404 error (missing path)
+3. **Third attempt**: Used `billing5.tranzila.com/cgi-bin/...` → 404 error (billing API doesn't use CGI)
+4. **✅ Final solution**: Used correct endpoint `billing5.tranzila.com/api/documents_db/create_document` with JSON format
 
-**Result:** Invoices now generate successfully with PDF URLs!
+**Solution Implemented:**
+- Endpoint: `https://billing5.tranzila.com/api/documents_db/create_document`
+- Format: JSON POST request (not URL-encoded)
+- Authentication: API headers (`X-tranzila-api-access-token`, `X-tranzila-api-app-key`, nonce, timestamp)
+- Request structure: `items` array + `payments` array (completely different from CGI format)
+- Response: JSON with `status_code`, `document.id`, `document.retrieval_key`
 
 ---
 
