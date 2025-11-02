@@ -6,8 +6,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
  * Handles both registration payments and commission charges
  */
 
-const MAKE_WEBHOOK_URL = 'https://hook.eu2.make.com/91wtmvcqm30g888p3wrixjhbqtaxwzhm';
-const TRANZILA_API_URL = 'https://direct.tranzila.com/cgi-bin/tranzila71u.cgi';
+const MAKE_WEBHOOK_URL = 'https://hook.eu2.make.com/91wtmvcqm30g988p3wrixjhbqtaxwzhm';
+const TRANZILA_API_URL = 'https://billing5.tranzila.com/api/documents_db/create_document';
 
 interface InvoiceRequest {
   professional_id: string;
@@ -79,11 +79,12 @@ Deno.serve(async (req) => {
 
     // Get Tranzila credentials from secrets
     const terminalName = Deno.env.get('TRANZILA_TOKEN_TERMINAL_NAME');
-    const terminalPassword = Deno.env.get('TRANZILA_TOKEN_TERMINAL_PASSWORD');
+    const appKey = Deno.env.get('TRANZILA_APP_KEY');
+    const secretKey = Deno.env.get('TRANZILA_SECRET');
 
-    if (!terminalName || !terminalPassword) {
+    if (!terminalName || !appKey || !secretKey) {
       console.error('Missing Tranzila credentials in environment');
-      throw new Error('Tranzila credentials not configured');
+      throw new Error('Tranzila billing API credentials not configured');
     }
 
     // Generate unique invoice number (using timestamp + professional_id suffix)
@@ -91,72 +92,111 @@ Deno.serve(async (req) => {
     console.log('Generated invoice number:', invoiceNumber);
 
     // Prepare Tranzila document creation request
-    // Using document API (tranmode: VK) as per https://docs.tranzila.com/docs/invoices/27ffheryfv066-create-document
-    const tranzilaParams = new URLSearchParams({
-      supplier: terminalName,
-      tranzilaTK: terminalPassword,
-      tranmode: 'VK', // Create document
-      sum: total_amount.toFixed(2),
-      currency: '1', // ILS
+    // Using Billing API (REST/JSON) as per https://docs.tranzila.com/docs/invoices/27ffheryfv066-create-document
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const requestBody = {
+      terminal_name: terminalName,
+      document_date: today,
+      document_type: 'IR', // Invoice/Receipt (חשבונית מס/קבלה)
+      document_language: 'heb',
+      document_currency_code: 'ILS',
+      action: 1, // 1 = Debit, 3 = Credit
+      vat_percent: 18, // 18% Israeli VAT
+      response_language: 'eng', // Get error messages in English
 
       // Customer details from professional record
-      contact: professional.name || '',
-      email: professional.email || '',
-      phone: professional.phone_number || '',
-      city: professional.city || professional.location || '',
-      company: professional.company_name || '',
-      TaxId: professional.business_license_number || '', // CRITICAL: Use existing field as tax_id
+      client_name: professional.name || '',
+      client_email: professional.email || '',
+      client_company: professional.company_name || '',
+      client_id: professional.business_license_number || '', // Tax ID / Business license
+      client_city: professional.city || professional.location || '',
+      client_country_code: 'IL',
 
-      // Invoice details
-      doctype: '1', // Tax invoice (קבלה/חשבונית מס)
-      remarks: description,
+      // Line items array (required - describes what was purchased)
+      items: [
+        {
+          name: description,
+          unit_price: amountBeforeVAT, // Price before VAT
+          units_number: 1,
+          unit_type: 1, // 1 = unit
+          price_type: 'G', // G = Gross (includes VAT in calculation)
+          currency_code: 'ILS',
+          to_doc_currency_exchange_rate: 1
+        }
+      ],
 
-      // Line items (single line for simplicity)
-      item_name_1: description,
-      item_amount_1: amountBeforeVAT.toFixed(2),
-      item_quantity_1: '1',
-      item_vat_1: '18', // 18% Israeli VAT
+      // Payment details array (required - how customer paid)
+      payments: [
+        {
+          payment_method: 1, // 1 = Credit Card
+          payment_date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
+          amount: total_amount, // Total amount paid (after VAT)
+          currency_code: 'ILS',
+          to_doc_currency_exchange_rate: 1
+        }
+      ]
+    };
+
+    console.log('Calling Tranzila billing API with request:', {
+      terminal_name: terminalName,
+      document_type: 'IR',
+      client_name: professional.name,
+      client_email: professional.email,
+      total_amount: total_amount.toFixed(2),
+      items_count: requestBody.items.length
     });
+    console.log('Full request body:', JSON.stringify(requestBody, null, 2));
 
-    console.log('Calling Tranzila document API with params:', {
-      supplier: terminalName,
-      tranmode: 'VK',
-      sum: total_amount.toFixed(2),
-      TaxId: professional.business_license_number,
-      email: professional.email,
-      doctype: '1'
-    });
+    // Generate nonce and timestamp for API authentication
+    const nonce = crypto.randomUUID();
+    const timestamp = Math.floor(Date.now() / 1000).toString();
 
-    // Call Tranzila API
+    // Call Tranzila Billing API (REST/JSON)
     const tranzilaResponse = await fetch(TRANZILA_API_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-tranzila-api-access-token': secretKey, // Secret key for authentication
+        'X-tranzila-api-app-key': appKey, // App key
+        'X-tranzila-api-nonce': nonce, // Random UUID for request uniqueness
+        'X-tranzila-api-request-time': timestamp // Unix timestamp
       },
-      body: tranzilaParams.toString()
+      body: JSON.stringify(requestBody)
     });
 
     const tranzilaText = await tranzilaResponse.text();
-    console.log('Tranzila response:', tranzilaText);
+    console.log('Tranzila response status:', tranzilaResponse.status);
+    console.log('Tranzila response headers:', Object.fromEntries(tranzilaResponse.headers.entries()));
+    console.log('Tranzila response body:', tranzilaText);
+    console.log('Tranzila response body length:', tranzilaText.length);
 
-    // Parse Tranzila response (key=value format)
-    const tranzilaData: Record<string, string> = {};
-    tranzilaText.split('&').forEach(pair => {
-      const [key, value] = pair.split('=');
-      if (key && value) {
-        tranzilaData[key] = decodeURIComponent(value);
-      }
-    });
+    // Parse Tranzila response (JSON format)
+    let tranzilaData: any = {};
+    try {
+      tranzilaData = JSON.parse(tranzilaText);
+    } catch (parseError) {
+      console.error('Failed to parse Tranzila response as JSON:', parseError);
+      console.error('Response was:', tranzilaText.substring(0, 500)); // First 500 chars
+      tranzilaData = {
+        status_code: 999,
+        status_msg: tranzilaText.substring(0, 200) || 'Invalid JSON response',
+        raw: tranzilaText,
+        http_status: tranzilaResponse.status
+      };
+    }
 
     // Check if invoice creation was successful
-    const responseCode = tranzilaData['Response'] || tranzilaData['code'];
-    const isSuccess = responseCode === '000' || responseCode === '0';
+    // Success: status_code = 0, response includes document details
+    const isSuccess = tranzilaData.status_code === 0;
 
     console.log('Tranzila parsed response:', {
-      code: responseCode,
+      status_code: tranzilaData.status_code,
+      status_msg: tranzilaData.status_msg,
       success: isSuccess,
-      doc_id: tranzilaData['doc_id'],
-      pdf_url: tranzilaData['pdf_url']
+      document_id: tranzilaData.document?.id,
+      document_number: tranzilaData.document?.number,
+      retrieval_key: tranzilaData.document?.retrieval_key
     });
 
     // Save invoice to database
@@ -171,12 +211,13 @@ Deno.serve(async (req) => {
       vat_amount: parseFloat(vatAmount.toFixed(2)),
       total_amount,
       description,
-      tranzila_invoice_id: tranzilaData['doc_id'] || null,
-      tranzila_document_number: tranzilaData['doc_number'] || null,
+      tranzila_invoice_id: tranzilaData.document?.id || null,
+      tranzila_document_number: tranzilaData.document?.number || null,
       tranzila_response: tranzilaData,
-      pdf_url: tranzilaData['pdf_url'] || null,
+      pdf_url: tranzilaData.document?.retrieval_key ?
+        `https://billing5.tranzila.com/api/documents_db/get_document?key=${tranzilaData.document.retrieval_key}` : null,
       status: isSuccess ? 'generated' : 'failed',
-      error_message: isSuccess ? null : (tranzilaData['message'] || 'Unknown error')
+      error_message: isSuccess ? null : (tranzilaData.status_msg || 'Unknown error')
     };
 
     console.log('Saving invoice to database:', invoiceData);
@@ -261,7 +302,9 @@ Deno.serve(async (req) => {
         success: isSuccess,
         invoice_id: savedInvoice?.id,
         invoice_number: invoiceNumber,
-        pdf_url: tranzilaData['pdf_url'] || null,
+        pdf_url: invoiceData.pdf_url,
+        document_id: tranzilaData.document?.id,
+        document_number: tranzilaData.document?.number,
         message: isSuccess ? 'חשבונית נוצרה בהצלחה' : 'שגיאה ביצירת החשבונית'
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

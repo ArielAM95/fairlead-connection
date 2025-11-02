@@ -28,6 +28,33 @@ export default function Registration() {
   const [saveCard, setSaveCard] = useState(true); // Default: checked
 
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [isPaymentLink, setIsPaymentLink] = useState(false); // Tracks if this is a payment-only link
+  const [professionalName, setProfessionalName] = useState(''); // Store name for display
+
+  // 📱 Check for phone URL parameter (payment link feature)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const phoneParam = urlParams.get('phone');
+
+    if (phoneParam) {
+      console.log('Payment link detected for phone:', phoneParam);
+      setPhoneNumber(phoneParam);
+      setIsPaymentLink(true);
+
+      // Lookup professional name for display
+      supabase
+        .from('professionals')
+        .select('name')
+        .eq('phone_number', phoneParam)
+        .single()
+        .then(({ data }) => {
+          if (data?.name) {
+            setProfessionalName(data.name);
+            console.log('Found professional:', data.name);
+          }
+        });
+    }
+  }, []);
 
   // 🔒 Disconnect Supabase realtime (למניעת שגיאת JSON.parse)
   useEffect(() => {
@@ -315,31 +342,52 @@ export default function Registration() {
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Header */}
           <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold text-foreground">דף בדיקה - תשלום הרשמה</h1>
-            <p className="text-lg text-muted-foreground">דמי הרשמה: ₪{REGISTRATION_FEE} כולל מע"מ</p>
-            <p className="text-sm text-muted-foreground">הזן מספר טלפון של משתמש קיים במערכת</p>
+            {isPaymentLink ? (
+              <>
+                <h1 className="text-3xl font-bold text-foreground">השלמת תשלום הרשמה</h1>
+                {professionalName && (
+                  <p className="text-xl text-foreground">שלום {professionalName}!</p>
+                )}
+                <p className="text-lg text-muted-foreground">
+                  נא להשלים את תשלום דמי ההרשמה בסך ₪{REGISTRATION_FEE}
+                </p>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+                  <p className="text-sm text-blue-800">
+                    📱 קישור תשלום עבור: <span className="font-semibold" dir="ltr">{phoneNumber}</span>
+                  </p>
+                </div>
+              </>
+            ) : (
+              <>
+                <h1 className="text-3xl font-bold text-foreground">דף בדיקה - תשלום הרשמה</h1>
+                <p className="text-lg text-muted-foreground">דמי הרשמה: ₪{REGISTRATION_FEE} כולל מע"מ</p>
+                <p className="text-sm text-muted-foreground">הזן מספר טלפון של משתמש קיים במערכת</p>
+              </>
+            )}
           </div>
 
-          {/* Phone number only */}
-          <div className="bg-card p-6 rounded-lg border border-border space-y-4">
-            <h2 className="text-xl font-semibold text-card-foreground">מספר טלפון</h2>
+          {/* Phone number only - Hidden if payment link */}
+          {!isPaymentLink && (
+            <div className="bg-card p-6 rounded-lg border border-border space-y-4">
+              <h2 className="text-xl font-semibold text-card-foreground">מספר טלפון</h2>
 
-            <div className="space-y-2">
-              <Label htmlFor="phone">טלפון *</Label>
-              <Input
-                id="phone"
-                type="tel"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="050-1234567"
-                dir="ltr"
-                required
-              />
-              <p className="text-sm text-muted-foreground">
-                המספר חייב להיות קיים בטבלת professionals
-              </p>
+              <div className="space-y-2">
+                <Label htmlFor="phone">טלפון *</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="050-1234567"
+                  dir="ltr"
+                  required
+                />
+                <p className="text-sm text-muted-foreground">
+                  המספר חייב להיות קיים בטבלת professionals
+                </p>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* פרטי תשלום - Hosted Fields */}
           <div className="bg-card p-6 rounded-lg border border-border space-y-4">

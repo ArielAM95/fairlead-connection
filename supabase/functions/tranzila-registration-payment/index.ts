@@ -227,8 +227,9 @@ Deno.serve(async (req) => {
     console.log('Registration payment completed successfully');
 
     // Generate invoice (non-blocking - don't fail payment if invoice fails)
+    // Note: Tranzila Document API may not be enabled yet - failures are logged but don't break payment
     try {
-      console.log('Generating invoice for registration payment...');
+      console.log('Attempting invoice generation for registration payment...');
 
       const invoiceResponse = await supabase.functions.invoke('tranzila-create-invoice', {
         body: {
