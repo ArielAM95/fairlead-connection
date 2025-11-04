@@ -197,6 +197,132 @@ export type Database = {
           },
         ]
       }
+      client_activity_log: {
+        Row: {
+          activity_type: string
+          client_id: string
+          created_at: string | null
+          created_by: string | null
+          description: string
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          activity_type: string
+          client_id: string
+          created_at?: string | null
+          created_by?: string | null
+          description: string
+          id?: string
+          metadata?: Json | null
+        }
+        Update: {
+          activity_type?: string
+          client_id?: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: []
+      }
+      client_custom_fields: {
+        Row: {
+          client_id: string
+          created_at: string | null
+          field_name: string
+          field_type: string
+          field_value: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          client_id: string
+          created_at?: string | null
+          field_name: string
+          field_type?: string
+          field_value?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Update: {
+          client_id?: string
+          created_at?: string | null
+          field_name?: string
+          field_type?: string
+          field_value?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      client_notes: {
+        Row: {
+          author_id: string
+          author_name: string
+          client_id: string
+          content: string
+          created_at: string | null
+          id: string
+          is_pinned: boolean | null
+          metadata: Json | null
+          note_type: string
+          updated_at: string | null
+        }
+        Insert: {
+          author_id: string
+          author_name: string
+          client_id: string
+          content: string
+          created_at?: string | null
+          id?: string
+          is_pinned?: boolean | null
+          metadata?: Json | null
+          note_type: string
+          updated_at?: string | null
+        }
+        Update: {
+          author_id?: string
+          author_name?: string
+          client_id?: string
+          content?: string
+          created_at?: string | null
+          id?: string
+          is_pinned?: boolean | null
+          metadata?: Json | null
+          note_type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      client_tags: {
+        Row: {
+          client_id: string
+          created_at: string | null
+          created_by: string
+          id: string
+          tag_color: string
+          tag_name: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string | null
+          created_by: string
+          id?: string
+          tag_color?: string
+          tag_name: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string | null
+          created_by?: string
+          id?: string
+          tag_color?: string
+          tag_name?: string
+        }
+        Relationships: []
+      }
       commissions: {
         Row: {
           amount: number
@@ -429,6 +555,54 @@ export type Database = {
         }
         Relationships: []
       }
+      fcm_tokens: {
+        Row: {
+          created_at: string | null
+          device_id: string
+          fcm_token: string
+          id: string
+          is_active: boolean | null
+          platform: string
+          professional_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          device_id: string
+          fcm_token: string
+          id?: string
+          is_active?: boolean | null
+          platform: string
+          professional_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          device_id?: string
+          fcm_token?: string
+          id?: string
+          is_active?: boolean | null
+          platform?: string
+          professional_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fcm_tokens_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fcm_tokens_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       internal_crm: {
         Row: {
           created_at: string
@@ -614,6 +788,105 @@ export type Database = {
           },
         ]
       }
+      lead_activity_log: {
+        Row: {
+          activity_type: string
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          lead_id: string
+          metadata: Json
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string
+          created_by?: string | null
+          description: string
+          id?: string
+          lead_id: string
+          metadata?: Json
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          lead_id?: string
+          metadata?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_activity_log_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "active_professional_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_activity_log_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "professional_leads_crm"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_notes: {
+        Row: {
+          author_id: string
+          author_name: string
+          content: string
+          created_at: string
+          id: string
+          is_pinned: boolean
+          lead_id: string
+          metadata: Json
+          note_type: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          author_name: string
+          content: string
+          created_at?: string
+          id?: string
+          is_pinned?: boolean
+          lead_id: string
+          metadata?: Json
+          note_type: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          author_name?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_pinned?: boolean
+          lead_id?: string
+          metadata?: Json
+          note_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_notes_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "active_professional_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_notes_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "professional_leads_crm"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead_payments: {
         Row: {
           commission_amount: number
@@ -713,6 +986,7 @@ export type Database = {
           title: string
           work_date: string | null
           work_time: string | null
+          work_timeframe: string | null
         }
         Insert: {
           budget?: number | null
@@ -738,6 +1012,7 @@ export type Database = {
           title: string
           work_date?: string | null
           work_time?: string | null
+          work_timeframe?: string | null
         }
         Update: {
           budget?: number | null
@@ -763,6 +1038,7 @@ export type Database = {
           title?: string
           work_date?: string | null
           work_time?: string | null
+          work_timeframe?: string | null
         }
         Relationships: [
           {
@@ -810,6 +1086,54 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      notification_preferences: {
+        Row: {
+          created_at: string | null
+          email_enabled: boolean | null
+          id: string
+          notification_type: string
+          professional_id: string
+          push_enabled: boolean | null
+          sms_enabled: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email_enabled?: boolean | null
+          id?: string
+          notification_type: string
+          professional_id: string
+          push_enabled?: boolean | null
+          sms_enabled?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email_enabled?: boolean | null
+          id?: string
+          notification_type?: string
+          professional_id?: string
+          push_enabled?: boolean | null
+          sms_enabled?: boolean | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_preferences_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_preferences_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notifications: {
         Row: {
@@ -1015,6 +1339,36 @@ export type Database = {
           },
         ]
       }
+      professional_leads_audit: {
+        Row: {
+          changed_at: string | null
+          changed_by: string | null
+          id: string
+          lead_id: string
+          new_data: Json | null
+          old_data: Json | null
+          operation: string
+        }
+        Insert: {
+          changed_at?: string | null
+          changed_by?: string | null
+          id?: string
+          lead_id: string
+          new_data?: Json | null
+          old_data?: Json | null
+          operation: string
+        }
+        Update: {
+          changed_at?: string | null
+          changed_by?: string | null
+          id?: string
+          lead_id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          operation?: string
+        }
+        Relationships: []
+      }
       professional_leads_crm: {
         Row: {
           assigned_to: string | null
@@ -1024,6 +1378,7 @@ export type Database = {
           contacted_at: string | null
           contacted_by: string | null
           created_at: string
+          deleted_at: string | null
           id: string
           inquiry_id: string | null
           internal_notes: string | null
@@ -1048,6 +1403,7 @@ export type Database = {
           contacted_at?: string | null
           contacted_by?: string | null
           created_at?: string
+          deleted_at?: string | null
           id?: string
           inquiry_id?: string | null
           internal_notes?: string | null
@@ -1072,6 +1428,7 @@ export type Database = {
           contacted_at?: string | null
           contacted_by?: string | null
           created_at?: string
+          deleted_at?: string | null
           id?: string
           inquiry_id?: string | null
           internal_notes?: string | null
@@ -2210,6 +2567,113 @@ export type Database = {
       }
     }
     Views: {
+      active_professional_leads: {
+        Row: {
+          assigned_to: string | null
+          closed_at: string | null
+          closed_reason: string | null
+          contacted: boolean | null
+          contacted_at: string | null
+          contacted_by: string | null
+          created_at: string | null
+          deleted_at: string | null
+          id: string | null
+          inquiry_id: string | null
+          internal_notes: string | null
+          lead_type: string | null
+          notes: string | null
+          paid: boolean | null
+          paid_at: string | null
+          payment_amount: number | null
+          priority: string | null
+          professional_id: string | null
+          status: string | null
+          tags: string[] | null
+          updated_at: string | null
+          uploaded_invoice: boolean | null
+          uploaded_invoice_at: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          closed_at?: string | null
+          closed_reason?: string | null
+          contacted?: boolean | null
+          contacted_at?: string | null
+          contacted_by?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          id?: string | null
+          inquiry_id?: string | null
+          internal_notes?: string | null
+          lead_type?: string | null
+          notes?: string | null
+          paid?: boolean | null
+          paid_at?: string | null
+          payment_amount?: number | null
+          priority?: string | null
+          professional_id?: string | null
+          status?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
+          uploaded_invoice?: boolean | null
+          uploaded_invoice_at?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          closed_at?: string | null
+          closed_reason?: string | null
+          contacted?: boolean | null
+          contacted_at?: string | null
+          contacted_by?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          id?: string | null
+          inquiry_id?: string | null
+          internal_notes?: string | null
+          lead_type?: string | null
+          notes?: string | null
+          paid?: boolean | null
+          paid_at?: string | null
+          payment_amount?: number | null
+          priority?: string | null
+          professional_id?: string | null
+          status?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
+          uploaded_invoice?: boolean | null
+          uploaded_invoice_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "professional_leads_crm_contacted_by_fkey"
+            columns: ["contacted_by"]
+            isOneToOne: false
+            referencedRelation: "internal_crm"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professional_leads_crm_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "contact_inquiries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professional_leads_crm_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professional_leads_crm_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       professionals_public_view: {
         Row: {
           about: string | null
@@ -2422,6 +2886,7 @@ export type Database = {
           title: string
           work_date: string | null
           work_time: string | null
+          work_timeframe: string | null
         }[]
         SetofOptions: {
           from: "*"
@@ -2456,6 +2921,7 @@ export type Database = {
           title: string
           work_date: string | null
           work_time: string | null
+          work_timeframe: string | null
         }[]
         SetofOptions: {
           from: "*"
