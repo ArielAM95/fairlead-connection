@@ -21,7 +21,7 @@ declare global {
   }
 }
 
-const REGISTRATION_FEE = 1; // ₪ FOR TESTING - Change back to 413 for production
+const REGISTRATION_FEE = 413; // ₪ Production registration fee
 
 interface TranzilaPaymentDialogProps {
   open: boolean;
