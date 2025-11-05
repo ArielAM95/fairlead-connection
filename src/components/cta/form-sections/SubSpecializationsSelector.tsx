@@ -3,8 +3,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { X, Plus } from "lucide-react";
-import { getSpecializationsByProfession, getProfessionLabel } from '../data/professionsAndSpecializations';
 import { ProfessionSelection, SignupFormData } from '@/types/signupForm';
+import { useProfessions } from '@/hooks/useProfessions';
+import { useSpecializations } from '@/hooks/useSpecializations';
 
 interface SubSpecializationsSelectorProps {
   selectedProfessions: ProfessionSelection[];
@@ -21,6 +22,17 @@ export const SubSpecializationsSelector = ({
   formData,
   setFormData
 }: SubSpecializationsSelectorProps) => {
+  const { data: professions = [] } = useProfessions();
+  const professionPks = selectedProfessions
+    .map(sp => professions.find(p => p.profession_id === sp.professionId)?.id)
+    .filter(Boolean) as string[];
+  
+  const { data: allSpecializations = [], isLoading } = useSpecializations(professionPks);
+  
+  const getProfessionLabel = (professionId: string) => {
+    const profession = professions.find(p => p.profession_id === professionId);
+    return profession?.label || professionId;
+  };
   
   if (selectedProfessions.length === 0) {
     return (
@@ -32,6 +44,17 @@ export const SubSpecializationsSelector = ({
     );
   }
   
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <label className="block text-sm font-medium text-foreground mb-2">
+          תתי התמחות למקצועות שבחרתם (אופציונלי)
+        </label>
+        <p className="text-sm text-muted-foreground">טוען תתי התמחויות...</p>
+      </div>
+    );
+  }
+  
   return (
     <div className="space-y-6">
       <label className="block text-sm font-medium text-foreground mb-2">
@@ -39,7 +62,8 @@ export const SubSpecializationsSelector = ({
       </label>
       
       {selectedProfessions.map(profession => {
-        const specializations = getSpecializationsByProfession(profession.professionId);
+        const professionPk = professions.find(p => p.profession_id === profession.professionId)?.id;
+        const specializations = allSpecializations.filter(spec => spec.profession_id === professionPk);
         const professionLabel = getProfessionLabel(profession.professionId);
         
         if (specializations.length === 0) {
@@ -65,18 +89,18 @@ export const SubSpecializationsSelector = ({
                     className="flex items-center space-x-2 space-x-reverse bg-background p-3 rounded-md border hover:border-primary/50 transition-all"
                   >
                     <Checkbox
-                      id={`spec-${profession.professionId}-${spec.id}`}
-                      checked={profession.specializations.includes(spec.id)}
-                      onCheckedChange={() => onToggleSpecialization(profession.professionId, spec.id)}
+                      id={`spec-${profession.professionId}-${spec.specialization_id}`}
+                      checked={profession.specializations.includes(spec.specialization_id)}
+                      onCheckedChange={() => onToggleSpecialization(profession.professionId, spec.specialization_id)}
                     />
                     <label 
-                      htmlFor={`spec-${profession.professionId}-${spec.id}`} 
+                      htmlFor={`spec-${profession.professionId}-${spec.specialization_id}`} 
                       className="flex-1 text-sm leading-none cursor-pointer"
                     >
                       {spec.label}
                     </label>
                   </div>
-                  {spec.id === "other" && profession.specializations.includes("other") && (
+                  {spec.specialization_id === "other" && profession.specializations.includes("other") && (
                     <div className="mt-2 space-y-2">
                       {(formData.otherSpecializations?.[profession.professionId] || ['']).map((value, index) => (
                         <div key={index} className="flex gap-2">

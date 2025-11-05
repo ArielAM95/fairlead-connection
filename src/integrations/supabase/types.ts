@@ -1282,6 +1282,47 @@ export type Database = {
         }
         Relationships: []
       }
+      profession_specializations: {
+        Row: {
+          created_at: string | null
+          display_order: number
+          id: string
+          is_active: boolean | null
+          label: string
+          profession_id: string
+          specialization_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          display_order: number
+          id?: string
+          is_active?: boolean | null
+          label: string
+          profession_id: string
+          specialization_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean | null
+          label?: string
+          profession_id?: string
+          specialization_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profession_specializations_profession_id_fkey"
+            columns: ["profession_id"]
+            isOneToOne: false
+            referencedRelation: "professions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       professional_certificates: {
         Row: {
           business_license_type: string | null
@@ -1692,6 +1733,36 @@ export type Database = {
           user_id?: string | null
           work_hours?: string | null
           working_hours?: string | null
+        }
+        Relationships: []
+      }
+      professions: {
+        Row: {
+          created_at: string | null
+          display_order: number
+          id: string
+          is_active: boolean | null
+          label: string
+          profession_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          display_order: number
+          id?: string
+          is_active?: boolean | null
+          label: string
+          profession_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean | null
+          label?: string
+          profession_id?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -2677,63 +2748,63 @@ export type Database = {
       professionals_public_view: {
         Row: {
           about: string | null
-          areas: string | null
-          certifications: string[] | null
-          city: string | null
-          company_name: string | null
+          created_at: string | null
+          email: string | null
           experience_range: string | null
-          experience_years: string | null
           id: string | null
           image: string | null
-          image_url: string | null
           is_verified: boolean | null
           location: string | null
           name: string | null
+          phone_number: string | null
           profession: string | null
           rating: number | null
           review_count: number | null
           specialties: string[] | null
           status: string | null
+          sub_specializations: string[] | null
+          updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           about?: string | null
-          areas?: string | null
-          certifications?: string[] | null
-          city?: string | null
-          company_name?: string | null
+          created_at?: string | null
+          email?: string | null
           experience_range?: string | null
-          experience_years?: string | null
           id?: string | null
           image?: string | null
-          image_url?: string | null
           is_verified?: boolean | null
           location?: string | null
           name?: string | null
+          phone_number?: string | null
           profession?: string | null
           rating?: number | null
           review_count?: number | null
           specialties?: string[] | null
           status?: string | null
+          sub_specializations?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           about?: string | null
-          areas?: string | null
-          certifications?: string[] | null
-          city?: string | null
-          company_name?: string | null
+          created_at?: string | null
+          email?: string | null
           experience_range?: string | null
-          experience_years?: string | null
           id?: string | null
           image?: string | null
-          image_url?: string | null
           is_verified?: boolean | null
           location?: string | null
           name?: string | null
+          phone_number?: string | null
           profession?: string | null
           rating?: number | null
           review_count?: number | null
           specialties?: string[] | null
           status?: string | null
+          sub_specializations?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
