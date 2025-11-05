@@ -133,12 +133,14 @@ export const submitSignupForm = async (
           ? formData.otherProfession
           : getProfessionLabel(formData.professions[0].professionId))
         : null,
-      sub_specializations: allSpecializations.map(spec => {
+      sub_specializations: allSpecializations.flatMap(spec => {
         const [profId, specId] = spec.split(':');
         if (specId === 'other' && formData.otherSpecializations?.[profId]) {
-          return `${profId}:${formData.otherSpecializations[profId]}`;
+          return formData.otherSpecializations[profId]
+            .filter(val => val.trim())
+            .map(val => `${profId}:${val}`);
         }
-        return getSpecializationLabel(profId, specId);
+        return [getSpecializationLabel(profId, specId)];
       }),
       profession: formData.professions.length > 0 
         ? (formData.professions[0].professionId === "other-profession" && formData.otherProfession
@@ -149,12 +151,12 @@ export const submitSignupForm = async (
           return field ? field.label : formData.workFields[0];
         })() : "לא צוין"),
       specialties: allSpecializations.length > 0 
-        ? allSpecializations.map(spec => {
+        ? allSpecializations.flatMap(spec => {
             const [profId, specId] = spec.split(':');
             if (specId === 'other' && formData.otherSpecializations?.[profId]) {
-              return formData.otherSpecializations[profId];
+              return formData.otherSpecializations[profId].filter(val => val.trim());
             }
-            return getSpecializationLabel(profId, specId);
+            return [getSpecializationLabel(profId, specId)];
           })
         : formData.workFields,
       email: formData.email.toLowerCase().trim(),

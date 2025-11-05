@@ -20,7 +20,7 @@ export const useFormState = () => {
     acceptTerms: false,
     acceptMarketing: false,
     otherProfession: "",
-    otherSpecializations: {}
+    otherSpecializations: {} as Record<string, string[]>
   };
 
   const [formData, setFormData] = useState<SignupFormData>(initialData);

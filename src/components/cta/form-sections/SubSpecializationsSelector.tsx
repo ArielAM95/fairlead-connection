@@ -1,6 +1,8 @@
 import React from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { X, Plus } from "lucide-react";
 import { getSpecializationsByProfession, getProfessionLabel } from '../data/professionsAndSpecializations';
 import { ProfessionSelection, SignupFormData } from '@/types/signupForm';
 
@@ -75,19 +77,69 @@ export const SubSpecializationsSelector = ({
                     </label>
                   </div>
                   {spec.id === "other" && profession.specializations.includes("other") && (
-                    <Input
-                      type="text"
-                      value={formData.otherSpecializations?.[profession.professionId] || ""}
-                      onChange={(e) => setFormData({ 
-                        ...formData, 
-                        otherSpecializations: {
-                          ...formData.otherSpecializations,
-                          [profession.professionId]: e.target.value
-                        }
-                      })}
-                      placeholder="פרט את התת התמחות..."
-                      className="mt-2"
-                    />
+                    <div className="mt-2 space-y-2">
+                      {(formData.otherSpecializations?.[profession.professionId] || ['']).map((value, index) => (
+                        <div key={index} className="flex gap-2">
+                          <Input
+                            type="text"
+                            value={value}
+                            onChange={(e) => {
+                              const currentValues = formData.otherSpecializations?.[profession.professionId] || [''];
+                              const newValues = [...currentValues];
+                              newValues[index] = e.target.value;
+                              setFormData({ 
+                                ...formData, 
+                                otherSpecializations: {
+                                  ...formData.otherSpecializations,
+                                  [profession.professionId]: newValues
+                                }
+                              });
+                            }}
+                            placeholder={`תת התמחות ${index + 1}...`}
+                            className="flex-1"
+                          />
+                          {(formData.otherSpecializations?.[profession.professionId]?.length || 0) > 1 && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => {
+                                const currentValues = formData.otherSpecializations?.[profession.professionId] || [];
+                                const newValues = currentValues.filter((_, i) => i !== index);
+                                setFormData({ 
+                                  ...formData, 
+                                  otherSpecializations: {
+                                    ...formData.otherSpecializations,
+                                    [profession.professionId]: newValues.length > 0 ? newValues : ['']
+                                  }
+                                });
+                              }}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      ))}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const currentValues = formData.otherSpecializations?.[profession.professionId] || [''];
+                          setFormData({ 
+                            ...formData, 
+                            otherSpecializations: {
+                              ...formData.otherSpecializations,
+                              [profession.professionId]: [...currentValues, '']
+                            }
+                          });
+                        }}
+                        className="w-full"
+                      >
+                        <Plus className="h-4 w-4 ml-2" />
+                        הוספת תת התמחות נוספת
+                      </Button>
+                    </div>
                   )}
                 </div>
               ))}
