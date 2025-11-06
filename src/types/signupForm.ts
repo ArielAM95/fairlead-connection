@@ -21,7 +21,7 @@ export interface SignupFormData {
   acceptTerms: boolean;
   acceptMarketing: boolean;
   otherProfession?: string;
-  otherSpecializations?: Record<string, string>;
+  otherSpecializations?: Record<string, string[]>;
 }
 
 export interface SignupFormErrors {

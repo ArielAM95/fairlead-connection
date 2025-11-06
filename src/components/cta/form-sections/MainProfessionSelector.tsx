@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
 import { Search, X } from 'lucide-react';
-import { professionsWithSpecializations, getProfessionLabel } from '../data/professionsAndSpecializations';
 import { ProfessionSelection, SignupFormData } from '@/types/signupForm';
+import { useProfessions } from '@/hooks/useProfessions';
 
 interface MainProfessionSelectorProps {
   selectedProfessions: ProfessionSelection[];
@@ -25,9 +25,16 @@ export const MainProfessionSelector = ({
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   
-  const filteredProfessions = professionsWithSpecializations.filter(p =>
+  const { data: professions = [], isLoading } = useProfessions();
+  
+  const filteredProfessions = professions.filter(p =>
     p.label.includes(searchTerm)
   );
+  
+  const getProfessionLabel = (professionId: string) => {
+    const profession = professions.find(p => p.profession_id === professionId);
+    return profession?.label || professionId;
+  };
   
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -41,10 +48,13 @@ export const MainProfessionSelector = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
   
-  const handleSelectProfession = (professionId: string) => {
-    onProfessionToggle(professionId);
-    setSearchTerm("");
-    setIsOpen(false);
+  const handleSelectProfession = (professionPk: string) => {
+    const profession = professions.find(p => p.id === professionPk);
+    if (profession) {
+      onProfessionToggle(profession.profession_id);
+      setSearchTerm("");
+      setIsOpen(false);
+    }
   };
   
   const handleRemoveProfession = (professionId: string) => {
@@ -113,9 +123,13 @@ export const MainProfessionSelector = ({
         
         {isOpen && searchTerm && (
           <div className="absolute z-50 w-full mt-1 bg-background border border-border rounded-lg shadow-lg max-h-60 overflow-auto">
-            {filteredProfessions.length > 0 ? (
+            {isLoading ? (
+              <div className="p-3 text-center text-muted-foreground text-sm">
+                טוען מקצועות...
+              </div>
+            ) : filteredProfessions.length > 0 ? (
               filteredProfessions.map(profession => {
-                const isSelected = selectedProfessions.some(p => p.professionId === profession.id);
+                const isSelected = selectedProfessions.some(p => p.professionId === profession.profession_id);
                 return (
                   <div
                     key={profession.id}
@@ -130,7 +144,10 @@ export const MainProfessionSelector = ({
               })
             ) : (
               <div 
-                onClick={() => handleSelectProfession("other-profession")}
+                onClick={() => {
+                  const otherProf = professions.find(p => p.profession_id === "other-profession");
+                  if (otherProf) handleSelectProfession(otherProf.id);
+                }}
                 className="p-3 hover:bg-muted cursor-pointer transition-colors text-sm text-center"
               >
                 <span className="text-foreground font-medium">🔍 לא מצאתי את המקצוע שלי - הוסף אחר</span>
