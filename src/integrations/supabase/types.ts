@@ -1738,6 +1738,9 @@ export type Database = {
       }
       professions: {
         Row: {
+          client_retention_days: number | null
+          commission_category: string | null
+          commission_explanation: string | null
           created_at: string | null
           display_order: number
           id: string
@@ -1747,6 +1750,9 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          client_retention_days?: number | null
+          commission_category?: string | null
+          commission_explanation?: string | null
           created_at?: string | null
           display_order: number
           id?: string
@@ -1756,6 +1762,9 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          client_retention_days?: number | null
+          commission_category?: string | null
+          commission_explanation?: string | null
           created_at?: string | null
           display_order?: number
           id?: string

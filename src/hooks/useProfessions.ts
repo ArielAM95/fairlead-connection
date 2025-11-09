@@ -6,6 +6,9 @@ export interface Profession {
   profession_id: string;
   label: string;
   display_order: number;
+  commission_category?: 'A' | 'B' | 'C' | 'D_contractor' | 'D_hvac';
+  client_retention_days?: 30 | 60 | 180;
+  commission_explanation?: string;
 }
 
 export const useProfessions = () => {

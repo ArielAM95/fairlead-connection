@@ -7,9 +7,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { commissionsData } from '@/data/commissionData';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search } from 'lucide-react';
+import { useProfessions } from '@/hooks/useProfessions';
 
 interface ProfessionSelectorProps {
   value: string;
@@ -17,19 +17,33 @@ interface ProfessionSelectorProps {
 }
 
 const ProfessionSelector = ({ value, onChange }: ProfessionSelectorProps) => {
+  const { data: professions, isLoading } = useProfessions();
   const [searchTerm, setSearchTerm] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
   // Filter and sort professions
   const filteredProfessions = useMemo(() => {
-    const filtered = commissionsData.filter(p =>
-      p.professionLabel.includes(searchTerm)
-    );
+    if (!professions) return [];
     
-    return filtered.sort((a, b) => 
-      a.professionLabel.localeCompare(b.professionLabel, 'he')
+    // Filter only professions with commission_category defined
+    const commissionsEnabled = professions.filter(p => p.commission_category);
+    
+    if (!searchTerm) return commissionsEnabled;
+    
+    return commissionsEnabled.filter(profession =>
+      profession.label.includes(searchTerm)
+    ).sort((a, b) => 
+      a.label.localeCompare(b.label, 'he')
     );
-  }, [searchTerm]);
+  }, [professions, searchTerm]);
+
+  if (isLoading) {
+    return (
+      <div className="h-14 flex items-center justify-center border-2 border-primary/20 rounded-md">
+        <span className="text-muted-foreground">טוען מקצועות...</span>
+      </div>
+    );
+  }
 
   return (
     <Select value={value} onValueChange={onChange} open={isOpen} onOpenChange={setIsOpen}>
@@ -63,11 +77,11 @@ const ProfessionSelector = ({ value, onChange }: ProfessionSelectorProps) => {
             ) : (
               filteredProfessions.map(profession => (
                 <SelectItem 
-                  key={profession.professionId} 
-                  value={profession.professionId}
+                  key={profession.profession_id} 
+                  value={profession.profession_id}
                   className="text-right py-3 px-4 hover:bg-accent/10 cursor-pointer rounded-md my-1 flex justify-end"
                 >
-                  {profession.professionLabel}
+                  {profession.label}
                 </SelectItem>
               ))
             )}

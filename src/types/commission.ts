@@ -1,17 +1,10 @@
+export type CommissionCategory = 'A' | 'B' | 'C' | 'D_contractor' | 'D_hvac';
+
 export interface CommissionCalculation {
   percentage: string;
   commission: number;
   netAmount: number;
   breakdown?: string;
-}
-
-export interface CommissionInfo {
-  professionId: string;
-  professionLabel: string;
-  category: 'A' | 'B' | 'C' | 'D';
-  calculateCommission: (amount: number) => CommissionCalculation;
-  explanation: string;
-  clientRetentionDays: 30 | 60 | 180;
 }
 
 export interface CommissionResultProps {

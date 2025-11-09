@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import ProfessionSelector from './ProfessionSelector';
-import { getCommissionInfo } from '@/data/commissionData';
+import { useProfessions } from '@/hooks/useProfessions';
+import { calculateCommission } from '@/utils/commissionCalculations';
 import { CommissionCalculation } from '@/types/commission';
 
 interface CommissionFormProps {
@@ -18,6 +19,7 @@ interface CommissionFormProps {
 }
 
 const CommissionForm = ({ onCalculate }: CommissionFormProps) => {
+  const { data: professions } = useProfessions();
   const [professionId, setProfessionId] = useState('');
   const [amount, setAmount] = useState('');
   const [errors, setErrors] = useState<{ profession?: string; amount?: string }>({});
@@ -41,20 +43,20 @@ const CommissionForm = ({ onCalculate }: CommissionFormProps) => {
       return;
     }
     
-    const commissionInfo = getCommissionInfo(professionId);
-    if (!commissionInfo) {
-      setErrors({ profession: 'מקצוע לא נמצא' });
+    const profession = professions?.find(p => p.profession_id === professionId);
+    if (!profession || !profession.commission_category) {
+      setErrors({ profession: 'מקצוע לא נמצא או אין לו הגדרת עמלה' });
       return;
     }
     
-    const calculation = commissionInfo.calculateCommission(numAmount);
+    const calculation = calculateCommission(profession.commission_category, numAmount);
     
     onCalculate({
-      professionLabel: commissionInfo.professionLabel,
+      professionLabel: profession.label,
       amount: numAmount,
       calculation,
-      explanation: commissionInfo.explanation,
-      clientRetentionDays: commissionInfo.clientRetentionDays
+      explanation: profession.commission_explanation || '',
+      clientRetentionDays: profession.client_retention_days || 30
     });
     
     setErrors({});
