@@ -50,7 +50,7 @@ const ProfessionSelector = ({ value, onChange }: ProfessionSelectorProps) => {
       <SelectTrigger className="w-full h-14 text-lg border-2 border-primary/20 hover:border-primary/40 transition-colors">
         <SelectValue placeholder="בחר מקצוע..." />
       </SelectTrigger>
-      <SelectContent className="max-h-[450px] bg-card z-50">
+      <SelectContent className="max-h-[450px] bg-card z-50" side="bottom" align="start" sideOffset={5}>
         {/* Search Input */}
         <div className="p-3 border-b border-border bg-card sticky top-0 z-10">
           <div className="relative">
@@ -59,10 +59,17 @@ const ProfessionSelector = ({ value, onChange }: ProfessionSelectorProps) => {
               type="text"
               placeholder="חפש מקצוע..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={(e) => e.stopPropagation()}
+              onChange={(e) => {
+                e.stopPropagation();
+                setSearchTerm(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                e.stopPropagation();
+              }}
+              onMouseDown={(e) => {
+                e.stopPropagation();
+              }}
               className="pr-10 bg-background text-right"
-              onClick={(e) => e.stopPropagation()}
               autoFocus
             />
           </div>
