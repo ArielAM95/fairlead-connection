@@ -56,22 +56,73 @@ export const submitSignupForm = async (
   try {
     console.log("Starting form submission process with data:", formData);
     
-    const { getProfessionLabel, getSpecializationLabel } = await import('@/components/cta/data/professionsAndSpecializations');
+    // Build mapping from DB for professions and specializations (Hebrew labels)
+    const selectedProfessionIds = formData.professions.map(p => p.professionId);
+
+    const { data: profRows, error: profFetchError } = await supabase
+      .from('professions')
+      .select('id, profession_id, label')
+      .in('profession_id', selectedProfessionIds);
+    if (profFetchError) throw profFetchError;
+
+    const profIdToLabel = new Map<string, string>();
+    const profIdToPk = new Map<string, string>();
+    (profRows || []).forEach((p: any) => {
+      profIdToLabel.set(p.profession_id, p.label);
+      profIdToPk.set(p.profession_id, p.id);
+    });
+
+    const professionPks = Array.from(profIdToPk.values());
+    const { data: specRows, error: specFetchError } = professionPks.length
+      ? await supabase
+          .from('profession_specializations')
+          .select('profession_id, specialization_id, label')
+          .in('profession_id', professionPks)
+          .eq('is_active', true)
+      : ({ data: [], error: null } as any);
+    if (specFetchError) throw specFetchError as any;
+
+    const specsMap = new Map<string, Map<string, string>>();
+    (specRows as any[]).forEach((s: any) => {
+      if (!specsMap.has(s.profession_id)) specsMap.set(s.profession_id, new Map());
+      specsMap.get(s.profession_id)!.set(s.specialization_id, s.label);
+    });
+
+    const getProfessionLabelDb = (professionId: string) =>
+      professionId === 'other-profession' && formData.otherProfession
+        ? formData.otherProfession
+        : (profIdToLabel.get(professionId) || professionId);
+
+    const getSpecLabelDb = (professionId: string, specId: string) => {
+      const pk = profIdToPk.get(professionId);
+      if (!pk) return specId;
+      const label = specsMap.get(pk)?.get(specId);
+      return label || specId;
+    };
     
+    // Work fields in Hebrew
     const workFieldsInHebrew = formData.workFields.map(fieldId => {
       if (fieldId === "other") return formData.otherWorkField || "אחר";
       const field = workFields.find(f => f.id === fieldId);
       return field ? field.label : fieldId;
     }).join(", ");
     
-    const workRegionsInHebrew = formData.workRegions.join(", ");
+    const workRegionsInHebrew = formData.workRegions
+      .map(regionId => workRegions.find(r => r.id === regionId)?.label || regionId)
+      .join(", ");
     
-    // Format professions and specializations for webhook
+    // Format professions and specializations for webhook (Hebrew)
     const professionsFormatted = formData.professions.map(prof => {
-      const profLabel = getProfessionLabel(prof.professionId);
-      const specs = prof.specializations
-        .map(specId => getSpecializationLabel(prof.professionId, specId))
-        .join(", ");
+      const profLabel = getProfessionLabelDb(prof.professionId);
+      const specLabels: string[] = [];
+      prof.specializations.forEach(specId => {
+        if (specId === 'other' && formData.otherSpecializations?.[prof.professionId]?.length) {
+          specLabels.push(...formData.otherSpecializations[prof.professionId].filter(v => v.trim()));
+        } else {
+          specLabels.push(getSpecLabelDb(prof.professionId, specId));
+        }
+      });
+      const specs = specLabels.filter(Boolean).join(", ");
       return specs ? `${profLabel} (${specs})` : profLabel;
     }).join(" | ");
     
@@ -119,46 +170,35 @@ export const submitSignupForm = async (
       '10+': '11'
     };
 
-    // Improved professional data preparation - ensuring required fields are provided
-    // Convert experience_years to string to match the database schema
-    // For professions: save first profession as main_profession, all specializations as sub_specializations array
-    const allSpecializations = formData.professions.flatMap(prof => 
-      prof.specializations.map(specId => `${prof.professionId}:${specId}`)
-    );
+    // Build all specialization labels (Hebrew) from DB mapping and user input
+    const allSpecLabels = formData.professions.flatMap(prof => {
+      const labels: string[] = [];
+      prof.specializations.forEach(specId => {
+        if (specId === 'other' && formData.otherSpecializations?.[prof.professionId]?.length) {
+          labels.push(...(formData.otherSpecializations[prof.professionId] || []).filter(v => v.trim()));
+        } else {
+          labels.push(getSpecLabelDb(prof.professionId, specId));
+        }
+      });
+      return labels;
+    });
     
+    const primaryProfessionLabel = formData.professions.length > 0
+      ? getProfessionLabelDb(formData.professions[0].professionId)
+      : null;
+    
+    const specialtiesFallback = formData.workFields.map(fieldId => {
+      if (fieldId === "other") return formData.otherWorkField || "אחר";
+      const field = workFields.find(f => f.id === fieldId);
+      return field ? field.label : fieldId;
+    });
+
     const professionalData = {
       name: `${formData.firstName} ${formData.lastName}`.trim(),
-      main_profession: formData.professions.length > 0 
-        ? (formData.professions[0].professionId === "other-profession" && formData.otherProfession
-          ? formData.otherProfession
-          : getProfessionLabel(formData.professions[0].professionId))
-        : null,
-      sub_specializations: allSpecializations.flatMap(spec => {
-        const [profId, specId] = spec.split(':');
-        if (specId === 'other' && formData.otherSpecializations?.[profId]) {
-          return formData.otherSpecializations[profId]
-            .filter(val => val.trim())
-            .map(val => `${profId}:${val}`);
-        }
-        return [getSpecializationLabel(profId, specId)];
-      }),
-      profession: formData.professions.length > 0 
-        ? (formData.professions[0].professionId === "other-profession" && formData.otherProfession
-          ? formData.otherProfession
-          : getProfessionLabel(formData.professions[0].professionId))
-        : (formData.workFields[0] ? (() => {
-          const field = workFields.find(f => f.id === formData.workFields[0]);
-          return field ? field.label : formData.workFields[0];
-        })() : "לא צוין"),
-      specialties: allSpecializations.length > 0 
-        ? allSpecializations.flatMap(spec => {
-            const [profId, specId] = spec.split(':');
-            if (specId === 'other' && formData.otherSpecializations?.[profId]) {
-              return formData.otherSpecializations[profId].filter(val => val.trim());
-            }
-            return [getSpecializationLabel(profId, specId)];
-          })
-        : formData.workFields,
+      main_profession: primaryProfessionLabel,
+      sub_specializations: allSpecLabels,
+      profession: primaryProfessionLabel ?? (specialtiesFallback[0] || "לא צוין"),
+      specialties: allSpecLabels.length > 0 ? allSpecLabels : specialtiesFallback,
       email: formData.email.toLowerCase().trim(),
       phone_number: formData.phone ? formData.phone.trim() : null,
       company_name: formData.companyName || null,
@@ -166,7 +206,7 @@ export const submitSignupForm = async (
       experience_years: experienceYearsMap[formData.experience] || '1',
       city: formData.city || "לא צוין",
       location: formData.city || "לא צוין",
-      areas: formData.workRegions.join(", "), // Already in Hebrew
+      areas: workRegionsInHebrew, // now in Hebrew
       terms_accepted: formData.acceptTerms,
       marketing_consent: formData.acceptMarketing,
       registration_payment_status: 'pending',
