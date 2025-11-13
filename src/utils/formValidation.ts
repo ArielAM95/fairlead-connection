@@ -5,9 +5,10 @@ export const validateEmail = (email: string): boolean => {
 };
 
 export const validatePhone = (phone: string): boolean => {
-  // Simple Israeli phone number validation
-  const phoneRegex = /^0[2-9]\d{7,8}$/;
-  return phoneRegex.test(phone.replace(/-/g, ''));
+  // Israeli phone number validation - 10 digits maximum (05XXXXXXXX or 0[2-9]XXXXXXXX)
+  const cleanPhone = phone.replace(/[\s-]/g, '');
+  const phoneRegex = /^0[2-9]\d{8}$/;
+  return phoneRegex.test(cleanPhone) || /^05\d{8}$/.test(cleanPhone);
 };
 
 export const sanitizeEmail = (email: string): string => {

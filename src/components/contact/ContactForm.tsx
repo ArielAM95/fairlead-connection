@@ -41,9 +41,10 @@ const ContactForm = ({ onSubmit }: ContactFormProps) => {
   };
 
   const validatePhone = (phone: string) => {
-    // Simple Israeli phone number validation
-    const phoneRegex = /^0[2-9]\d{7,8}$/;
-    return phoneRegex.test(phone.replace(/-/g, ''));
+    // Israeli phone number validation - 10 digits maximum
+    const cleanPhone = phone.replace(/[\s-]/g, '');
+    const phoneRegex = /^0[2-9]\d{8}$/;
+    return phoneRegex.test(cleanPhone) || /^05\d{8}$/.test(cleanPhone);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -183,6 +184,7 @@ const ContactForm = ({ onSubmit }: ContactFormProps) => {
             className="bg-gray-50 border-gray-200"
             dir="ltr"
             placeholder="05X-XXXXXXX"
+            maxLength={10}
             error={!!errors.phone}
             errorMessage={errors.phone}
           />
