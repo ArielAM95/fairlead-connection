@@ -64,6 +64,7 @@ export const PersonalInfoSection = ({
           className="bg-gray-50 border-gray-200"
           dir="ltr"
           placeholder="05X-XXXXXXX"
+          maxLength={10}
           error={!!phoneError}
           errorMessage={phoneError}
         />
