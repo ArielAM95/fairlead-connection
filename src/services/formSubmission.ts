@@ -26,6 +26,9 @@ export const submitContactForm = async (formData: ContactFormData): Promise<void
 
   // 2. שמירה ב-Supabase
   try {
+    // Import getUtmParams at the top of the file
+    const { getUtmParams } = await import('@/utils/utmUtils');
+    
     const { error: dbError } = await supabase
       .from('contact_inquiries' as any)
       .insert({
@@ -34,7 +37,8 @@ export const submitContactForm = async (formData: ContactFormData): Promise<void
         email: formData.email,
         phone_number: formData.phone,
         message: formData.message || "",
-        source: 'website'
+        source: 'website',
+        utm_params: getUtmParams()
       });
 
     if (dbError) {
@@ -204,6 +208,7 @@ export const submitSignupForm = async (
       company_name: formData.companyName || null,
       business_license_number: formData.businessLicenseNumber || null,
       experience_years: experienceYearsMap[formData.experience] || '1',
+      utm_params: utmParams,
       city: formData.city || "לא צוין",
       location: formData.city || "לא צוין",
       areas: workRegionsInHebrew, // now in Hebrew
