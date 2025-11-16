@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { T } from "@/components/translation/T";
 
 const Terms = () => {
   useEffect(() => {
@@ -15,19 +16,19 @@ const Terms = () => {
   return (
     <div className="overflow-x-hidden">
       <Navbar />
-      
+
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="max-w-4xl mx-auto">
           <Link to="/" className="inline-block mb-8">
             <Button variant="outline" className="flex items-center gap-2">
               <ArrowRight size={16} />
-              <span>חזרה לדף הבית</span>
+              <span><T>חזרה לדף הבית</T></span>
             </Button>
           </Link>
-          
+
           <div className="prose prose-lg prose-blue">
-            <h1 className="text-3xl md:text-4xl font-bold mb-6">תקנון ותנאי שימוש – פלטפורמת oFair</h1>
-            <p className="font-medium text-gray-500">עודכן: פברואר 2025</p>
+            <h1 className="text-3xl md:text-4xl font-bold mb-6"><T>תקנון ותנאי שימוש – פלטפורמת oFair</T></h1>
+            <p className="font-medium text-gray-500"><T>עודכן: פברואר 2025</T></p>
             
             <h2 className="text-2xl font-bold mt-8 mb-4">1. תקציר כללי</h2>
             <p>1.1. מסמך זה ("ההסכם") מהווה את תקנון תנאי השימוש ומדיניות הפרטיות של פלטפורמת <strong>oFair</strong> (להלן: "המערכת" או "הפלטפורמה"), המופעלת על ידי חברת <code>Ofair Platform</code>, הממוקמת בכתובת העסק הרשומה <code>יוסף אבו, נתיבות, ישראל</code>, (להלן: "בעלת המערכת" או "החברה"). ההסכם חל על כל המשתמשים והמבקרים באתר oFair.co.il ובכל דומיין קשור אחר, לרבות כל עמוד או כתובת אחסון דיגיטלית שמפורסמת מטעם הפלטפורמה, וכן על כל אפליקציה או ממשק אחר המופעל על ידי ו/או באמצעות בעלת המערכת.</p>
@@ -125,7 +126,7 @@ const Terms = () => {
             
             <hr className="my-8" />
             
-            <p className="font-bold text-lg text-center mt-12">תודה שקראתם את התנאים. שימושכם במערכת מהווה הסכמה מלאה לאמור לעיל. אנו מאחלים לכם שימוש יעיל ומוצלח ב-oFair!</p>
+            <p className="font-bold text-lg text-center mt-12"><T>תודה שקראתם את התנאים. שימושכם במערכת מהווה הסכמה מלאה לאמור לעיל. אנו מאחלים לכם שימוש יעיל ומוצלח ב-oFair!</T></p>
           </div>
         </div>
       </div>

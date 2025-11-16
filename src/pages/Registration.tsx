@@ -6,6 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { T } from '@/components/translation/T';
+import { useTranslatedText } from '@/hooks/useTranslatedText';
 
 // Tranzila SDK Types
 declare global {
@@ -336,6 +338,10 @@ export default function Registration() {
     }
   };
 
+  const payButtonText = useTranslatedText(`שלם ₪${REGISTRATION_FEE} והירשם`);
+  const processingText = useTranslatedText("מעבד תשלום...");
+  const phonePlaceholder = useTranslatedText("050-1234567");
+
   return (
     <div className="min-h-screen bg-background py-12 px-4">
       <div className="max-w-2xl mx-auto">
@@ -344,24 +350,24 @@ export default function Registration() {
           <div className="text-center space-y-2">
             {isPaymentLink ? (
               <>
-                <h1 className="text-3xl font-bold text-foreground">השלמת תשלום הרשמה</h1>
+                <h1 className="text-3xl font-bold text-foreground"><T>השלמת תשלום הרשמה</T></h1>
                 {professionalName && (
-                  <p className="text-xl text-foreground">שלום {professionalName}!</p>
+                  <p className="text-xl text-foreground"><T>שלום</T> {professionalName}!</p>
                 )}
                 <p className="text-lg text-muted-foreground">
-                  נא להשלים את תשלום דמי ההרשמה בסך ₪{REGISTRATION_FEE}
+                  <T>נא להשלים את תשלום דמי ההרשמה בסך</T> ₪{REGISTRATION_FEE}
                 </p>
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
                   <p className="text-sm text-blue-800">
-                    📱 קישור תשלום עבור: <span className="font-semibold" dir="ltr">{phoneNumber}</span>
+                    📱 <T>קישור תשלום עבור:</T> <span className="font-semibold" dir="ltr">{phoneNumber}</span>
                   </p>
                 </div>
               </>
             ) : (
               <>
-                <h1 className="text-3xl font-bold text-foreground">דף בדיקה - תשלום הרשמה</h1>
-                <p className="text-lg text-muted-foreground">דמי הרשמה: ₪{REGISTRATION_FEE} כולל מע"מ</p>
-                <p className="text-sm text-muted-foreground">הזן מספר טלפון של משתמש קיים במערכת</p>
+                <h1 className="text-3xl font-bold text-foreground"><T>דף בדיקה - תשלום הרשמה</T></h1>
+                <p className="text-lg text-muted-foreground"><T>דמי הרשמה:</T> ₪{REGISTRATION_FEE} <T>כולל מע"מ</T></p>
+                <p className="text-sm text-muted-foreground"><T>הזן מספר טלפון של משתמש קיים במערכת</T></p>
               </>
             )}
           </div>
@@ -369,21 +375,21 @@ export default function Registration() {
           {/* Phone number only - Hidden if payment link */}
           {!isPaymentLink && (
             <div className="bg-card p-6 rounded-lg border border-border space-y-4">
-              <h2 className="text-xl font-semibold text-card-foreground">מספר טלפון</h2>
+              <h2 className="text-xl font-semibold text-card-foreground"><T>מספר טלפון</T></h2>
 
               <div className="space-y-2">
-                <Label htmlFor="phone">טלפון *</Label>
+                <Label htmlFor="phone"><T>טלפון</T> *</Label>
                 <Input
                   id="phone"
                   type="tel"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  placeholder="050-1234567"
+                  placeholder={phonePlaceholder}
                   dir="ltr"
                   required
                 />
                 <p className="text-sm text-muted-foreground">
-                  המספר חייב להיות קיים בטבלת professionals
+                  <T>המספר חייב להיות קיים בטבלת professionals</T>
                 </p>
               </div>
             </div>
@@ -391,29 +397,29 @@ export default function Registration() {
 
           {/* פרטי תשלום - Hosted Fields */}
           <div className="bg-card p-6 rounded-lg border border-border space-y-4">
-            <h2 className="text-xl font-semibold text-card-foreground">פרטי תשלום</h2>
-            
+            <h2 className="text-xl font-semibold text-card-foreground"><T>פרטי תשלום</T></h2>
+
             <div className="space-y-2">
-              <Label>מספר כרטיס *</Label>
-              <div 
-                id="hosted-card-number" 
+              <Label><T>מספר כרטיס</T> *</Label>
+              <div
+                id="hosted-card-number"
                 className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>תוקף (MM/YY) *</Label>
-                <div 
-                  id="hosted-expiry" 
+                <Label><T>תוקף (MM/YY)</T> *</Label>
+                <div
+                  id="hosted-expiry"
                   className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
                 />
               </div>
 
               <div className="space-y-2">
                 <Label>CVV *</Label>
-                <div 
-                  id="hosted-cvv" 
+                <div
+                  id="hosted-cvv"
                   className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
                 />
               </div>
@@ -432,14 +438,14 @@ export default function Registration() {
               htmlFor="save-card"
               className="text-sm font-normal cursor-pointer leading-tight"
             >
-              שמור את פרטי הכרטיס לשימוש עתידי באפליקציה
+              <T>שמור את פרטי הכרטיס לשימוש עתידי באפליקציה</T>
             </Label>
           </div>
 
           {/* הודעת אבטחה */}
           <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 p-3 rounded-md">
             <span className="text-lg">🔒</span>
-            <p>פרטי הכרטיס מוצפנים ומאובטחים על ידי Tranzila</p>
+            <p><T>פרטי הכרטיס מוצפנים ומאובטחים על ידי Tranzila</T></p>
           </div>
 
           {/* כפתור שליחה */}
@@ -452,18 +458,18 @@ export default function Registration() {
             {isSubmitting ? (
               <span className="flex items-center gap-2">
                 <span className="animate-spin">⏳</span>
-                מעבד תשלום...
+                {processingText}
               </span>
             ) : (
-              `שלם ₪${REGISTRATION_FEE} והירשם`
+              payButtonText
             )}
           </Button>
 
           {/* סטטוס */}
           <div className="text-center text-sm text-muted-foreground">
-            {!sdkLoaded && <p>טוען מערכת תשלום...</p>}
-            {sdkLoaded && !fieldsReady && <p>מכין שדות תשלום...</p>}
-            {fieldsReady && <p className="text-green-600">✓ מערכת התשלום מוכנה</p>}
+            {!sdkLoaded && <p><T>טוען מערכת תשלום...</T></p>}
+            {sdkLoaded && !fieldsReady && <p><T>מכין שדות תשלום...</T></p>}
+            {fieldsReady && <p className="text-green-600">✓ <T>מערכת התשלום מוכנה</T></p>}
           </div>
         </form>
       </div>

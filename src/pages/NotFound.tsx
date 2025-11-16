@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
+import { T } from "@/components/translation/T";
 
 const NotFound = () => {
   const location = useLocation();
@@ -24,14 +25,14 @@ const NotFound = () => {
             </svg>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold mb-4 text-ofair-900">404</h1>
-          <p className="text-xl text-gray-600 mb-8">אופס! העמוד שחיפשת לא נמצא</p>
+          <p className="text-xl text-gray-600 mb-8"><T>אופס! העמוד שחיפשת לא נמצא</T></p>
         </div>
-        
-        <Button 
+
+        <Button
           className="bg-ofair-900 hover:bg-ofair-800 text-white button-pulse"
           onClick={() => window.location.href = "/"}
         >
-          <span>חזרה לעמוד הבית</span>
+          <span><T>חזרה לעמוד הבית</T></span>
           <ChevronRight className="mr-2 h-4 w-4" />
         </Button>
       </div>
