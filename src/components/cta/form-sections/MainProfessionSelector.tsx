@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Search, X } from 'lucide-react';
 import { ProfessionSelection, SignupFormData } from '@/types/signupForm';
 import { useProfessions } from '@/hooks/useProfessions';
+import { T } from "@/components/translation/T";
+import { useTranslatedText } from "@/hooks/useTranslatedText";
 
 interface MainProfessionSelectorProps {
   selectedProfessions: ProfessionSelection[];
@@ -61,10 +63,14 @@ export const MainProfessionSelector = ({
     onProfessionToggle(professionId);
   };
   
+  const searchPlaceholder = useTranslatedText("חפש מקצוע להוספה...");
+  const otherProfessionPlaceholder = useTranslatedText("פרט את המקצוע שלך... *");
+  const removeProfessionLabel = useTranslatedText("הסר מקצוע");
+
   return (
     <div className="space-y-3">
       <label className="block text-sm font-medium text-foreground mb-2">
-        מה המקצועות שלך? * (ניתן לבחור מספר)
+        <T>מה המקצועות שלך? * (ניתן לבחור מספר)</T>
       </label>
       
       {selectedProfessions.length > 0 && (
@@ -75,13 +81,13 @@ export const MainProfessionSelector = ({
                 className="flex items-center gap-2 bg-primary/10 border border-primary/30 px-3 py-2 rounded-lg"
               >
                 <span className="text-sm font-medium text-foreground">
-                  ✅ {prof.professionId === "other-profession" ? formData.otherProfession || "אחר" : getProfessionLabel(prof.professionId)}
+                  ✅ <T>{prof.professionId === "other-profession" ? formData.otherProfession || "אחר" : getProfessionLabel(prof.professionId)}</T>
                 </span>
                 <button
                   type="button"
                   onClick={() => handleRemoveProfession(prof.professionId)}
                   className="text-muted-foreground hover:text-destructive transition-colors"
-                  aria-label="הסר מקצוע"
+                  aria-label={removeProfessionLabel}
                 >
                   <X size={16} />
                 </button>
@@ -92,7 +98,7 @@ export const MainProfessionSelector = ({
                     type="text"
                     value={formData.otherProfession || ""}
                     onChange={(e) => onOtherProfessionChange(e.target.value)}
-                    placeholder="פרט את המקצוע שלך... *"
+                    placeholder={otherProfessionPlaceholder}
                     className={otherProfessionError ? "border-destructive" : ""}
                   />
                   {otherProfessionError && (
@@ -116,7 +122,7 @@ export const MainProfessionSelector = ({
               setIsOpen(true);
             }}
             onFocus={() => setIsOpen(true)}
-            placeholder="חפש מקצוע להוספה..."
+            placeholder={searchPlaceholder}
             className="pr-10"
           />
         </div>
@@ -125,7 +131,7 @@ export const MainProfessionSelector = ({
           <div className="absolute z-50 w-full mt-1 bg-background border border-border rounded-lg shadow-lg max-h-60 overflow-auto">
             {isLoading ? (
               <div className="p-3 text-center text-muted-foreground text-sm">
-                טוען מקצועות...
+                <T>טוען מקצועות...</T>
               </div>
             ) : filteredProfessions.length > 0 ? (
               filteredProfessions.map(profession => {
@@ -138,19 +144,19 @@ export const MainProfessionSelector = ({
                       isSelected ? 'bg-primary/5 font-medium' : ''
                     }`}
                   >
-                    {isSelected && '✅ '}{profession.label}
+                    {isSelected && '✅ '}<T>{profession.label}</T>
                   </div>
                 );
               })
             ) : (
-              <div 
+              <div
                 onClick={() => {
                   const otherProf = professions.find(p => p.profession_id === "other-profession");
                   if (otherProf) handleSelectProfession(otherProf.id);
                 }}
                 className="p-3 hover:bg-muted cursor-pointer transition-colors text-sm text-center"
               >
-                <span className="text-foreground font-medium">🔍 לא מצאתי את המקצוע שלי - הוסף אחר</span>
+                <span className="text-foreground font-medium">🔍 <T>לא מצאתי את המקצוע שלי - הוסף אחר</T></span>
               </div>
             )}
           </div>

@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
+import { T } from "@/components/translation/T";
 
 interface FieldSelectorProps {
   fields: { id: string; label: string }[];
@@ -25,13 +26,13 @@ const FieldSelector = ({ fields, selectedFields, onToggleField, label, showError
               onCheckedChange={() => onToggleField(field.id)} 
             />
             <label htmlFor={`field-${field.id}`} className="text-sm leading-none cursor-pointer">
-              {field.label}
+              <T>{field.label}</T>
             </label>
           </div>
         ))}
       </div>
       {showError && (
-        <p className="text-xs text-red-500 mt-1">יש לבחור לפחות אחד</p>
+        <p className="text-xs text-red-500 mt-1"><T>יש לבחור לפחות אחד</T></p>
       )}
     </div>
   );

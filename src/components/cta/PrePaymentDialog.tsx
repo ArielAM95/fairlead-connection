@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Phone } from "lucide-react";
+import { T } from "@/components/translation/T";
 
 interface PrePaymentDialogProps {
   open: boolean;
@@ -14,7 +15,7 @@ const PrePaymentDialog = ({ open, onClose, onProceedToPayment }: PrePaymentDialo
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-3xl font-bold text-ofair-900 text-center mb-2">
-            הרשמה בוצעה בהצלחה
+            <T>הרשמה בוצעה בהצלחה</T>
           </DialogTitle>
         </DialogHeader>
 
@@ -22,10 +23,10 @@ const PrePaymentDialog = ({ open, onClose, onProceedToPayment }: PrePaymentDialo
           {/* Header Section */}
           <div className="text-center space-y-2">
             <h3 className="text-xl font-bold text-gray-900">
-              נשאר רק שלב אחד – ואתם בפנים!
+              <T>נשאר רק שלב אחד – ואתם בפנים!</T>
             </h3>
             <p className="text-base text-gray-700">
-              כדי להשלים את ההצטרפות לפלטפורמת OFAIR:
+              <T>כדי להשלים את ההצטרפות לפלטפורמת OFAIR:</T>
             </p>
           </div>
 
@@ -34,35 +35,35 @@ const PrePaymentDialog = ({ open, onClose, onProceedToPayment }: PrePaymentDialo
             <div className="flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-green-500 mt-0.5 flex-shrink-0" />
               <p className="text-base text-gray-800">
-                בצעו תשלום חד־פעמי של <span className="font-bold">350 ₪</span> בלבד
+                <T>בצעו תשלום חד־פעמי של</T> <span className="font-bold">350 ₪</span> <T>בלבד</T>
               </p>
             </div>
-            
+
             <div className="flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-green-500 mt-0.5 flex-shrink-0" />
               <p className="text-base text-gray-800">
-                שלחו לנו לפחות <span className="font-bold">5 חשבוניות אחרונות</span> (ללקוחות אמיתיים מהשנה האחרונה)
+                <T>שלחו לנו לפחות</T> <span className="font-bold"><T>5 חשבוניות אחרונות</T></span> <T>(ללקוחות אמיתיים מהשנה האחרונה)</T>
               </p>
             </div>
-            
+
             <div className="flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-green-500 mt-0.5 flex-shrink-0" />
               <p className="text-base text-gray-800">
-                אנחנו נבדוק את הדירוג שלכם מול לקוחות
+                <T>אנחנו נבדוק את הדירוג שלכם מול לקוחות</T>
               </p>
             </div>
-            
+
             <div className="flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-green-500 mt-0.5 flex-shrink-0" />
               <p className="text-base text-gray-800">
-                אם הדירוג <span className="font-bold">4.2 ומעלה</span> – החשבון שלכם יעלה לאוויר באופן רשמי, לתמיד!
+                <T>אם הדירוג</T> <span className="font-bold"><T>4.2 ומעלה</T></span> – <T>החשבון שלכם יעלה לאוויר באופן רשמי, לתמיד!</T>
               </p>
             </div>
-            
+
             <div className="flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-green-500 mt-0.5 flex-shrink-0" />
               <p className="text-base text-gray-800">
-                במקרה שהדירוג נמוך מ־4.2 – תקבלו החזר כספי מלא או תוכלו לשלוח עוד 5 חשבוניות לבדיקה חוזרת.
+                <T>במקרה שהדירוג נמוך מ־4.2 – תקבלו החזר כספי מלא או תוכלו לשלוח עוד 5 חשבוניות לבדיקה חוזרת.</T>
               </p>
             </div>
           </div>
@@ -70,7 +71,7 @@ const PrePaymentDialog = ({ open, onClose, onProceedToPayment }: PrePaymentDialo
           {/* Highlight Box */}
           <div className="bg-cyan-50 border border-cyan-200 p-4 rounded-lg">
             <p className="text-sm text-cyan-900 text-center leading-relaxed">
-              📌 <span className="font-semibold">ככל שתשלחו יותר חשבוניות</span> – כך הדף שלכם ייראה מקצועי, אמין ומלא חוות דעת!
+              📌 <span className="font-semibold"><T>ככל שתשלחו יותר חשבוניות</T></span> – <T>כך הדף שלכם ייראה מקצועי, אמין ומלא חוות דעת!</T>
             </p>
           </div>
 
@@ -80,16 +81,16 @@ const PrePaymentDialog = ({ open, onClose, onProceedToPayment }: PrePaymentDialo
               onClick={onProceedToPayment}
               className="w-full bg-blue-900 hover:bg-blue-800 text-white py-6 text-lg font-bold rounded-xl"
             >
-              🔵 בצע תשלום עכשיו
+              🔵 <T>בצע תשלום עכשיו</T>
             </Button>
-            
+
             <Button
               variant="outline"
               onClick={() => window.open('tel:0123456789', '_self')}
               className="w-full border-2 border-gray-300 hover:bg-gray-50 py-6 text-lg font-bold rounded-xl"
             >
               <Phone className="w-5 h-5 ml-2" />
-              דברו איתנו בטלפון
+              <T>דברו איתנו בטלפון</T>
             </Button>
           </div>
 
@@ -99,21 +100,21 @@ const PrePaymentDialog = ({ open, onClose, onProceedToPayment }: PrePaymentDialo
           {/* Welcome Message */}
           <div className="space-y-4 text-center">
             <p className="text-base text-gray-800">
-              <span className="font-bold">ברוכים הבאים ל-oFair!</span> פרטיך התקבלו בהצלחה.
+              <span className="font-bold"><T>ברוכים הבאים ל-oFair!</T></span> <T>פרטיך התקבלו בהצלחה.</T>
             </p>
-            
+
             <p className="text-sm text-gray-600">
-              נשלח מייל עם הנחיות להמשך התהליך (אם לא מוצאים ממליצים לבדוק גם בספאם)
+              <T>נשלח מייל עם הנחיות להמשך התהליך (אם לא מוצאים ממליצים לבדוק גם בספאם)</T>
             </p>
 
             {/* Social Media Section */}
             <div className="space-y-3 pt-4">
               <p className="text-base text-gray-700 font-medium">
-                ממש יעזור אם תעקבו אחרינו ברשתות החברתיות
+                <T>ממש יעזור אם תעקבו אחרינו ברשתות החברתיות</T>
               </p>
-              
+
               <p className="text-sm text-gray-600 italic">
-                אנחנו איתכם ואתם איתנו - ככה בעז״ה נעשה ונצליח
+                <T>אנחנו איתכם ואתם איתנו - ככה בעז״ה נעשה ונצליח</T>
               </p>
 
               {/* Social Icons */}

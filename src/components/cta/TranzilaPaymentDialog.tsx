@@ -11,6 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { T } from '@/components/translation/T';
+import { useTranslatedText } from '@/hooks/useTranslatedText';
 
 // Tranzila SDK Types
 declare global {
@@ -276,13 +278,16 @@ export default function TranzilaPaymentDialog({
     }
   };
 
+  const payButtonText = useTranslatedText(`שלם ₪${REGISTRATION_FEE}`);
+  const processingText = useTranslatedText("מעבד תשלום...");
+
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && !isProcessing && onClose()}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-ofair-900">ביצוע תשלום</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-ofair-900"><T>ביצוע תשלום</T></DialogTitle>
           <DialogDescription className="text-lg">
-            דמי הרשמה: ₪{REGISTRATION_FEE} כולל מע"מ
+            <T>דמי הרשמה:</T> ₪{REGISTRATION_FEE} <T>כולל מע"מ</T>
           </DialogDescription>
         </DialogHeader>
 
@@ -290,26 +295,26 @@ export default function TranzilaPaymentDialog({
           {/* פרטי תשלום - Hosted Fields */}
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-right block">מספר כרטיס *</Label>
-              <div 
-                id="hosted-card-number" 
+              <Label className="text-right block"><T>מספר כרטיס</T> *</Label>
+              <div
+                id="hosted-card-number"
                 className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-right block">תוקף (MM/YY) *</Label>
-                <div 
-                  id="hosted-expiry" 
+                <Label className="text-right block"><T>תוקף (MM/YY)</T> *</Label>
+                <div
+                  id="hosted-expiry"
                   className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
                 />
               </div>
 
               <div className="space-y-2">
                 <Label className="text-right block">CVV *</Label>
-                <div 
-                  id="hosted-cvv" 
+                <div
+                  id="hosted-cvv"
                   className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
                 />
               </div>
@@ -328,21 +333,21 @@ export default function TranzilaPaymentDialog({
               htmlFor="save-card"
               className="text-sm font-normal cursor-pointer leading-tight"
             >
-              שמור את פרטי הכרטיס לשימוש עתידי באפליקציה
+              <T>שמור את פרטי הכרטיס לשימוש עתידי באפליקציה</T>
             </Label>
           </div>
 
           {/* הודעת אבטחה */}
           <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 p-3 rounded-md">
             <span className="text-lg">🔒</span>
-            <p>פרטי הכרטיס מוצפנים ומאובטחים על ידי Tranzila</p>
+            <p><T>פרטי הכרטיס מוצפנים ומאובטחים על ידי Tranzila</T></p>
           </div>
 
           {/* סטטוס */}
           <div className="text-center text-sm">
-            {!sdkLoaded && <p className="text-muted-foreground">טוען מערכת תשלום...</p>}
-            {sdkLoaded && !fieldsReady && <p className="text-muted-foreground">מכין שדות תשלום...</p>}
-            {fieldsReady && <p className="text-green-600 font-medium">✓ מערכת התשלום מוכנה</p>}
+            {!sdkLoaded && <p className="text-muted-foreground"><T>טוען מערכת תשלום...</T></p>}
+            {sdkLoaded && !fieldsReady && <p className="text-muted-foreground"><T>מכין שדות תשלום...</T></p>}
+            {fieldsReady && <p className="text-green-600 font-medium">✓ <T>מערכת התשלום מוכנה</T></p>}
           </div>
 
           {/* כפתורי פעולה */}
@@ -354,7 +359,7 @@ export default function TranzilaPaymentDialog({
               disabled={isProcessing}
               className="flex-1"
             >
-              ביטול
+              <T>ביטול</T>
             </Button>
             <Button
               type="button"
@@ -365,10 +370,10 @@ export default function TranzilaPaymentDialog({
               {isProcessing ? (
                 <span className="flex items-center gap-2">
                   <span className="animate-spin">⏳</span>
-                  מעבד תשלום...
+                  {processingText}
                 </span>
               ) : (
-                `שלם ₪${REGISTRATION_FEE}`
+                payButtonText
               )}
             </Button>
           </div>

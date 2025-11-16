@@ -1,5 +1,6 @@
 
 import { Input } from "@/components/ui/input";
+import { T } from "@/components/translation/T";
 
 interface PersonalInfoSectionProps {
   firstName: string;
@@ -23,7 +24,7 @@ export const PersonalInfoSection = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-            שם פרטי *
+            <T>שם פרטי</T> *
           </label>
           <Input
             id="firstName"
@@ -34,10 +35,10 @@ export const PersonalInfoSection = ({
             className="bg-gray-50 border-gray-200"
           />
         </div>
-        
+
         <div>
           <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-            שם משפחה *
+            <T>שם משפחה</T> *
           </label>
           <Input
             id="lastName"
@@ -52,7 +53,7 @@ export const PersonalInfoSection = ({
 
       <div>
         <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-          מספר טלפון *
+          <T>מספר טלפון</T> *
         </label>
         <Input
           id="phone"
@@ -72,7 +73,7 @@ export const PersonalInfoSection = ({
 
       <div>
         <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
-          עיר *
+          <T>עיר</T> *
         </label>
         <Input
           id="city"

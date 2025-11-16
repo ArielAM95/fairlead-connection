@@ -1,6 +1,7 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { experienceOptions } from "@/components/cta/data/workFields";
+import { T } from "@/components/translation/T";
 
 interface ExperienceSectionProps {
   value: string;
@@ -12,7 +13,7 @@ export const ExperienceSection = ({ value, onChange, error }: ExperienceSectionP
   return (
     <div>
       <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-1">
-        ותק *
+        <T>ותק</T> *
       </label>
       <Select onValueChange={onChange} value={value} required>
         <SelectTrigger className={`bg-gray-50 border-gray-200 ${error ? 'border-red-500 ring-red-500' : ''}`}>
@@ -21,7 +22,7 @@ export const ExperienceSection = ({ value, onChange, error }: ExperienceSectionP
         <SelectContent>
           {experienceOptions.map(option => (
             <SelectItem key={option.id} value={option.id}>
-              {option.label}
+              <T>{option.label}</T>
             </SelectItem>
           ))}
         </SelectContent>

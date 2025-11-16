@@ -6,6 +6,8 @@ import { X, Plus } from "lucide-react";
 import { ProfessionSelection, SignupFormData } from '@/types/signupForm';
 import { useProfessions } from '@/hooks/useProfessions';
 import { useSpecializations } from '@/hooks/useSpecializations';
+import { T } from "@/components/translation/T";
+import { useTranslatedText } from "@/hooks/useTranslatedText";
 
 interface SubSpecializationsSelectorProps {
   selectedProfessions: ProfessionSelection[];
@@ -34,23 +36,25 @@ export const SubSpecializationsSelector = ({
     return profession?.label || professionId;
   };
   
+  const addSpecializationText = useTranslatedText("הוספת תת התמחות נוספת");
+
   if (selectedProfessions.length === 0) {
     return (
       <div className="bg-muted/30 border-2 border-dashed border-border rounded-lg p-8 text-center">
         <p className="text-muted-foreground text-sm">
-          ⬆️ קודם בחרו לפחות מקצוע אחד
+          ⬆️ <T>קודם בחרו לפחות מקצוע אחד</T>
         </p>
       </div>
     );
   }
-  
+
   if (isLoading) {
     return (
       <div className="space-y-6">
         <label className="block text-sm font-medium text-foreground mb-2">
-          תתי התמחות למקצועות שבחרתם (אופציונלי)
+          <T>תתי התמחות למקצועות שבחרתם (אופציונלי)</T>
         </label>
-        <p className="text-sm text-muted-foreground">טוען תתי התמחויות...</p>
+        <p className="text-sm text-muted-foreground"><T>טוען תתי התמחויות...</T></p>
       </div>
     );
   }
@@ -58,7 +62,7 @@ export const SubSpecializationsSelector = ({
   return (
     <div className="space-y-6">
       <label className="block text-sm font-medium text-foreground mb-2">
-        תתי התמחות למקצועות שבחרתם (אופציונלי)
+        <T>תתי התמחות למקצועות שבחרתם (אופציונלי)</T>
       </label>
       
       {selectedProfessions.map(profession => {
@@ -70,7 +74,7 @@ export const SubSpecializationsSelector = ({
           return (
             <div key={profession.professionId} className="bg-primary/5 border border-primary/20 rounded-lg p-6">
               <p className="text-sm text-foreground">
-                ✅ מקצוע <strong>{professionLabel}</strong> - אין תתי התמחות זמינים
+                ✅ <T>מקצוע</T> <strong><T>{professionLabel}</T></strong> - <T>אין תתי התמחות זמינים</T>
               </p>
             </div>
           );
@@ -79,7 +83,7 @@ export const SubSpecializationsSelector = ({
         return (
           <div key={profession.professionId} className="space-y-3 p-4 bg-muted/20 rounded-lg border">
             <h4 className="font-semibold text-foreground text-sm mb-3">
-              {professionLabel} - בחרו תתי התמחות (ניתן לבחור מספר)
+              <T>{professionLabel}</T> - <T>בחרו תתי התמחות (ניתן לבחור מספר)</T>
             </h4>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -93,11 +97,11 @@ export const SubSpecializationsSelector = ({
                       checked={profession.specializations.includes(spec.specialization_id)}
                       onCheckedChange={() => onToggleSpecialization(profession.professionId, spec.specialization_id)}
                     />
-                    <label 
-                      htmlFor={`spec-${profession.professionId}-${spec.specialization_id}`} 
+                    <label
+                      htmlFor={`spec-${profession.professionId}-${spec.specialization_id}`}
                       className="flex-1 text-sm leading-none cursor-pointer"
                     >
-                      {spec.label}
+                      <T>{spec.label}</T>
                     </label>
                   </div>
                   {spec.specialization_id === "other" && profession.specializations.includes("other") && (
@@ -150,8 +154,8 @@ export const SubSpecializationsSelector = ({
                         size="sm"
                         onClick={() => {
                           const currentValues = formData.otherSpecializations?.[profession.professionId] || [''];
-                          setFormData({ 
-                            ...formData, 
+                          setFormData({
+                            ...formData,
                             otherSpecializations: {
                               ...formData.otherSpecializations,
                               [profession.professionId]: [...currentValues, '']
@@ -161,7 +165,7 @@ export const SubSpecializationsSelector = ({
                         className="w-full"
                       >
                         <Plus className="h-4 w-4 ml-2" />
-                        הוספת תת התמחות נוספת
+                        {addSpecializationText}
                       </Button>
                     </div>
                   )}
@@ -171,7 +175,7 @@ export const SubSpecializationsSelector = ({
             
             {profession.specializations.length > 0 && (
               <div className="text-xs text-foreground bg-primary/5 p-2 rounded flex items-center gap-2 mt-2">
-                <span className="font-bold">✅ נבחרו: {profession.specializations.length}</span>
+                <span className="font-bold">✅ <T>נבחרו</T>: {profession.specializations.length}</span>
               </div>
             )}
           </div>

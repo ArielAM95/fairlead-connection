@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { TrendingUp, Calculator } from "lucide-react";
+import { T } from "@/components/translation/T";
 
 const EarningsCalculatorSection = () => {
   const [leads, setLeads] = useState<string>("10");
@@ -46,10 +47,10 @@ const EarningsCalculatorSection = () => {
         <div className="text-center mb-12 scroll-fade">
           <Calculator className="w-12 h-12 mx-auto mb-4 text-primary" />
           <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-l from-primary via-primary-glow to-primary bg-clip-text text-transparent">
-            חשב את הרווח הפוטנציאלי שלך
+            <T>חשב את הרווח הפוטנציאלי שלך</T>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            מלא את הפרטים וגלה כמה תוכל להרוויח רק משיתוף לידים
+            <T>מלא את הפרטים וגלה כמה תוכל להרוויח רק משיתוף לידים</T>
           </p>
         </div>
 
@@ -58,7 +59,7 @@ const EarningsCalculatorSection = () => {
             {/* Leads Input */}
             <div className="space-y-2">
               <label htmlFor="leads" className="block text-sm font-medium text-foreground">
-                כמה לידים תעביר בחודש?
+                <T>כמה לידים תעביר בחודש?</T>
               </label>
               <div className="relative">
                 <input
@@ -70,7 +71,7 @@ const EarningsCalculatorSection = () => {
                   className="w-full px-4 py-3 bg-background/50 border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                 />
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm pointer-events-none">
-                  לידים
+                  <T>לידים</T>
                 </span>
               </div>
             </div>
@@ -78,7 +79,7 @@ const EarningsCalculatorSection = () => {
             {/* Average Amount Input */}
             <div className="space-y-2">
               <label htmlFor="avgAmount" className="block text-sm font-medium text-foreground">
-                סכום עבודה ממוצע?
+                <T>סכום עבודה ממוצע?</T>
               </label>
               <div className="relative">
                 <input
@@ -99,7 +100,7 @@ const EarningsCalculatorSection = () => {
             {/* Commission Input */}
             <div className="space-y-2">
               <label htmlFor="commission" className="block text-sm font-medium text-foreground">
-                כמה עמלה תיקח?
+                <T>כמה עמלה תיקח?</T>
               </label>
               <div className="relative">
                 <input
@@ -123,14 +124,14 @@ const EarningsCalculatorSection = () => {
             <div className="flex items-center justify-center gap-2 mb-3">
               <TrendingUp className="w-6 h-6 text-primary" />
               <h3 className="text-xl font-semibold text-foreground">
-                הרווח החודשי הפוטנציאלי שלך
+                <T>הרווח החודשי הפוטנציאלי שלך</T>
               </h3>
             </div>
             <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-l from-primary via-primary-glow to-primary bg-clip-text text-transparent transition-all duration-300 break-words">
               ₪{monthlyEarnings.toLocaleString('he-IL')}
             </div>
             <p className="text-sm text-muted-foreground mt-2">
-              לחודש
+              <T>לחודש</T>
             </p>
           </div>
 
@@ -139,10 +140,10 @@ const EarningsCalculatorSection = () => {
             <span className="text-2xl">⚠️</span>
             <div className="flex-1">
               <p className="text-sm font-medium text-foreground">
-                <strong>שים לב:</strong> זה רק מהלידים שאתה מעביר! 
+                <strong><T>שים לב:</T></strong> <T>זה רק מהלידים שאתה מעביר!</T>
               </p>
               <p className="text-sm text-muted-foreground mt-1">
-                זה לא כולל את כל הבקשות הישירות שתקבל מצרכנים בפלטפורמה של oFair
+                <T>זה לא כולל את כל הבקשות הישירות שתקבל מצרכנים בפלטפורמה של oFair</T>
               </p>
             </div>
           </div>
@@ -155,7 +156,7 @@ const EarningsCalculatorSection = () => {
               }}
               className="px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl"
             >
-              הירשם עכשיו והתחל להרוויח
+              <T>הירשם עכשיו והתחל להרוויח</T>
             </button>
           </div>
         </div>
@@ -163,7 +164,7 @@ const EarningsCalculatorSection = () => {
         {/* Additional Context */}
         <div className="text-center mt-8 scroll-fade">
           <p className="text-muted-foreground">
-            בנוסף לרווח מהלידים, תקבל גישה ללקוחות חדשים שמחפשים אותך ישירות 🚀
+            <T>בנוסף לרווח מהלידים, תקבל גישה ללקוחות חדשים שמחפשים אותך ישירות</T> 🚀
           </p>
         </div>
       </div>

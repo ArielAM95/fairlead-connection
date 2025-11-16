@@ -1,5 +1,6 @@
 
 import { Input } from "@/components/ui/input";
+import { T } from "@/components/translation/T";
 
 interface BusinessDetailsSectionProps {
   companyName: string;
@@ -26,7 +27,7 @@ export const BusinessDetailsSection = ({
     <>
       <div>
         <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">
-          שם החברה (אופציונלי)
+          <T>שם החברה (אופציונלי)</T>
         </label>
         <Input
           id="companyName"
@@ -41,7 +42,7 @@ export const BusinessDetailsSection = ({
 
       <div>
         <label htmlFor="businessLicenseNumber" className="block text-sm font-medium text-gray-700 mb-1">
-          מספר עוסק מורשה/פטור/ח.פ *
+          <T>מספר עוסק מורשה/פטור/ח.פ</T> *
         </label>
         <Input
           id="businessLicenseNumber"
@@ -60,7 +61,7 @@ export const BusinessDetailsSection = ({
           dir="ltr"
         />
         <p className="text-xs text-gray-500 mt-1">
-          9 ספרות בלבד
+          <T>9 ספרות בלבד</T>
         </p>
       </div>
     </>
