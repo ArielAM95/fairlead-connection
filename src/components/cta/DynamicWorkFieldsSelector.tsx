@@ -3,6 +3,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
 import { X, Search } from "lucide-react";
 import { workFields } from "./data/workFields";
+import { T } from "@/components/translation/T";
+import { useTranslatedText } from "@/hooks/useTranslatedText";
 
 interface DynamicWorkFieldsSelectorProps {
   selectedFields: string[];
@@ -24,6 +26,9 @@ export const DynamicWorkFieldsSelector = ({
   const [showOtherOption, setShowOtherOption] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const searchPlaceholder = useTranslatedText("חפש תחום עבודה...");
+  const otherFieldPlaceholder = useTranslatedText("נא פרט תחום עבודה אחר");
 
   // Filter fields based on search term
   const filteredFields = workFields.filter(field =>
@@ -92,9 +97,9 @@ export const DynamicWorkFieldsSelector = ({
   return (
     <div className="space-y-4">
       <label className="block text-sm font-medium text-gray-700 mb-2">
-        תחומי עבודה *
+        <T>תחומי עבודה</T> *
       </label>
-      
+
       {/* Selected fields display */}
       {selectedFields.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-3">
@@ -103,7 +108,7 @@ export const DynamicWorkFieldsSelector = ({
               key={`${selectedFields[index]}-${index}`}
               className="flex items-center gap-1 bg-ofair-100 text-ofair-800 px-3 py-1 rounded-full text-sm"
             >
-              <span>{label}</span>
+              <span><T>{label}</T></span>
               <button
                 type="button"
                 onClick={() => handleRemoveField(selectedFields[index])}
@@ -129,7 +134,7 @@ export const DynamicWorkFieldsSelector = ({
               setIsDropdownOpen(true);
             }}
             onFocus={() => setIsDropdownOpen(true)}
-            placeholder="חפש תחום עבודה..."
+            placeholder={searchPlaceholder}
             className="bg-gray-50 border-gray-200 pr-10"
           />
         </div>
@@ -148,7 +153,7 @@ export const DynamicWorkFieldsSelector = ({
                     selectedFields.includes(field.id) ? 'bg-gray-100' : ''
                   }`}
                 >
-                  {field.label}
+                  <T>{field.label}</T>
                   {selectedFields.includes(field.id) && (
                     <span className="mr-2 text-green-600">✓</span>
                   )}
@@ -160,11 +165,11 @@ export const DynamicWorkFieldsSelector = ({
                 onClick={handleOtherSelect}
                 className="w-full text-right px-3 py-2 text-sm hover:bg-gray-50 text-ofair-600"
               >
-                הוסף: "{searchTerm}"
+                <T>הוסף:</T> "{searchTerm}"
               </button>
             ) : (
               <div className="px-3 py-2 text-sm text-gray-500 text-right">
-                לא נמצאו תוצאות
+                <T>לא נמצאו תוצאות</T>
               </div>
             )}
           </div>
@@ -179,7 +184,7 @@ export const DynamicWorkFieldsSelector = ({
             name="otherWorkField"
             value={otherWorkField}
             onChange={onChange}
-            placeholder="נא פרט תחום עבודה אחר"
+            placeholder={otherFieldPlaceholder}
             className="bg-gray-50 border-gray-200"
           />
         </div>
@@ -187,7 +192,7 @@ export const DynamicWorkFieldsSelector = ({
 
       {/* Error message */}
       {selectedFields.length === 0 && (
-        <p className="text-xs text-red-500 mt-1">יש לבחור לפחות אחד</p>
+        <p className="text-xs text-red-500 mt-1"><T>יש לבחור לפחות אחד</T></p>
       )}
     </div>
   );
