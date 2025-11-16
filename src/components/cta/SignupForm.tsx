@@ -298,13 +298,13 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
             <p className="text-red-700 font-medium mb-2"><T>נא לתקן את השגיאות הבאות:</T></p>
             <ul className="list-disc list-inside space-y-1 text-red-600 text-sm">
-              {errors.email && <li>{errors.email}</li>}
-              {errors.phone && <li>{errors.phone}</li>}
-              {errors.businessLicenseNumber && <li>{errors.businessLicenseNumber}</li>}
-              {errors.professions && <li>{errors.professions}</li>}
-              {errors.otherProfession && <li>{errors.otherProfession}</li>}
-              {errors.experience && <li>{errors.experience}</li>}
-              {errors.acceptTerms && <li>{errors.acceptTerms}</li>}
+              {errors.email && <li><T>{errors.email}</T></li>}
+              {errors.phone && <li><T>{errors.phone}</T></li>}
+              {errors.businessLicenseNumber && <li><T>{errors.businessLicenseNumber}</T></li>}
+              {errors.professions && <li><T>{errors.professions}</T></li>}
+              {errors.otherProfession && <li><T>{errors.otherProfession}</T></li>}
+              {errors.experience && <li><T>{errors.experience}</T></li>}
+              {errors.acceptTerms && <li><T>{errors.acceptTerms}</T></li>}
             </ul>
           </div>
         )}

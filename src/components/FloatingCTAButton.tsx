@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
+import { T } from "@/components/translation/T";
 
 const FloatingCTAButton = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -46,7 +47,7 @@ const FloatingCTAButton = () => {
         group
       `}
     >
-      <span className="text-lg">הצטרפו עכשיו</span>
+      <span className="text-lg"><T>הצטרפו עכשיו</T></span>
       <ArrowDown className="w-5 h-5 animate-bounce group-hover:animate-none" />
     </Button>
   );

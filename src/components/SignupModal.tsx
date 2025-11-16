@@ -8,6 +8,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useUtmParams } from "@/hooks/useUtmParams";
 import { submitSignupForm } from "@/services/formSubmission";
+import { T } from "@/components/translation/T";
+import { useTranslatedText } from "@/hooks/useTranslatedText";
 
 interface SignupModalProps {
   isOpen: boolean;
@@ -66,6 +68,11 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
+  const otherFieldPlaceholder = useTranslatedText("נא פרט תחום עבודה אחר");
+  const selectExperiencePlaceholder = useTranslatedText("בחר ותק");
+  const phonePlaceholder = useTranslatedText("05X-XXXXXXX");
+  const cityPlaceholder = useTranslatedText("שם העיר");
+
   if (!isOpen) return null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,13 +85,13 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
       const fields = prev.workFields.includes(id)
         ? prev.workFields.filter((field) => field !== id)
         : [...prev.workFields, id];
-      
-      const showOther = id === "other" 
-        ? !prev.workFields.includes("other") 
+
+      const showOther = id === "other"
+        ? !prev.workFields.includes("other")
         : fields.includes("other");
-      
-      return { 
-        ...prev, 
+
+      return {
+        ...prev,
         workFields: fields,
         showOtherWorkField: showOther,
         otherWorkField: showOther ? prev.otherWorkField : ""
@@ -99,7 +106,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
-    
+
     if (formData.workFields.length === 0) {
       setFormError("יש לבחור לפחות תחום עבודה אחד");
       toast({
@@ -119,12 +126,12 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
       });
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
       console.log("SignupModal: Submitting form data", formData);
-      
+
       await submitSignupForm(
         {
           ...formData,
@@ -134,12 +141,12 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
           phone: formData.phone || "00-0000000",
           city: formData.city || "לא צוין",
           acceptTerms: true,
-        }, 
-        workFields, 
+        },
+        workFields,
         workRegions,
         utmParams
       );
-      
+
       toast({
         title: "הרשמה בוצעה בהצלחה",
         description: "ברוכים הבאים ל-oFair! פרטיך התקבלו בהצלחה.",
@@ -147,13 +154,13 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
       onClose();
     } catch (error) {
       console.error("Error in form submission:", error);
-      
-      const errorMsg = error instanceof Error 
-        ? error.message 
+
+      const errorMsg = error instanceof Error
+        ? error.message
         : "אירעה שגיאה בעת שליחת הטופס. אנא נסו שוב מאוחר יותר.";
-      
+
       setFormError(errorMsg);
-      
+
       toast({
         title: "שגיאה בהרשמה",
         description: errorMsg,
@@ -166,12 +173,12 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div 
+      <div
         className="relative w-full max-w-lg bg-white rounded-lg shadow-xl overflow-y-auto max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6 pb-0 flex justify-between items-center border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-ofair-900">הרשמה ל-oFair</h2>
+          <h2 className="text-2xl font-bold text-ofair-900"><T>הרשמה ל-oFair</T></h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 focus:outline-none"
@@ -179,22 +186,22 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
             <X className="h-6 w-6" />
           </button>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {formError && (
             <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md text-sm">
-              {formError}
+              <T>{formError}</T>
             </div>
           )}
-          
+
           <p className="text-muted-foreground mb-6">
-            הצטרפו למהפכת שיתוף הלידים וקבלו גישה ללקוחות איכותיים
+            <T>הצטרפו למהפכת שיתוף הלידים וקבלו גישה ללקוחות איכותיים</T>
           </p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-                שם פרטי *
+                <T>שם פרטי</T> *
               </label>
               <Input
                 id="firstName"
@@ -205,10 +212,10 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                 className="bg-gray-50 border-gray-200"
               />
             </div>
-            
+
             <div>
               <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-                שם משפחה *
+                <T>שם משפחה</T> *
               </label>
               <Input
                 id="lastName"
@@ -220,10 +227,10 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
               />
             </div>
           </div>
-          
+
           <div>
             <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">
-              שם חברה (אופציונלי)
+              <T>שם חברה (אופציונלי)</T>
             </label>
             <Input
               id="companyName"
@@ -233,38 +240,38 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
               className="bg-gray-50 border-gray-200"
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              תחומי עבודה *
+              <T>תחומי עבודה</T> *
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-gray-50 p-3 rounded-md border border-gray-200">
               {workFields.map((field) => (
                 <div key={field.id} className="flex items-center space-x-2 space-x-reverse">
-                  <Checkbox 
+                  <Checkbox
                     id={`field-${field.id}`}
                     checked={formData.workFields.includes(field.id)}
                     onCheckedChange={() => handleWorkFieldToggle(field.id)}
                   />
-                  <label 
+                  <label
                     htmlFor={`field-${field.id}`}
                     className="text-sm leading-none cursor-pointer"
                   >
-                    {field.label}
+                    <T>{field.label}</T>
                   </label>
                 </div>
               ))}
               <div className="flex items-center space-x-2 space-x-reverse">
-                <Checkbox 
+                <Checkbox
                   id="field-other"
                   checked={formData.workFields.includes("other")}
                   onCheckedChange={() => handleWorkFieldToggle("other")}
                 />
-                <label 
+                <label
                   htmlFor="field-other"
                   className="text-sm leading-none cursor-pointer"
                 >
-                  אחר
+                  <T>אחר</T>
                 </label>
               </div>
             </div>
@@ -275,28 +282,28 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                   name="otherWorkField"
                   value={formData.otherWorkField}
                   onChange={handleChange}
-                  placeholder="נא פרט תחום עבודה אחר"
+                  placeholder={otherFieldPlaceholder}
                   className="bg-gray-50 border-gray-200"
                 />
               </div>
             )}
             {formData.workFields.length === 0 && (
-              <p className="text-xs text-red-500 mt-1">יש לבחור לפחות תחום אחד</p>
+              <p className="text-xs text-red-500 mt-1"><T>יש לבחור לפחות תחום אחד</T></p>
             )}
           </div>
-          
+
           <div>
             <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-1">
-              ותק *
+              <T>ותק</T> *
             </label>
             <Select onValueChange={handleExperienceChange} value={formData.experience} required>
               <SelectTrigger className="bg-gray-50 border-gray-200">
-                <SelectValue placeholder="בחר ותק" />
+                <SelectValue placeholder={selectExperiencePlaceholder} />
               </SelectTrigger>
               <SelectContent>
                 {experienceOptions.map((option) => (
                   <SelectItem key={option.id} value={option.id}>
-                    {option.label}
+                    <T>{option.label}</T>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -305,7 +312,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
 
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-              מספר טלפון *
+              <T>מספר טלפון</T> *
             </label>
             <Input
               id="phone"
@@ -316,13 +323,13 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
               required
               className="bg-gray-50 border-gray-200"
               dir="ltr"
-              placeholder="05X-XXXXXXX"
+              placeholder={phonePlaceholder}
             />
           </div>
 
           <div>
             <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
-              עיר *
+              <T>עיר</T> *
             </label>
             <Input
               id="city"
@@ -331,13 +338,13 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
               onChange={handleChange}
               required
               className="bg-gray-50 border-gray-200"
-              placeholder="שם העיר"
+              placeholder={cityPlaceholder}
             />
           </div>
-          
+
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              אימייל *
+              <T>אימייל</T> *
             </label>
             <Input
               id="email"
@@ -351,10 +358,10 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
               placeholder="your@email.com"
             />
           </div>
-          
+
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              סיסמא *
+              <T>סיסמא</T> *
             </label>
             <Input
               id="password"
@@ -368,41 +375,45 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
               minLength={6}
             />
             <p className="text-xs text-muted-foreground mt-1">
-              יש להזין סיסמא באורך 6 תווים לפחות
+              <T>יש להזין סיסמא באורך 6 תווים לפחות</T>
             </p>
           </div>
-          
+
           <div className="flex items-start space-x-2 space-x-reverse rtl:space-x-reverse">
-            <Checkbox 
-              id="acceptMarketing" 
+            <Checkbox
+              id="acceptMarketing"
               checked={formData.acceptMarketing}
               onCheckedChange={(checked) => {
                 setFormData(prev => ({ ...prev, acceptMarketing: checked === true }));
               }}
               required
             />
-            <label 
-              htmlFor="acceptMarketing" 
+            <label
+              htmlFor="acceptMarketing"
               className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              אני מאשר/ת קבלת עדכונים לגבי ההרשמה שלי, תוכן שיווקי והטבות באמצעות דוא"ל והודעות SMS *
+              <T>אני מאשר/ת קבלת עדכונים לגבי ההרשמה שלי, תוכן שיווקי והטבות באמצעות דוא"ל והודעות SMS</T> *
             </label>
           </div>
-          
+
           <div className="pt-4">
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="w-full bg-ofair-900 hover:bg-ofair-800 text-white py-6"
               disabled={isSubmitting || formData.workFields.length === 0 || !formData.acceptMarketing}
             >
-              {isSubmitting ? "מבצע רישום..." : "הרשמה"}
+              {isSubmitting ? <T>מבצע רישום...</T> : <T>הרשמה</T>}
             </Button>
-            
+
             <p className="text-xs text-center text-muted-foreground mt-4">
-              בלחיצה על "הרשמה" אני מאשר/ת את 
-              <a href="#" className="text-ofair-900 hover:underline mx-1">תנאי השימוש</a>
-              ואת
-              <a href="#" className="text-ofair-900 hover:underline mx-1">מדיניות הפרטיות</a>
+              <T>בלחיצה על "הרשמה" אני מאשר/ת את</T>
+              <a href="#" className="text-ofair-900 hover:underline mx-1">
+                <T>תנאי השימוש</T>
+              </a>
+              <T>ואת</T>
+              <a href="#" className="text-ofair-900 hover:underline mx-1">
+                <T>מדיניות הפרטיות</T>
+              </a>
             </p>
           </div>
         </form>

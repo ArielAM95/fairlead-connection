@@ -1,12 +1,13 @@
 
 import { useState, useRef, useEffect } from "react";
 import SignupForm from "./SignupForm";
-import { SignupFormData } from "@/types/signupForm"; 
+import { SignupFormData } from "@/types/signupForm";
 import CtaHeader from "./CtaHeader";
 import { workFields, workRegions } from "./data/workFields";
 import { useUtmParams } from "@/hooks/useUtmParams";
 import { submitSignupForm } from "@/services/formSubmission";
 import { toast } from "sonner";
+import { T } from "@/components/translation/T";
 
 interface MainCtaSectionProps {
   showNotification?: (title: string, description: string, userName?: string, userPhone?: string, showWelcomeMessage?: boolean) => void;
@@ -149,7 +150,7 @@ const MainCtaSection = ({ showNotification }: MainCtaSectionProps) => {
           <div className="glass-card md:p-8 scroll-fade max-w-2xl mx-auto">
             {formError && (
               <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md text-sm">
-                {formError}
+                <T>{formError}</T>
               </div>
             )}
             <SignupForm onSubmit={handleSubmit} />

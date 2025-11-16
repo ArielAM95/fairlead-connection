@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { MessageCircle } from 'lucide-react';
+import { useTranslatedText } from "@/hooks/useTranslatedText";
 
 const WhatsAppButton = () => {
+  const ariaLabel = useTranslatedText("פנו אלינו בוואטסאפ");
+
   const handleWhatsAppClick = () => {
     const phoneNumber = '972505577565'; // Remove the first 0 and add 972 country code
     const message = encodeURIComponent('היי, אני צריך עזרה עם ההרשמה ל-oFair');
@@ -14,7 +17,7 @@ const WhatsAppButton = () => {
     <button
       onClick={handleWhatsAppClick}
       className="fixed left-4 bottom-20 z-50 bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110"
-      aria-label="פנו אלינו בוואטסאפ"
+      aria-label={ariaLabel}
     >
       <MessageCircle size={24} />
     </button>

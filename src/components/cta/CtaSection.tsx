@@ -2,12 +2,13 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
 import SignupForm from "./SignupForm";
-import { SignupFormData } from "@/types/signupForm"; 
+import { SignupFormData } from "@/types/signupForm";
 import CtaHeader from "./CtaHeader";
 import { workFields, workRegions } from "./data/workFields";
 import { useUtmParams } from "@/hooks/useUtmParams";
 import { submitSignupForm } from "@/services/formSubmission";
 import { toast } from "sonner";
+import { T } from "@/components/translation/T";
 
 interface CtaSectionProps {
   showNotification?: (title: string, description: string) => void;
@@ -163,7 +164,7 @@ const CtaSection = ({ showNotification }: CtaSectionProps) => {
           <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg scroll-fade max-w-2xl mx-auto">
             {formError && (
               <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md text-sm">
-                {formError}
+                <T>{formError}</T>
               </div>
             )}
             <SignupForm onSubmit={handleSubmit} />
