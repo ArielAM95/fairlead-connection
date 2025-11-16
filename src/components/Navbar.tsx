@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { LanguageSelector } from "@/components/translation/LanguageSelector";
+import { T } from "@/components/translation/T";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,22 +48,23 @@ const Navbar = () => {
           {/* Desktop navigation - Only visible on desktop */}
           <div className="hidden md:flex md:space-x-8 md:space-x-reverse px-[33px] mx-[19px]">
             <a href="#what-is" className="text-foreground/80 hover:text-primary transition-colors">
-              מה זה oFair?
+              <T>מה זה oFair?</T>
             </a>
             <a href="#benefits" className="text-foreground/80 hover:text-primary transition-colors">
-              יתרונות
+              <T>יתרונות</T>
             </a>
             <a href="#problems" className="text-foreground/80 hover:text-primary transition-colors">
-              איך זה עובד?
+              <T>איך זה עובד?</T>
             </a>
             <a href="#contact" className="text-foreground/80 hover:text-primary transition-colors">
-              צור קשר
+              <T>צור קשר</T>
             </a>
           </div>
 
-          <div className="hidden md:block px-[2px]">
-            <Button className="cta-gradient text-white mr-4 button-pulse" onClick={scrollToForm}>
-              <span>הירשמו כעת</span>
+          <div className="hidden md:flex md:items-center md:gap-4 px-[2px]">
+            <LanguageSelector />
+            <Button className="cta-gradient text-white button-pulse" onClick={scrollToForm}>
+              <T>הירשמו כעת</T>
               <ChevronRight className="mr-2 h-4 w-4" />
             </Button>
           </div>
@@ -77,20 +80,23 @@ const Navbar = () => {
         {/* Mobile menu - Only visible when toggled on mobile */}
         {isOpen && <div className="md:hidden fixed top-[60px] right-0 left-0 bg-card/95 backdrop-blur-md border-t border-border shadow-md p-4 animate-fade-in z-50">
             <div className="flex flex-col space-y-4">
+              <div className="flex justify-end">
+                <LanguageSelector />
+              </div>
               <a href="#what-is" className="text-foreground/80 hover:text-primary py-2 transition-colors" onClick={() => setIsOpen(false)}>
-                מה זה oFair?
+                <T>מה זה oFair?</T>
               </a>
               <a href="#benefits" className="text-foreground/80 hover:text-primary py-2 transition-colors" onClick={() => setIsOpen(false)}>
-                יתרונות
+                <T>יתרונות</T>
               </a>
               <a href="#problems" className="text-foreground/80 hover:text-primary py-2 transition-colors" onClick={() => setIsOpen(false)}>
-                איך זה עובד?
+                <T>איך זה עובד?</T>
               </a>
               <a href="#contact" className="text-foreground/80 hover:text-primary py-2 transition-colors" onClick={() => setIsOpen(false)}>
-                צור קשר
+                <T>צור קשר</T>
               </a>
               <Button className="cta-gradient text-white button-pulse w-full" onClick={scrollToForm}>
-                <span>הירשמו כעת</span>
+                <T>הירשמו כעת</T>
                 <ChevronRight className="mr-2 h-4 w-4" />
               </Button>
             </div>
