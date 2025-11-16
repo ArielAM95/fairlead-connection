@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search } from 'lucide-react';
 import { useProfessions } from '@/hooks/useProfessions';
+import { T } from '@/components/translation/T';
+import { useTranslatedText } from '@/hooks/useTranslatedText';
 
 interface ProfessionSelectorProps {
   value: string;
@@ -37,10 +39,13 @@ const ProfessionSelector = ({ value, onChange }: ProfessionSelectorProps) => {
     );
   }, [professions, searchTerm]);
 
+  const selectPlaceholder = useTranslatedText("בחר מקצוע...");
+  const searchPlaceholder = useTranslatedText("חפש מקצוע...");
+
   if (isLoading) {
     return (
       <div className="h-14 flex items-center justify-center border-2 border-primary/20 rounded-md">
-        <span className="text-muted-foreground">טוען מקצועות...</span>
+        <span className="text-muted-foreground"><T>טוען מקצועות...</T></span>
       </div>
     );
   }
@@ -48,7 +53,7 @@ const ProfessionSelector = ({ value, onChange }: ProfessionSelectorProps) => {
   return (
     <Select value={value} onValueChange={onChange} open={isOpen} onOpenChange={setIsOpen}>
       <SelectTrigger className="w-full h-14 text-lg border-2 border-primary/20 hover:border-primary/40 transition-colors">
-        <SelectValue placeholder="בחר מקצוע..." />
+        <SelectValue placeholder={selectPlaceholder} />
       </SelectTrigger>
       <SelectContent className="max-h-[450px] bg-card z-50" side="bottom" align="start" sideOffset={5}>
         {/* Search Input */}
@@ -57,7 +62,7 @@ const ProfessionSelector = ({ value, onChange }: ProfessionSelectorProps) => {
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="חפש מקצוע..."
+              placeholder={searchPlaceholder}
               value={searchTerm}
               onChange={(e) => {
                 e.stopPropagation();
@@ -79,16 +84,16 @@ const ProfessionSelector = ({ value, onChange }: ProfessionSelectorProps) => {
           <div className="p-2">
             {filteredProfessions.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                לא נמצאו מקצועות
+                <T>לא נמצאו מקצועות</T>
               </div>
             ) : (
               filteredProfessions.map(profession => (
-                <SelectItem 
-                  key={profession.profession_id} 
+                <SelectItem
+                  key={profession.profession_id}
                   value={profession.profession_id}
                   className="text-right py-3 px-4 hover:bg-accent/10 cursor-pointer rounded-md my-1 flex justify-end"
                 >
-                  {profession.label}
+                  <T>{profession.label}</T>
                 </SelectItem>
               ))
             )}

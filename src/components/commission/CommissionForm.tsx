@@ -7,6 +7,8 @@ import ProfessionSelector from './ProfessionSelector';
 import { useProfessions } from '@/hooks/useProfessions';
 import { calculateCommission } from '@/utils/commissionCalculations';
 import { CommissionCalculation } from '@/types/commission';
+import { T } from '@/components/translation/T';
+import { useTranslatedText } from '@/hooks/useTranslatedText';
 
 interface CommissionFormProps {
   onCalculate: (result: {
@@ -75,6 +77,8 @@ const CommissionForm = ({ onCalculate }: CommissionFormProps) => {
     return parseFloat(num).toLocaleString('he-IL');
   };
 
+  const amountPlaceholder = useTranslatedText("הזן סכום העסקה");
+
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
       <div className="bg-gradient-to-br from-card/90 to-card/50 backdrop-blur-xl border-2 border-primary/20 rounded-3xl p-8 md:p-10 shadow-2xl">
@@ -82,26 +86,26 @@ const CommissionForm = ({ onCalculate }: CommissionFormProps) => {
           {/* Profession Selector */}
           <div className="space-y-2">
             <Label htmlFor="profession" className="text-lg font-semibold text-right block">
-              בחר מקצוע
+              <T>בחר מקצוע</T>
             </Label>
-            <ProfessionSelector 
-              value={professionId} 
+            <ProfessionSelector
+              value={professionId}
               onChange={(value) => {
                 setProfessionId(value);
                 if (errors.profession) {
                   setErrors({ ...errors, profession: undefined });
                 }
-              }} 
+              }}
             />
             {errors.profession && (
-              <p className="text-sm text-destructive text-right">{errors.profession}</p>
+              <p className="text-sm text-destructive text-right"><T>{errors.profession}</T></p>
             )}
           </div>
 
           {/* Amount Input */}
           <div className="space-y-2">
             <Label htmlFor="amount" className="text-lg font-semibold text-right block">
-              סכום העסקה (₪)
+              <T>סכום העסקה (₪)</T>
             </Label>
             <div className="relative">
               <Input
@@ -109,26 +113,26 @@ const CommissionForm = ({ onCalculate }: CommissionFormProps) => {
                 type="text"
                 value={amount}
                 onChange={handleAmountChange}
-                placeholder="הזן סכום העסקה"
+                placeholder={amountPlaceholder}
                 className="h-14 text-lg border-2 border-primary/20 hover:border-primary/40 focus:border-primary transition-colors text-right pr-4"
               />
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
-                לא כולל מע״מ
+                <T>לא כולל מע״מ</T>
               </div>
             </div>
             {errors.amount && (
-              <p className="text-sm text-destructive text-right">{errors.amount}</p>
+              <p className="text-sm text-destructive text-right"><T>{errors.amount}</T></p>
             )}
           </div>
 
           {/* Submit Button */}
-          <Button 
+          <Button
             type="submit"
             size="lg"
             className="w-full h-14 text-lg font-bold bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] hover:bg-[position:100%_0] transition-all duration-500 shadow-xl hover:shadow-2xl hover:scale-[1.02] group"
           >
             <Calculator className="w-6 h-6 ml-2 group-hover:rotate-12 transition-transform" />
-            חשב עמלה
+            <T>חשב עמלה</T>
           </Button>
         </div>
       </div>
