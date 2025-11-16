@@ -13,6 +13,7 @@ import TranzilaPaymentDialog from "./TranzilaPaymentDialog";
 import PrePaymentDialog from "./PrePaymentDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { T } from "@/components/translation/T";
 
 interface SignupFormProps {
   onSubmit: (formData: SignupFormData) => Promise<void>;
@@ -155,7 +156,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
       {/* פרטים אישיים */}
       <div className="space-y-4">
         <h3 className="text-xl font-bold text-ofair-900 border-b-2 border-ofair-300 pb-2">
-          פרטים אישיים
+          <T>פרטים אישיים</T>
         </h3>
         <PersonalInfoSection
           firstName={formData.firstName}
@@ -170,7 +171,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
       {/* פרטי העסק */}
       <div className="space-y-4">
         <h3 className="text-xl font-bold text-ofair-900 border-b-2 border-ofair-300 pb-2">
-          פרטי העסק
+          <T>פרטי העסק</T>
         </h3>
         <BusinessDetailsSection
           companyName={formData.companyName}
@@ -183,7 +184,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
       {/* פרטי עיסוק */}
       <div className="space-y-4">
         <h3 className="text-xl font-bold text-ofair-900 border-b-2 border-ofair-300 pb-2">
-          פרטי עיסוק
+          <T>פרטי עיסוק</T>
         </h3>
         <OccupationDetailsSection
           selectedProfessions={formData.professions}
@@ -204,7 +205,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
 
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-          אימייל (אופציונלי)
+          <T>אימייל (אופציונלי)</T>
         </label>
         <Input
           id="email"
@@ -239,13 +240,13 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           htmlFor="acceptTerms"
           className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
         >
-          אני מאשר/ת את{" "}
+          <T>אני מאשר/ת את</T>{" "}
           <a href="/terms" className="text-ofair-900 hover:underline">
-            תנאי השימוש
+            <T>תנאי השימוש</T>
           </a>
-          {" "}ואת{" "}
+          {" "}<T>ואת</T>{" "}
           <a href="/terms" className="text-ofair-900 hover:underline">
-            מדיניות הפרטיות
+            <T>מדיניות הפרטיות</T>
           </a>
           {" *"}
         </Label>
@@ -270,7 +271,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           htmlFor="acceptMarketing"
           className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
         >
-          אני מאשר/ת קבלת עדכונים לגבי ההרשמה שלי, תוכן שיווקי והטבות באמצעות דוא"ל והודעות Whatsapp (חובה)
+          <T>אני מאשר/ת קבלת עדכונים לגבי ההרשמה שלי, תוכן שיווקי והטבות באמצעות דוא"ל והודעות Whatsapp (חובה)</T>
         </Label>
       </div>
 
@@ -290,12 +291,12 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
             !!errors.otherProfession
           }
         >
-          {isSubmitting ? "מבצע רישום..." : "הירשמו כעת"}
+          {isSubmitting ? <T>מבצע רישום...</T> : <T>הירשמו כעת</T>}
         </Button>
-        
+
         {(errors.email || errors.phone || errors.experience || errors.acceptTerms || errors.businessLicenseNumber || errors.professions || errors.otherProfession) && (
           <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-red-700 font-medium mb-2">נא לתקן את השגיאות הבאות:</p>
+            <p className="text-red-700 font-medium mb-2"><T>נא לתקן את השגיאות הבאות:</T></p>
             <ul className="list-disc list-inside space-y-1 text-red-600 text-sm">
               {errors.email && <li>{errors.email}</li>}
               {errors.phone && <li>{errors.phone}</li>}

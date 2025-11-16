@@ -1,5 +1,6 @@
 
 import { useEffect, useRef } from "react";
+import { T } from "@/components/translation/T";
 
 const HowItWorksSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -49,7 +50,7 @@ const HowItWorksSection = () => {
       
       <div className="container mx-auto px-4 md:px-6 relative">
         <div className="max-w-3xl mx-auto text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary scroll-fade">איך זה עובד?</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary scroll-fade"><T>איך זה עובד?</T></h2>
         </div>
 
         <div className="max-w-4xl mx-auto space-y-20">
@@ -62,8 +63,8 @@ const HowItWorksSection = () => {
                   </div>
                 </div>
                 <div className="space-y-4 text-right">
-                  <h3 className="text-2xl md:text-3xl font-bold text-primary">{step.title}</h3>
-                  <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">{step.description}</p>
+                  <h3 className="text-2xl md:text-3xl font-bold text-primary"><T>{step.title}</T></h3>
+                  <p className="text-lg md:text-xl text-muted-foreground leading-relaxed"><T>{step.description}</T></p>
                 </div>
               </div>
             </div>

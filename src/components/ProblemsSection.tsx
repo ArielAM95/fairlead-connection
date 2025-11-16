@@ -1,5 +1,6 @@
 
 import { useEffect, useRef } from "react";
+import { T } from "@/components/translation/T";
 
 const ProblemsSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -49,12 +50,12 @@ const ProblemsSection = () => {
     <section id="problems" className="section-padding bg-gradient-to-br from-primary/5 via-background to-accent/5" ref={sectionRef}>
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary scroll-fade">מה הבעיות שאנחנו פותרים עבורך?</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary scroll-fade"><T>מה הבעיות שאנחנו פותרים עבורך?</T></h2>
         </div>
 
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
           {problems.map((item, index) => (
-            <div 
+            <div
               key={item.id}
               className="scroll-fade"
               style={{ transitionDelay: `${index * 100}ms` }}
@@ -66,10 +67,10 @@ const ProblemsSection = () => {
                   </div>
                   <div className="space-y-2 text-right">
                     <h3 className="text-xl md:text-2xl font-bold text-primary leading-snug">
-                      {item.problem}
+                      <T>{item.problem}</T>
                     </h3>
                     <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
-                      {item.solution}
+                      <T>{item.solution}</T>
                     </p>
                   </div>
                 </div>

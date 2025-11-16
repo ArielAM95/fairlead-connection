@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Facebook, Instagram } from "lucide-react";
+import { T } from "@/components/translation/T";
 
 // Custom TikTok icon component since it's not in lucide-react
 const TikTokIcon = ({
@@ -20,35 +21,35 @@ const Footer = () => {
             <a href="#" className="flex items-center mb-5">
               <img src="/lovable-uploads/ofair-logo.png" alt="oFair Logo" className="h-18 w-auto" />
             </a>
-            <p className="text-white/90 text-lg mb-3">🔹 oFair – מהפכת שיתוף הלידים והעבודה החכמה כבר כאן!</p>
-            <p className="text-white/80 text-sm">הפלטפורמה שתחבר בין בעלי מקצוע, מאפשרת שיתוף לידים ומציגה הצעות מחיר בזמן אמת</p>
+            <p className="text-white/90 text-lg mb-3"><T>🔹 oFair – מהפכת שיתוף הלידים והעבודה החכמה כבר כאן!</T></p>
+            <p className="text-white/80 text-sm"><T>הפלטפורמה שתחבר בין בעלי מקצוע, מאפשרת שיתוף לידים ומציגה הצעות מחיר בזמן אמת</T></p>
           </div>
-          
+
           {/* Navigation Links */}
           <div className="md:col-span-3">
-            <h3 className="font-semibold text-white text-lg mb-5">ניווט מהיר</h3>
+            <h3 className="font-semibold text-white text-lg mb-5"><T>ניווט מהיר</T></h3>
             <nav className="flex flex-col space-y-3">
               <a href="#what-is" className="text-white/80 hover:text-white transition-colors">
-                מה זה oFair?
+                <T>מה זה oFair?</T>
               </a>
               <a href="#benefits" className="text-white/80 hover:text-white transition-colors">
-                יתרונות
+                <T>יתרונות</T>
               </a>
               <a href="#problems" className="text-white/80 hover:text-white transition-colors">
-                פתרונות לבעיות
+                <T>פתרונות לבעיות</T>
               </a>
               <a href="#how-it-works" className="text-white/80 hover:text-white transition-colors">
-                איך זה עובד?
+                <T>איך זה עובד?</T>
               </a>
               <Link to="/terms" className="text-white/90 hover:text-white underline font-medium">
-                תקנון ותנאי פרטיות
+                <T>תקנון ותנאי פרטיות</T>
               </Link>
             </nav>
           </div>
-          
+
           {/* Contact */}
           <div className="md:col-span-4">
-            <h3 className="font-semibold text-white text-lg mb-5">צור קשר</h3>
+            <h3 className="font-semibold text-white text-lg mb-5"><T>צור קשר</T></h3>
             <div className="space-y-4">
               <p className="text-white/80 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 ml-2 text-white flex-shrink-0">
@@ -78,7 +79,7 @@ const Footer = () => {
         </div>
         
         <div className="border-t border-white/20 pt-8 text-center">
-          <p className="text-white/80 text-sm">&copy; {currentYear} oFair. כל הזכויות שמורות.</p>
+          <p className="text-white/80 text-sm">&copy; {currentYear} oFair. <T>כל הזכויות שמורות.</T></p>
         </div>
       </div>
     </footer>;

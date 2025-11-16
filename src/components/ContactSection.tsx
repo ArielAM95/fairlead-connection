@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { showNotification, showSuccessNotification } from "@/utils/notification";
+import { T } from "@/components/translation/T";
 
 interface ContactSectionProps {
   showNotification?: (title: string, description: string) => void;
@@ -159,25 +160,25 @@ const ContactSection = ({ showNotification: propsShowNotification }: ContactSect
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-ofair-900">
-              צור קשר
+              <T>צור קשר</T>
             </h2>
             <p className="text-lg text-muted-foreground mb-2">
-              יש לכם שאלות? אנחנו כאן בשבילכם.
+              <T>יש לכם שאלות? אנחנו כאן בשבילכם.</T>
             </p>
             <p className="text-muted-foreground mb-4">
-              מלאו את הטופס ונחזור אליכם בהקדם האפשרי.
+              <T>מלאו את הטופס ונחזור אליכם בהקדם האפשרי.</T>
             </p>
             <div className="inline-block bg-ofair-100 text-ofair-900 px-4 py-2 rounded-md font-medium border border-ofair-200 mb-6">
-              שימו לב: זהו טופס צור קשר בלבד ואינו מהווה טופס הרשמה לשירות
+              <T>שימו לב: זהו טופס צור קשר בלבד ואינו מהווה טופס הרשמה לשירות</T>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="contact-firstName" className="block text-sm font-medium text-gray-700 mb-1">
-                    שם פרטי
+                    <T>שם פרטי</T>
                   </label>
                   <Input
                     id="contact-firstName"
@@ -188,10 +189,10 @@ const ContactSection = ({ showNotification: propsShowNotification }: ContactSect
                     className="bg-gray-50 border-gray-200"
                   />
                 </div>
-                
+
                 <div>
                   <label htmlFor="contact-lastName" className="block text-sm font-medium text-gray-700 mb-1">
-                    שם משפחה
+                    <T>שם משפחה</T>
                   </label>
                   <Input
                     id="contact-lastName"
@@ -203,11 +204,11 @@ const ContactSection = ({ showNotification: propsShowNotification }: ContactSect
                   />
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-1">
-                    אימייל
+                    <T>אימייל</T>
                   </label>
                   <Input
                     id="contact-email"
@@ -222,10 +223,10 @@ const ContactSection = ({ showNotification: propsShowNotification }: ContactSect
                     errorMessage={errors.email}
                   />
                 </div>
-                
+
                 <div>
                   <label htmlFor="contact-phone" className="block text-sm font-medium text-gray-700 mb-1">
-                    מספר טלפון
+                    <T>מספר טלפון</T>
                   </label>
                   <Input
                     id="contact-phone"
@@ -245,7 +246,7 @@ const ContactSection = ({ showNotification: propsShowNotification }: ContactSect
               
               <div>
                 <label htmlFor="contact-message" className="block text-sm font-medium text-gray-700 mb-1">
-                  הודעה
+                  <T>הודעה</T>
                 </label>
                 <Textarea
                   id="contact-message"
@@ -256,7 +257,7 @@ const ContactSection = ({ showNotification: propsShowNotification }: ContactSect
                   className="bg-gray-50 border-gray-200 min-h-32"
                 />
               </div>
-              
+
               <div className="flex items-start gap-2 rtl:space-x-reverse">
                 <Checkbox
                   id="acceptTerms"
@@ -276,13 +277,13 @@ const ContactSection = ({ showNotification: propsShowNotification }: ContactSect
                   htmlFor="acceptTerms"
                   className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                 >
-                  אני מאשר/ת את{" "}
+                  <T>אני מאשר/ת את</T>{" "}
                   <a href="/terms" className="text-ofair-900 hover:underline">
-                    תנאי השימוש
+                    <T>תנאי השימוש</T>
                   </a>
-                  {" "}ואת{" "}
+                  {" "}<T>ואת</T>{" "}
                   <a href="/terms" className="text-ofair-900 hover:underline">
-                    מדיניות הפרטיות
+                    <T>מדיניות הפרטיות</T>
                   </a>
                   {" *"}
                 </Label>
@@ -290,19 +291,19 @@ const ContactSection = ({ showNotification: propsShowNotification }: ContactSect
               {errors.acceptTerms && (
                 <p className="text-sm text-red-500">{errors.acceptTerms}</p>
               )}
-              
+
               <div>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-ofair-900 hover:bg-ofair-800 text-white"
                   disabled={isSubmitting || !formData.acceptTerms || !!errors.email || !!errors.phone}
                 >
-                  {isSubmitting ? "שולח..." : "שלח הודעה"}
+                  {isSubmitting ? <T>שולח...</T> : <T>שלח הודעה</T>}
                 </Button>
               </div>
-              
+
               <div className="text-center mt-4 text-sm text-muted-foreground">
-                <p>* טופס זה אינו מהווה הרשמה לשירות, רק יצירת קשר עם הצוות שלנו</p>
+                <p><T>* טופס זה אינו מהווה הרשמה לשירות, רק יצירת קשר עם הצוות שלנו</T></p>
               </div>
             </form>
           </div>

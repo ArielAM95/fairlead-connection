@@ -1,6 +1,7 @@
 
 import { useEffect, useRef } from "react";
 import { Check } from "lucide-react";
+import { T } from "@/components/translation/T";
 
 const BenefitsSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -44,14 +45,14 @@ const BenefitsSection = () => {
       <div className="container mx-auto px-4 md:px-6 relative">
         <div className="max-w-3xl mx-auto text-center mb-20">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary font-medium mb-6 scroll-fade">
-            יתרונות oFair
+            <T>יתרונות oFair</T>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary scroll-fade">למה להצטרף ל-oFair?</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary scroll-fade"><T>למה להצטרף ל-oFair?</T></h2>
         </div>
 
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {benefits.map((benefit, index) => (
-            <div 
+            <div
               key={index}
               className="scroll-fade"
               style={{ transitionDelay: `${index * 80}ms` }}
@@ -61,7 +62,7 @@ const BenefitsSection = () => {
                   <div className="w-9 h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center shadow-subtle mt-1">
                     <Check className="h-5 w-5" />
                   </div>
-                  <p className="text-base md:text-lg text-foreground leading-relaxed">{benefit}</p>
+                  <p className="text-base md:text-lg text-foreground leading-relaxed"><T>{benefit}</T></p>
                 </div>
               </div>
             </div>
