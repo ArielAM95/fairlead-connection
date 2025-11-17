@@ -68,21 +68,29 @@ export default function Registration() {
         // Normalize phone number - remove +972, 972, or leading 0
         let normalizedPhone = phoneNumber.trim().replace(/[-\s]/g, '');
         
+        // Build array of possible phone formats
+        const phoneVariations = [];
+        
         if (normalizedPhone.startsWith('+972')) {
-          normalizedPhone = normalizedPhone.substring(4); // Remove +972
+          const withoutPrefix = normalizedPhone.substring(4);
+          phoneVariations.push(normalizedPhone, '972' + withoutPrefix, '0' + withoutPrefix, withoutPrefix);
         } else if (normalizedPhone.startsWith('972')) {
-          normalizedPhone = normalizedPhone.substring(3); // Remove 972
+          const withoutPrefix = normalizedPhone.substring(3);
+          phoneVariations.push(normalizedPhone, '+972' + withoutPrefix, '0' + withoutPrefix, withoutPrefix);
         } else if (normalizedPhone.startsWith('0')) {
-          normalizedPhone = normalizedPhone.substring(1); // Remove leading 0
+          const withoutPrefix = normalizedPhone.substring(1);
+          phoneVariations.push(normalizedPhone, '972' + withoutPrefix, '+972' + withoutPrefix, withoutPrefix);
+        } else {
+          phoneVariations.push(normalizedPhone, '0' + normalizedPhone, '972' + normalizedPhone, '+972' + normalizedPhone);
         }
 
-        console.log('Searching for phone:', normalizedPhone);
+        console.log('Searching for phone variations:', phoneVariations);
 
-        // Search using LIKE to match any format in database
+        // Search using exact match OR for all variations
         const { data, error } = await supabase
           .from('professionals')
           .select('name, phone_number')
-          .or(`phone_number.like.%${normalizedPhone},phone_number.like.0${normalizedPhone},phone_number.like.972${normalizedPhone},phone_number.like.+972${normalizedPhone}`)
+          .or(phoneVariations.map(v => `phone_number.eq.${v}`).join(','))
           .limit(1);
 
         if (error) throw error;
