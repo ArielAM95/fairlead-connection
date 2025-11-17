@@ -443,6 +443,7 @@ export type Database = {
           phone_number: string
           source: string | null
           updated_at: string | null
+          utm_params: Json | null
         }
         Insert: {
           created_at?: string | null
@@ -454,6 +455,7 @@ export type Database = {
           phone_number: string
           source?: string | null
           updated_at?: string | null
+          utm_params?: Json | null
         }
         Update: {
           created_at?: string | null
@@ -465,6 +467,7 @@ export type Database = {
           phone_number?: string
           source?: string | null
           updated_at?: string | null
+          utm_params?: Json | null
         }
         Relationships: []
       }
@@ -1423,6 +1426,10 @@ export type Database = {
           id: string
           inquiry_id: string | null
           internal_notes: string | null
+          is_new_funnel_eligible: boolean | null
+          last_webinar_key: string | null
+          last_webinar_status: string | null
+          lead_category: string | null
           lead_type: string | null
           notes: string | null
           paid: boolean | null
@@ -1448,6 +1455,10 @@ export type Database = {
           id?: string
           inquiry_id?: string | null
           internal_notes?: string | null
+          is_new_funnel_eligible?: boolean | null
+          last_webinar_key?: string | null
+          last_webinar_status?: string | null
+          lead_category?: string | null
           lead_type?: string | null
           notes?: string | null
           paid?: boolean | null
@@ -1473,6 +1484,10 @@ export type Database = {
           id?: string
           inquiry_id?: string | null
           internal_notes?: string | null
+          is_new_funnel_eligible?: boolean | null
+          last_webinar_key?: string | null
+          last_webinar_status?: string | null
+          lead_category?: string | null
           lead_type?: string | null
           notes?: string | null
           paid?: boolean | null
@@ -1564,7 +1579,6 @@ export type Database = {
           professional_phone: string
           rating_cleanliness: number
           rating_communication: number
-          rating_overall: number
           rating_quality: number
           rating_recommendation: number
           rating_timing: number
@@ -1582,7 +1596,6 @@ export type Database = {
           professional_phone: string
           rating_cleanliness: number
           rating_communication: number
-          rating_overall: number
           rating_quality: number
           rating_recommendation: number
           rating_timing: number
@@ -1600,7 +1613,6 @@ export type Database = {
           professional_phone?: string
           rating_cleanliness?: number
           rating_communication?: number
-          rating_overall?: number
           rating_quality?: number
           rating_recommendation?: number
           rating_timing?: number
@@ -1635,12 +1647,14 @@ export type Database = {
           name: string
           phone_number: string | null
           profession: string
+          profession_ids: string[] | null
           profile_completion_percentage: number | null
           rating: number | null
           registration_amount: number | null
           registration_paid_at: string | null
           registration_payment_status: string | null
           review_count: number | null
+          specialization_ids: string[] | null
           specialties: string[] | null
           status: string | null
           sub_specializations: string[] | null
@@ -1649,6 +1663,7 @@ export type Database = {
           tutorial_completed: boolean | null
           updated_at: string | null
           user_id: string | null
+          utm_params: Json | null
           work_hours: string | null
           working_hours: string | null
         }
@@ -1676,12 +1691,14 @@ export type Database = {
           name: string
           phone_number?: string | null
           profession: string
+          profession_ids?: string[] | null
           profile_completion_percentage?: number | null
           rating?: number | null
           registration_amount?: number | null
           registration_paid_at?: string | null
           registration_payment_status?: string | null
           review_count?: number | null
+          specialization_ids?: string[] | null
           specialties?: string[] | null
           status?: string | null
           sub_specializations?: string[] | null
@@ -1690,6 +1707,7 @@ export type Database = {
           tutorial_completed?: boolean | null
           updated_at?: string | null
           user_id?: string | null
+          utm_params?: Json | null
           work_hours?: string | null
           working_hours?: string | null
         }
@@ -1717,12 +1735,14 @@ export type Database = {
           name?: string
           phone_number?: string | null
           profession?: string
+          profession_ids?: string[] | null
           profile_completion_percentage?: number | null
           rating?: number | null
           registration_amount?: number | null
           registration_paid_at?: string | null
           registration_payment_status?: string | null
           review_count?: number | null
+          specialization_ids?: string[] | null
           specialties?: string[] | null
           status?: string | null
           sub_specializations?: string[] | null
@@ -1731,6 +1751,7 @@ export type Database = {
           tutorial_completed?: boolean | null
           updated_at?: string | null
           user_id?: string | null
+          utm_params?: Json | null
           work_hours?: string | null
           working_hours?: string | null
         }
@@ -2513,6 +2534,63 @@ export type Database = {
         }
         Relationships: []
       }
+      webinar_leads: {
+        Row: {
+          city: string | null
+          created_at: string | null
+          email: string | null
+          first_name: string | null
+          global_lead_id: string | null
+          id: string
+          invite_source: string | null
+          last_name: string | null
+          lead_type_at_time: string | null
+          notes: string | null
+          phone: string
+          profession: string | null
+          registration_status: string | null
+          source_campaign: string | null
+          updated_at: string | null
+          webinar_key: string
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          global_lead_id?: string | null
+          id?: string
+          invite_source?: string | null
+          last_name?: string | null
+          lead_type_at_time?: string | null
+          notes?: string | null
+          phone: string
+          profession?: string | null
+          registration_status?: string | null
+          source_campaign?: string | null
+          updated_at?: string | null
+          webinar_key: string
+        }
+        Update: {
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          global_lead_id?: string | null
+          id?: string
+          invite_source?: string | null
+          last_name?: string | null
+          lead_type_at_time?: string | null
+          notes?: string | null
+          phone?: string
+          profession?: string | null
+          registration_status?: string | null
+          source_campaign?: string | null
+          updated_at?: string | null
+          webinar_key?: string
+        }
+        Relationships: []
+      }
       work_cancellations: {
         Row: {
           cancellation_notes: string | null
@@ -3082,7 +3160,6 @@ export type Database = {
           id: string
           rating_cleanliness: number
           rating_communication: number
-          rating_overall: number
           rating_quality: number
           rating_recommendation: number
           rating_timing: number
@@ -3263,6 +3340,7 @@ export type Database = {
               professional_profession: string
               professional_rating: number
               professional_verified: boolean
+              share_percentage: number
               status: string
             }[]
           }

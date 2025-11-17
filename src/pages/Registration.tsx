@@ -29,6 +29,7 @@ export default function Registration() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isPaymentLink, setIsPaymentLink] = useState(false); // Tracks if this is a payment-only link
   const [professionalName, setProfessionalName] = useState(''); // Store name for display
+  const [phoneCheckStatus, setPhoneCheckStatus] = useState<'idle' | 'checking' | 'found' | 'not_found'>('idle');
 
   // 📱 Check for phone URL parameter (payment link feature)
   useEffect(() => {
@@ -50,6 +51,49 @@ export default function Registration() {
       });
     }
   }, []);
+
+  // 🔍 Check if phone number exists in database (with debounce)
+  useEffect(() => {
+    if (isPaymentLink) return; // Skip check for payment links
+    
+    if (!phoneNumber || phoneNumber.length < 10) {
+      setPhoneCheckStatus('idle');
+      return;
+    }
+
+    // Validate Israeli phone format
+    if (!/^0[2-9]\d{8}$/.test(phoneNumber)) {
+      setPhoneCheckStatus('idle');
+      return;
+    }
+
+    setPhoneCheckStatus('checking');
+
+    const timeoutId = setTimeout(async () => {
+      try {
+        const { data, error } = await supabase
+          .from('professionals')
+          .select('name, phone_number')
+          .eq('phone_number', phoneNumber)
+          .maybeSingle();
+
+        if (error) throw error;
+
+        if (data) {
+          setProfessionalName(data.name);
+          setPhoneCheckStatus('found');
+        } else {
+          setProfessionalName('');
+          setPhoneCheckStatus('not_found');
+        }
+      } catch (error) {
+        console.error('Error checking phone number:', error);
+        setPhoneCheckStatus('idle');
+      }
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [phoneNumber, isPaymentLink]);
 
   // 🔒 Disconnect Supabase realtime (למניעת שגיאת JSON.parse)
   useEffect(() => {
@@ -341,8 +385,27 @@ export default function Registration() {
 
               <div className="space-y-2">
                 <Label htmlFor="phone">טלפון *</Label>
-                <Input id="phone" type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="050-1234567" dir="ltr" required />
+                <Input id="phone" type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="050-1234567" dir="ltr" required maxLength={10} />
                 
+                {/* Phone check status indicator */}
+                {phoneCheckStatus === 'checking' && (
+                  <p className="text-sm text-muted-foreground flex items-center gap-2">
+                    <span className="animate-spin">⏳</span>
+                    בודק מספר טלפון...
+                  </p>
+                )}
+                {phoneCheckStatus === 'found' && (
+                  <p className="text-sm text-green-600 flex items-center gap-2">
+                    <span>✓</span>
+                    נמצא משתמש: {professionalName}
+                  </p>
+                )}
+                {phoneCheckStatus === 'not_found' && (
+                  <p className="text-sm text-red-600 flex items-center gap-2">
+                    <span>✗</span>
+                    מספר הטלפון לא נמצא במערכת
+                  </p>
+                )}
               </div>
             </div>}
 
