@@ -328,7 +328,8 @@ export default function Registration() {
                   </p>
                 </div>
               </> : <>
-                <h1 className="text-3xl font-bold text-foreground">דף בדיקה - תשלום הרשמה</h1>
+                <h1 className="text-3xl font-bold text-foreground"> 
+  תשלום הרשמה</h1>
                 <p className="text-lg text-muted-foreground">דמי הרשמה: ₪{REGISTRATION_FEE} כולל מע"מ</p>
                 <p className="text-sm text-muted-foreground">הזן מספר טלפון של משתמש קיים במערכת</p>
               </>}
