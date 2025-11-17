@@ -56,13 +56,7 @@ export default function Registration() {
   useEffect(() => {
     if (isPaymentLink) return; // Skip check for payment links
     
-    if (!phoneNumber || phoneNumber.length < 10) {
-      setPhoneCheckStatus('idle');
-      return;
-    }
-
-    // Validate Israeli phone format
-    if (!/^0[2-9]\d{8}$/.test(phoneNumber)) {
+    if (!phoneNumber || phoneNumber.length < 9) {
       setPhoneCheckStatus('idle');
       return;
     }
@@ -71,16 +65,32 @@ export default function Registration() {
 
     const timeoutId = setTimeout(async () => {
       try {
+        // Normalize phone number - remove +972, 972, or leading 0
+        let normalizedPhone = phoneNumber.trim().replace(/[-\s]/g, '');
+        
+        if (normalizedPhone.startsWith('+972')) {
+          normalizedPhone = normalizedPhone.substring(4); // Remove +972
+        } else if (normalizedPhone.startsWith('972')) {
+          normalizedPhone = normalizedPhone.substring(3); // Remove 972
+        } else if (normalizedPhone.startsWith('0')) {
+          normalizedPhone = normalizedPhone.substring(1); // Remove leading 0
+        }
+
+        console.log('Searching for phone:', normalizedPhone);
+
+        // Search using LIKE to match any format in database
         const { data, error } = await supabase
           .from('professionals')
           .select('name, phone_number')
-          .eq('phone_number', phoneNumber)
-          .maybeSingle();
+          .or(`phone_number.like.%${normalizedPhone},phone_number.like.0${normalizedPhone},phone_number.like.972${normalizedPhone},phone_number.like.+972${normalizedPhone}`)
+          .limit(1);
 
         if (error) throw error;
 
-        if (data) {
-          setProfessionalName(data.name);
+        console.log('Search result:', data);
+
+        if (data && data.length > 0) {
+          setProfessionalName(data[0].name);
           setPhoneCheckStatus('found');
         } else {
           setProfessionalName('');
