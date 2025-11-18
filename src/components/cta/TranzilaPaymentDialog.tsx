@@ -75,10 +75,13 @@ export default function TranzilaPaymentDialog({
 
   const loadTranzilaSDK = async () => {
     try {
-      console.log('Getting handshake token...');
+      console.log('Getting handshake token for amount:', REGISTRATION_FEE);
 
       // Use public handshake (no auth required for registration)
-      const { data, error } = await supabase.functions.invoke('tranzila-handshake-public');
+      // IMPORTANT: Pass the exact amount that will be charged
+      const { data, error } = await supabase.functions.invoke('tranzila-handshake-public', {
+        body: { amount: REGISTRATION_FEE.toFixed(2) }
+      });
 
       if (error) {
         console.error('Handshake error:', error);
@@ -86,7 +89,7 @@ export default function TranzilaPaymentDialog({
       }
 
       const { handshakeToken: token, terminal } = data;
-      console.log('Handshake token received, terminal:', terminal);
+      console.log('Handshake token received for', REGISTRATION_FEE, 'ILS, terminal:', terminal);
 
       setHandshakeToken(token);
       setTerminalName(terminal);
@@ -198,22 +201,22 @@ export default function TranzilaPaymentDialog({
 
       console.log('Terminal name:', terminal);
 
-      // ✅ FIX 1: Get FRESH handshake token right before charge
-      console.log('Requesting fresh handshake token for charge...');
-      const { data: freshHandshake, error: handshakeError } = await supabase.functions.invoke('tranzila-handshake-public');
+      // ✅ FIX: Use the SAME handshake token that was used to initialize the SDK
+      // The Hosted Fields instance is bound to the original handshake token
+      // We cannot use a different token - must use the one from initialization
+      const token = (window as any).tranzilaHandshakeToken;
 
-      if (handshakeError || !freshHandshake?.handshakeToken) {
-        console.error('Failed to get fresh handshake token:', handshakeError);
-        throw new Error('שגיאה בחיבור למערכת התשלום. אנא נסה שוב');
+      if (!token) {
+        throw new Error('Missing handshake token');
       }
 
-      console.log('Fresh handshake token received (first 10 chars):', freshHandshake.handshakeToken.substring(0, 10));
+      console.log('Using handshake token from SDK initialization (first 10 chars):', token.substring(0, 10));
       console.log('Charging registration fee via Tranzila...');
 
       // Charge with Tranzila (includes tokenization) - Using callback pattern from docs
       const chargeParams = {
         terminal_name: terminal,
-        thtk: freshHandshake.handshakeToken, // ✅ Use FRESH token
+        thtk: token, // Use same token that initialized the Hosted Fields
         amount: REGISTRATION_FEE.toFixed(2),
         currency_code: 'ILS',
         tran_mode: 'A', // Authorization + Capture

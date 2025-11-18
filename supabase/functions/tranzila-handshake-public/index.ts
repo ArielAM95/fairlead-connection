@@ -13,6 +13,20 @@ Deno.serve(async (req) => {
   try {
     console.log('Public handshake request received');
 
+    // Parse request body to get amount if provided
+    let amount = '1.00'; // Default amount
+    if (req.method === 'POST') {
+      try {
+        const body = await req.json();
+        if (body.amount) {
+          amount = String(body.amount);
+          console.log('Using provided amount:', amount);
+        }
+      } catch (e) {
+        console.log('No amount in request body, using default 1.00');
+      }
+    }
+
     // Get terminal credentials
     const rawTerminal = Deno.env.get('TRANZILA_TOKEN_TERMINAL_NAME')?.trim() ||
                         Deno.env.get('TRANZILA_TERMINAL_NAME')?.trim() || '';
@@ -37,7 +51,7 @@ Deno.serve(async (req) => {
     const url = new URL('https://api.tranzila.com/v1/handshake/create');
     url.searchParams.set('supplier', terminal);
     url.searchParams.set('TranzilaPW', password);
-    url.searchParams.set('sum', '1.00');
+    url.searchParams.set('sum', amount); // Use provided amount or default
     url.searchParams.set('currency', '1');
 
     console.log('Calling Tranzila handshake API with GET...');
