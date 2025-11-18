@@ -226,30 +226,10 @@ Deno.serve(async (req) => {
 
     console.log('Registration payment completed successfully');
 
-    // Generate invoice (non-blocking - don't fail payment if invoice fails)
-    // Note: Tranzila Document API may not be enabled yet - failures are logged but don't break payment
-    try {
-      console.log('Attempting invoice generation for registration payment...');
-
-      const invoiceResponse = await supabase.functions.invoke('tranzila-create-invoice', {
-        body: {
-          professional_id: professional.id,
-          transaction_log_id: transactionLog?.id || null,
-          invoice_type: 'registration',
-          total_amount: amount || 413,
-          description: `דמי הרשמה - oFair - ${professional.name}`
-        }
-      });
-
-      if (invoiceResponse.error) {
-        console.error('Invoice generation failed (non-blocking):', invoiceResponse.error);
-      } else {
-        console.log('Invoice generated successfully:', invoiceResponse.data);
-      }
-    } catch (invoiceError) {
-      console.error('Invoice generation exception (non-blocking):', invoiceError);
-      // Don't throw - invoice generation failures shouldn't break payment
-    }
+    // ✅ REMOVED: Invoice generation via Billing API
+    // Invoices are now auto-generated during charge when customer fields are included
+    // See TranzilaPaymentDialog.tsx - chargeParams includes: contact, email, company, id
+    // This triggers automatic invoice creation and email delivery by Tranzila
 
     return new Response(
       JSON.stringify({
