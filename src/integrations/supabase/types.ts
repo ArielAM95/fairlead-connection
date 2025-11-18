@@ -3155,13 +3155,12 @@ export type Database = {
         Args: { token_param?: string }
         Returns: {
           created_at: string
+          customer_first_name: string
           customer_initials: string
-          customer_phone_masked: string
-          id: string
           rating_cleanliness: number
           rating_communication: number
+          rating_id: string
           rating_quality: number
-          rating_recommendation: number
           rating_timing: number
           rating_value: number
           recommendation: string
@@ -3237,11 +3236,42 @@ export type Database = {
           total_ratings: number
         }[]
       }
+      get_professional_rating_stats_by_id: {
+        Args: { professional_id_param: string }
+        Returns: {
+          average_cleanliness: number
+          average_communication: number
+          average_quality: number
+          average_recommendation: number
+          average_timing: number
+          average_value: number
+          overall_weighted_average: number
+          total_ratings: number
+        }[]
+      }
+      get_professional_ratings_by_id: {
+        Args: { professional_id_param: string }
+        Returns: {
+          company_name: string
+          created_at: string
+          customer_name: string
+          professional_name: string
+          rating_cleanliness: number
+          rating_communication: number
+          rating_quality: number
+          rating_recommendation: number
+          rating_timing: number
+          rating_value: number
+          recommendation: string
+          weighted_average: number
+        }[]
+      }
       get_professional_ratings_public: {
         Args: { professional_phone_param: string }
         Returns: {
           company_name: string
           created_at: string
+          customer_name: string
           professional_name: string
           rating_cleanliness: number
           rating_communication: number
