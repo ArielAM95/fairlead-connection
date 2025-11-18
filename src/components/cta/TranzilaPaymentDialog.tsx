@@ -220,13 +220,23 @@ export default function TranzilaPaymentDialog({
         amount: REGISTRATION_FEE.toFixed(2),
         currency_code: 'ILS',
         tran_mode: 'A', // Authorization + Capture
-        tokenize: true  // Enable tokenization
+        tokenize: true,  // Enable tokenization
+        // ✅ AUTO-INVOICE GENERATION FIELDS
+        // Including these fields triggers Tranzila to auto-generate and email invoice
+        contact: userDetails.name,
+        email: userDetails.email || `${userDetails.phone}@temp.ofair.co.il`, // Fallback if no email
+        company: userDetails.companyName || userDetails.name,
+        id: userDetails.idNumber || '' // Business license number for Israeli tax compliance
       };
 
-      console.log('Charging with params (amount, terminal):', {
+      console.log('Charging with params (amount, terminal, invoice):', {
         amount: chargeParams.amount,
         terminal: chargeParams.terminal_name,
-        tokenPrefix: chargeParams.thtk.substring(0, 10)
+        tokenPrefix: chargeParams.thtk.substring(0, 10),
+        contact: chargeParams.contact,
+        email: chargeParams.email,
+        company: chargeParams.company,
+        hasBusinessLicense: !!chargeParams.id
       });
 
       // ✅ FIX 2: Add timeout to prevent hanging
