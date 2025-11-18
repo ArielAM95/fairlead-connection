@@ -40,13 +40,15 @@ export default function Registration() {
       setPhoneNumber(phoneParam);
       setIsPaymentLink(true);
 
-      // Lookup professional name for display
-      supabase.from('professionals').select('name').eq('phone_number', phoneParam).single().then(({
-        data
-      }) => {
-        if (data?.name) {
+      // Lookup professional name for display using Edge Function
+      supabase.functions.invoke('find-professional', {
+        body: { phoneNumber: phoneParam }
+      }).then(({ data, error }) => {
+        if (data && data.name) {
           setProfessionalName(data.name);
           console.log('Found professional:', data.name);
+        } else {
+          console.log('Professional not found for payment link');
         }
       });
     }
@@ -65,44 +67,25 @@ export default function Registration() {
 
     const timeoutId = setTimeout(async () => {
       try {
-        // Normalize phone number - remove +972, 972, or leading 0
-        let normalizedPhone = phoneNumber.trim().replace(/[-\s]/g, '');
-        
-        // Build array of possible phone formats
-        const phoneVariations = [];
-        
-        if (normalizedPhone.startsWith('+972')) {
-          const withoutPrefix = normalizedPhone.substring(4);
-          phoneVariations.push(normalizedPhone, '972' + withoutPrefix, '0' + withoutPrefix, withoutPrefix);
-        } else if (normalizedPhone.startsWith('972')) {
-          const withoutPrefix = normalizedPhone.substring(3);
-          phoneVariations.push(normalizedPhone, '+972' + withoutPrefix, '0' + withoutPrefix, withoutPrefix);
-        } else if (normalizedPhone.startsWith('0')) {
-          const withoutPrefix = normalizedPhone.substring(1);
-          phoneVariations.push(normalizedPhone, '972' + withoutPrefix, '+972' + withoutPrefix, withoutPrefix);
-        } else {
-          phoneVariations.push(normalizedPhone, '0' + normalizedPhone, '972' + normalizedPhone, '+972' + normalizedPhone);
-        }
+        console.log('Checking phone number using find-professional Edge Function:', phoneNumber);
 
-        console.log('Searching for phone variations:', phoneVariations);
-
-        // Search using exact match OR for all variations
-        const { data, error } = await supabase
-          .from('professionals')
-          .select('name, phone_number')
-          .or(phoneVariations.map(v => `phone_number.eq.${v}`).join(','))
-          .limit(1);
+        // Use Edge Function to search for professional (bypasses RLS)
+        const { data, error } = await supabase.functions.invoke('find-professional', {
+          body: { phoneNumber: phoneNumber }
+        });
 
         if (error) throw error;
 
         console.log('Search result:', data);
 
-        if (data && data.length > 0) {
-          setProfessionalName(data[0].name);
+        if (data && data.name) {
+          setProfessionalName(data.name);
           setPhoneCheckStatus('found');
+          console.log('✓ Professional found:', data.name);
         } else {
           setProfessionalName('');
           setPhoneCheckStatus('not_found');
+          console.log('✗ Professional not found');
         }
       } catch (error) {
         console.error('Error checking phone number:', error);
