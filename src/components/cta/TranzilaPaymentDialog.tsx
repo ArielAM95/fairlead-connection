@@ -187,44 +187,66 @@ export default function TranzilaPaymentDialog({
         throw new Error('Tranzila instance not found');
       }
 
-      console.log('Charging registration fee via Tranzila...');
+      console.log('Tranzila instance found:', !!tranzilaInstance);
 
-      // Get values from window (stored during initialization)
+      // Get terminal from window
       const terminal = (window as any).tranzilaTerminal;
-      const token = (window as any).tranzilaHandshakeToken;
 
-      if (!terminal || !token) {
-        throw new Error('Missing terminal or handshake token');
+      if (!terminal) {
+        throw new Error('Missing terminal name');
       }
+
+      console.log('Terminal name:', terminal);
+
+      // ✅ FIX 1: Get FRESH handshake token right before charge
+      console.log('Requesting fresh handshake token for charge...');
+      const { data: freshHandshake, error: handshakeError } = await supabase.functions.invoke('tranzila-handshake-public');
+
+      if (handshakeError || !freshHandshake?.handshakeToken) {
+        console.error('Failed to get fresh handshake token:', handshakeError);
+        throw new Error('שגיאה בחיבור למערכת התשלום. אנא נסה שוב');
+      }
+
+      console.log('Fresh handshake token received (first 10 chars):', freshHandshake.handshakeToken.substring(0, 10));
+      console.log('Charging registration fee via Tranzila...');
 
       // Charge with Tranzila (includes tokenization) - Using callback pattern from docs
       const chargeParams = {
         terminal_name: terminal,
-        thtk: token,
+        thtk: freshHandshake.handshakeToken, // ✅ Use FRESH token
         amount: REGISTRATION_FEE.toFixed(2),
         currency_code: 'ILS',
         tran_mode: 'A', // Authorization + Capture
         tokenize: true  // Enable tokenization
       };
 
-      console.log('Charging with params:', chargeParams);
-      console.log('Terminal name:', terminal, 'Type:', typeof terminal);
-      console.log('Handshake token:', token, 'Type:', typeof token);
-
-      chargeResult = await new Promise<any>((resolve, reject) => {
-        tranzilaInstance.charge(
-          chargeParams,
-          (err: any, response: any) => {
-            if (err) {
-              console.error('Charge error:', err);
-              reject(err);
-            } else {
-              console.log('Charge response:', response);
-              resolve(response);
-            }
-          }
-        );
+      console.log('Charging with params (amount, terminal):', {
+        amount: chargeParams.amount,
+        terminal: chargeParams.terminal_name,
+        tokenPrefix: chargeParams.thtk.substring(0, 10)
       });
+
+      // ✅ FIX 2: Add timeout to prevent hanging
+      chargeResult = await Promise.race([
+        new Promise<any>((resolve, reject) => {
+          tranzilaInstance.charge(
+            chargeParams,
+            (err: any, response: any) => {
+              if (err) {
+                console.error('Charge error from Tranzila:', err);
+                reject(err);
+              } else {
+                console.log('Charge response from Tranzila:', response);
+                resolve(response);
+              }
+            }
+          );
+        }),
+        // Timeout after 30 seconds
+        new Promise<any>((_, reject) =>
+          setTimeout(() => reject(new Error('התשלום לקח זמן רב מדי. אנא נסה שוב')), 30000)
+        )
+      ]);
 
       console.log('Tranzila charge result:', chargeResult);
 
@@ -261,7 +283,12 @@ export default function TranzilaPaymentDialog({
       });
 
     } catch (error: any) {
-      console.error('Payment error:', error);
+      console.error('Payment error details:', {
+        message: error.message,
+        stack: error.stack,
+        type: error.constructor?.name,
+        chargeResult: chargeResult
+      });
 
       // Send error to webhook if we have a charge result
       if (chargeResult) {
@@ -271,7 +298,21 @@ export default function TranzilaPaymentDialog({
         sendToMakeWebhook({ error: error.message }, false, error.message);
       }
 
-      toast.error(error.message || 'שגיאה בביצוע התשלום');
+      // ✅ FIX 3: Better error messages for users
+      let userMessage = error.message || 'שגיאה בביצוע התשלום';
+
+      // Don't modify already translated error messages
+      if (!userMessage.includes('שגיאה') && !userMessage.includes('Charge failed')) {
+        if (error.message.includes('timeout') || error.message.includes('לקח זמן רב')) {
+          userMessage = 'התשלום לקח זמן רב מדי. אנא נסה שוב';
+        } else if (error.message.includes('handshake') || error.message.includes('חיבור')) {
+          userMessage = 'שגיאה בחיבור למערכת התשלום. אנא רענן את הדף ונסה שוב';
+        } else if (error.message.includes('instance not found')) {
+          userMessage = 'מערכת התשלום לא זמינה. אנא רענן את הדף';
+        }
+      }
+
+      toast.error(userMessage);
       setIsProcessing(false);
     }
   };
