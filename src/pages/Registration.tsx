@@ -225,9 +225,9 @@ export default function Registration() {
 
       setShowPaymentDialog(false);
 
-      // Navigate to success page - wait 4 seconds for user to read message
+      // Navigate to thank you page - wait 4 seconds for user to read message
       setTimeout(() => {
-        navigate('/');
+        navigate('/thank-you');
       }, 4000);
     } catch (error: any) {
       console.error('Post-payment error:', error);
