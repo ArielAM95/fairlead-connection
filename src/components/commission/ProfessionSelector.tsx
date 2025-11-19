@@ -61,33 +61,34 @@ const ProfessionSelector = ({ value, onChange }: ProfessionSelectorProps) => {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <button
-          type="button"
-          className="w-full h-14 px-4 text-lg border-2 border-primary/20 hover:border-primary/40 transition-colors rounded-md bg-background text-right flex items-center justify-between"
-        >
-          <ChevronDown className={cn("h-5 w-5 text-muted-foreground transition-transform", isOpen && "rotate-180")} />
-          <span className={cn("flex-1 text-right", !displayValue && "text-muted-foreground")}>
-            {displayValue || "חפש ובחר מקצוע..."}
-          </span>
-        </button>
+        <div className="relative">
+          <Input
+            ref={inputRef}
+            type="text"
+            placeholder="חפש ובחר מקצוע..."
+            value={isOpen ? searchTerm : displayValue}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              if (!isOpen) setIsOpen(true);
+            }}
+            onFocus={() => setIsOpen(true)}
+            className="text-right h-14 text-lg pr-12 border-2 border-primary/20 hover:border-primary/40 transition-colors"
+          />
+          <ChevronDown 
+            className={cn(
+              "absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground transition-transform pointer-events-none",
+              isOpen && "rotate-180"
+            )} 
+          />
+        </div>
       </PopoverTrigger>
       <PopoverContent 
         className="w-[var(--radix-popover-trigger-width)] p-0 bg-card border-2 border-primary/20" 
         side="bottom" 
         align="start"
         sideOffset={5}
+        avoidCollisions={false}
       >
-        <div className="p-3 border-b border-border bg-card">
-          <Input
-            ref={inputRef}
-            type="text"
-            placeholder="הקלד לחיפוש מקצוע..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="text-right border-primary/20"
-          />
-        </div>
-
         <ScrollArea className="h-[300px] md:h-[350px]">
           <div className="p-2">
             {filteredProfessions.length === 0 ? (
