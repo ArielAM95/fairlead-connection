@@ -3,464 +3,286 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import TranzilaPaymentDialog from '@/components/cta/TranzilaPaymentDialog';
 
-// Tranzila SDK Types
-declare global {
-  interface Window {
-    TzlaHostedFields?: {
-      create: (options: any) => any;
-    };
-  }
-}
 const REGISTRATION_FEE = 413; // ₪ Production registration fee
+
+interface ProfessionalData {
+  name: string;
+  email?: string;
+  company_name?: string;
+  business_license_number?: string;
+  city?: string;
+}
 
 export default function Registration() {
   const navigate = useNavigate();
-  const [sdkLoaded, setSdkLoaded] = useState(false);
-  const [fieldsReady, setFieldsReady] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [handshakeToken, setHandshakeToken] = useState<string>('');
-  const [terminalName, setTerminalName] = useState<string>('');
-  const [saveCard, setSaveCard] = useState(true); // Default: checked
 
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [isPaymentLink, setIsPaymentLink] = useState(false); // Tracks if this is a payment-only link
-  const [professionalName, setProfessionalName] = useState(''); // Store name for display
+  const [isPaymentLink, setIsPaymentLink] = useState(false);
+  const [professionalData, setProfessionalData] = useState<ProfessionalData | null>(null);
   const [phoneCheckStatus, setPhoneCheckStatus] = useState<'idle' | 'checking' | 'found' | 'not_found'>('idle');
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
   // 📱 Check for phone URL parameter (payment link feature)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const phoneParam = urlParams.get('phone');
+
     if (phoneParam) {
       console.log('Payment link detected for phone:', phoneParam);
       setPhoneNumber(phoneParam);
       setIsPaymentLink(true);
 
-      // Lookup professional name for display using Edge Function
-      supabase.functions.invoke('find-professional', {
-        body: { phoneNumber: phoneParam }
-      }).then(({ data, error }) => {
-        if (data && data.name) {
-          setProfessionalName(data.name);
-          console.log('Found professional:', data.name);
-        } else {
-          console.log('Professional not found for payment link');
-        }
-      });
+      // Fetch full professional details
+      fetchProfessionalData(phoneParam);
     }
   }, []);
 
   // 🔍 Check if phone number exists in database (with debounce)
   useEffect(() => {
     if (isPaymentLink) return; // Skip check for payment links
-    
+
     if (!phoneNumber || phoneNumber.length < 9) {
       setPhoneCheckStatus('idle');
+      setProfessionalData(null);
       return;
     }
 
     setPhoneCheckStatus('checking');
 
-    const timeoutId = setTimeout(async () => {
-      try {
-        console.log('Checking phone number using find-professional Edge Function:', phoneNumber);
-
-        // Use Edge Function to search for professional (bypasses RLS)
-        const { data, error } = await supabase.functions.invoke('find-professional', {
-          body: { phoneNumber: phoneNumber }
-        });
-
-        if (error) throw error;
-
-        console.log('Search result:', data);
-
-        if (data && data.name) {
-          setProfessionalName(data.name);
-          setPhoneCheckStatus('found');
-          console.log('✓ Professional found:', data.name);
-        } else {
-          setProfessionalName('');
-          setPhoneCheckStatus('not_found');
-          console.log('✗ Professional not found');
-        }
-      } catch (error) {
-        console.error('Error checking phone number:', error);
-        setPhoneCheckStatus('idle');
-      }
+    const timeoutId = setTimeout(() => {
+      fetchProfessionalData(phoneNumber);
     }, 500); // 500ms debounce
 
     return () => clearTimeout(timeoutId);
   }, [phoneNumber, isPaymentLink]);
 
-  // 🔒 Disconnect Supabase realtime (למניעת שגיאת JSON.parse)
-  useEffect(() => {
-    const channels = supabase.getChannels();
-    channels.forEach(channel => channel.unsubscribe());
-    return () => {
-      console.log('Supabase channels will reconnect naturally');
-    };
-  }, []);
-
-  // 📦 Load Tranzila SDK
-  useEffect(() => {
-    loadTranzilaSDK();
-  }, []);
-  const loadTranzilaSDK = async () => {
+  // 📞 Fetch professional data from database
+  const fetchProfessionalData = async (phone: string) => {
     try {
-      console.log('Getting handshake token...');
+      console.log('Fetching professional data for phone:', phone);
 
-      // Use public handshake (no auth required for registration)
-      const {
-        data,
-        error
-      } = await supabase.functions.invoke('tranzila-handshake-public');
-      if (error) {
-        console.error('Handshake error:', error);
-        throw error;
+      // Use Edge Function to search for professional (bypasses RLS)
+      const { data, error } = await supabase.functions.invoke('find-professional', {
+        body: { phoneNumber: phone }
+      });
+
+      if (error) throw error;
+
+      console.log('Professional data received:', data);
+
+      if (data && data.name) {
+        // Store full professional data for invoice generation
+        setProfessionalData({
+          name: data.name,
+          email: data.email || '',
+          company_name: data.company_name || data.name,
+          business_license_number: data.business_license_number || '',
+          city: data.city || data.location || ''
+        });
+        setPhoneCheckStatus('found');
+        console.log('✓ Professional found:', data.name);
+      } else {
+        setProfessionalData(null);
+        setPhoneCheckStatus('not_found');
+        console.log('✗ Professional not found');
       }
-      const {
-        handshakeToken: token,
-        terminal
-      } = data;
-      console.log('Handshake token received, terminal:', terminal);
-      setHandshakeToken(token);
-      setTerminalName(terminal);
-
-      // Load Tranzila SDK script
-      const script = document.createElement('script');
-      script.src = 'https://hf.tranzila.com/assets/js/thostedf.js';
-      script.async = true;
-      script.onload = () => {
-        console.log('Tranzila SDK loaded');
-        setSdkLoaded(true);
-        initHostedFields(handshakeToken, terminal);
-      };
-      script.onerror = () => {
-        console.error('Failed to load Tranzila SDK');
-        toast.error('שגיאה בטעינת מערכת התשלום');
-      };
-      document.body.appendChild(script);
-    } catch (error: any) {
-      console.error('SDK load error:', error);
-      toast.error('שגיאה בטעינת מערכת התשלום');
-    }
-  };
-  const initHostedFields = (handshakeToken: string, terminal: string) => {
-    if (!window.TzlaHostedFields) {
-      toast.error('מערכת התשלום לא זמינה');
-      return;
-    }
-    try {
-      const hostedFieldsInstance = window.TzlaHostedFields.create({
-        sandbox: false,
-        terminal_name: terminal,
-        handshake_token: handshakeToken,
-        fields: {
-          credit_card_number: {
-            selector: '#hosted-card-number'
-          },
-          cvv: {
-            selector: '#hosted-cvv'
-          },
-          expiry: {
-            selector: '#hosted-expiry'
-          }
-        }
-      });
-      hostedFieldsInstance.onEvent('ready', () => {
-        console.log('Tranzila Hosted Fields ready');
-        setFieldsReady(true);
-      });
-      hostedFieldsInstance.onEvent('validityChange', (event: any) => {
-        console.log('Field validity changed:', event);
-      });
-
-      // Store for charge
-      (window as any).tranzilaInstance = hostedFieldsInstance;
     } catch (error) {
-      console.error('Hosted fields init error:', error);
-      toast.error('שגיאה באתחול שדות תשלום');
+      console.error('Error fetching professional data:', error);
+      setPhoneCheckStatus('idle');
+      setProfessionalData(null);
     }
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
 
+  // 💳 Open payment dialog
+  const handleOpenPayment = () => {
     // Validate phone number
     if (!phoneNumber || !/^0[2-9]\d{7,8}$/.test(phoneNumber)) {
       toast.error('נא להזין מספר טלפון תקין');
       return;
     }
-    if (!fieldsReady) {
-      toast.error('שדות התשלום טרם מוכנים');
+
+    // Verify professional found
+    if (phoneCheckStatus !== 'found' || !professionalData) {
+      toast.error('לא נמצא משתמש עם מספר טלפון זה');
       return;
     }
-    setIsSubmitting(true);
+
+    setShowPaymentDialog(true);
+  };
+
+  // ✅ Handle payment success
+  const handlePaymentSuccess = async (paymentData: any) => {
     try {
-      const tranzilaInstance = (window as any).tranzilaInstance;
-      if (!tranzilaInstance) {
-        throw new Error('Tranzila instance not found');
-      }
-      console.log('Charging registration fee via Tranzila...');
+      console.log('Payment successful, saving token...');
 
-      // Charge with Tranzila (includes tokenization) - Using callback pattern from docs
-      const chargeResult = await new Promise<any>((resolve, reject) => {
-        tranzilaInstance.charge({
-          terminal_name: terminalName,
-          thtk: handshakeToken,
-          amount: REGISTRATION_FEE.toFixed(2),
-          currency_code: 'ILS',
-          tran_mode: 'A',
-          // Authorization + Capture
-          tokenize: true // Enable tokenization
-        }, (err: any, response: any) => {
-          if (err) {
-            console.error('Charge error:', err);
-            reject(err);
-          } else {
-            console.log('Charge response:', response);
-            resolve(response);
+      // Parse expiry from Tranzila format (MMYY)
+      const expdate = paymentData.card_expiry; // e.g., "0431" = April 2031
+      const expiry_month = parseInt(expdate.substring(0, 2), 10);
+      const expiry_year = 2000 + parseInt(expdate.substring(2, 4), 10);
+
+      if (paymentData.save_card) {
+        // Save payment token
+        const { data, error } = await supabase.functions.invoke(
+          'tranzila-registration-payment',
+          {
+            body: {
+              phone_number: phoneNumber,
+              tranzila_token: paymentData.tranzila_token,
+              card_last4: paymentData.card_last4,
+              expiry_month,
+              expiry_year,
+              confirmation_code: paymentData.confirmation_code,
+              amount: 413 // Production registration fee
+            }
           }
-        });
-      });
-      console.log('Tranzila charge result:', chargeResult);
+        );
 
-      // Extract token from response according to docs
-      const txnResponse = chargeResult.transaction_response;
-
-      // Check if payment was successful
-      const paymentSuccess = txnResponse?.success && txnResponse.processor_response_code === '000';
-      const errorMessage = paymentSuccess ? null : txnResponse?.processor_response_message || 'Unknown error';
-
-      // Send entire Tranzila response to Make.com webhook (ALL attempts - success and failure)
-      fetch('https://hook.eu2.make.com/f6ktm70ppeik9wyo7jey5tljf5bcf5xj', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          tranzila_response: chargeResult,
-          user_details: {
-            phone_number: phoneNumber
-          },
-          timestamp: new Date().toISOString(),
-          amount: REGISTRATION_FEE,
-          success: paymentSuccess,
-          error_message: errorMessage,
-          source: 'registration_page'
-        })
-      }).catch(err => {
-        console.error('Failed to send Tranzila response to Make.com:', err);
-        // Non-blocking - don't throw error
-      });
-      if (!paymentSuccess) {
-        throw new Error('Charge failed: ' + errorMessage);
-      }
-      const tranzilaToken = txnResponse.token;
-      const last4 = String(txnResponse.credit_card_last_4_digits).padStart(4, '0').slice(-4);
-
-      // Parse expiry from response
-      const expiry_month = Number(txnResponse.expiry_month);
-      // Tranzila returns 2-digit year (e.g., "31" for 2031), convert to 4-digit
-      const twoDigitYear = Number(txnResponse.expiry_year);
-      const expiry_year = twoDigitYear < 100 ? 2000 + twoDigitYear : twoDigitYear;
-
-      // Check if user wants to save the card
-      if (saveCard) {
-        const paymentData = {
-          phone_number: phoneNumber,
-          tranzila_token: tranzilaToken,
-          card_last4: last4,
-          expiry_month,
-          expiry_year,
-          confirmation_code: txnResponse.confirmation_code || '',
-          amount: REGISTRATION_FEE
-        };
-        console.log('Sending payment data:', paymentData);
-
-        // Call new registration payment function
-        const {
-          data: saveData,
-          error: saveError
-        } = await supabase.functions.invoke('tranzila-registration-payment', {
-          body: paymentData
-        });
-        console.log('Function response - data:', saveData);
-        console.log('Function response - error:', saveError);
-        if (saveError) {
-          console.error('Save token error:', saveError);
-          console.error('Error details:', JSON.stringify(saveError, null, 2));
-
-          // Try to get the actual error message from the response
-          let errorMessage = 'Unknown error';
-          if (saveData && typeof saveData === 'object') {
-            console.error('Error response body:', saveData);
-            errorMessage = saveData.error || saveData.message || errorMessage;
-          }
-          throw new Error(`שגיאה בשמירת פרטי המשתמש: ${errorMessage}`);
+        if (error) {
+          console.error('Save token error:', error);
+          toast.error('שגיאה בשמירת פרטי התשלום');
+          return;
         }
-        console.log('Registration successful with saved card:', saveData);
+
+        console.log('Registration successful with saved card:', data);
         toast.success(`ההרשמה הושלמה בהצלחה! ₪${REGISTRATION_FEE} חוייבו`);
       } else {
         // User chose NOT to save card - just update payment status
         console.log('User chose not to save card, updating payment status only');
-        const {
-          error
-        } = await supabase.from('professionals').update({
-          registration_payment_status: 'completed',
-          registration_paid_at: new Date().toISOString(),
-          registration_amount: REGISTRATION_FEE
-        }).eq('phone_number', phoneNumber);
+
+        const { error } = await supabase
+          .from('professionals')
+          .update({
+            registration_payment_status: 'completed',
+            registration_paid_at: new Date().toISOString(),
+            registration_amount: REGISTRATION_FEE
+          })
+          .eq('phone_number', phoneNumber);
+
         if (error) {
           console.error('Error updating payment status:', error);
-          throw new Error('שגיאה בעדכון סטטוס התשלום');
+          toast.error('שגיאה בעדכון סטטוס התשלום');
+          return;
         }
+
         console.log('Registration successful without saving card');
         toast.success(`התשלום בוצע בהצלחה! ₪${REGISTRATION_FEE} חוייבו`);
       }
 
-      // Navigate to success page or dashboard
+      setShowPaymentDialog(false);
+
+      // Navigate to success page
       setTimeout(() => {
         navigate('/');
       }, 2000);
     } catch (error: any) {
-      console.error('Registration error:', error);
-
-      // Send error to webhook (for errors that happen before/after Tranzila charge)
-      fetch('https://hook.eu2.make.com/f6ktm70ppeik9wyo7jey5tljf5bcf5xj', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          tranzila_response: {
-            error: error.message
-          },
-          user_details: {
-            phone_number: phoneNumber
-          },
-          timestamp: new Date().toISOString(),
-          amount: REGISTRATION_FEE,
-          success: false,
-          error_message: error.message,
-          source: 'registration_page'
-        })
-      }).catch(err => {
-        console.error('Failed to send error to Make.com:', err);
-      });
-      toast.error(error.message || 'שגיאה בתהליך ההרשמה');
-    } finally {
-      setIsSubmitting(false);
+      console.error('Post-payment error:', error);
+      toast.error(error.message || 'שגיאה בשמירת הנתונים');
     }
   };
-  return <div className="min-h-screen bg-background py-12 px-4">
+
+  return (
+    <div className="min-h-screen bg-background py-12 px-4">
       <div className="max-w-2xl mx-auto">
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Header */}
-          <div className="text-center space-y-2">
-            {isPaymentLink ? <>
-                <h1 className="text-3xl font-bold text-foreground">השלמת תשלום הרשמה</h1>
-                {professionalName && <p className="text-xl text-foreground">שלום {professionalName}!</p>}
-                <p className="text-lg text-muted-foreground">
-                  נא להשלים את תשלום דמי ההרשמה בסך ₪{REGISTRATION_FEE}
+        {/* Header */}
+        <div className="text-center space-y-2 mb-8">
+          {isPaymentLink ? (
+            <>
+              <h1 className="text-3xl font-bold text-foreground">השלמת תשלום הרשמה</h1>
+              {professionalData && (
+                <p className="text-xl text-foreground">שלום {professionalData.name}!</p>
+              )}
+              <p className="text-lg text-muted-foreground">
+                נא להשלים את תשלום דמי ההרשמה בסך ₪{REGISTRATION_FEE}
+              </p>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+                <p className="text-sm text-blue-800">
+                  📱 קישור תשלום עבור: <span className="font-semibold" dir="ltr">{phoneNumber}</span>
                 </p>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
-                  <p className="text-sm text-blue-800">
-                    📱 קישור תשלום עבור: <span className="font-semibold" dir="ltr">{phoneNumber}</span>
-                  </p>
-                </div>
-              </> : <>
-                <h1 className="text-3xl font-bold text-foreground"> 
-  תשלום הרשמה</h1>
-                <p className="text-lg text-muted-foreground">דמי הרשמה: ₪{REGISTRATION_FEE} כולל מע"מ</p>
-                <p className="text-sm text-muted-foreground">הזן מספר טלפון של משתמש קיים במערכת</p>
-              </>}
-          </div>
-
-          {/* Phone number only - Hidden if payment link */}
-          {!isPaymentLink && <div className="bg-card p-6 rounded-lg border border-border space-y-4">
-              <h2 className="text-xl font-semibold text-card-foreground">מספר טלפון</h2>
-
-              <div className="space-y-2">
-                <Label htmlFor="phone">טלפון *</Label>
-                <Input id="phone" type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="050-1234567" dir="ltr" required maxLength={10} />
-                
-                {/* Phone check status indicator */}
-                {phoneCheckStatus === 'checking' && (
-                  <p className="text-sm text-muted-foreground flex items-center gap-2">
-                    <span className="animate-spin">⏳</span>
-                    בודק מספר טלפון...
-                  </p>
-                )}
-                {phoneCheckStatus === 'found' && (
-                  <p className="text-sm text-green-600 flex items-center gap-2">
-                    <span>✓</span>
-                    נמצא משתמש: {professionalName}
-                  </p>
-                )}
-                {phoneCheckStatus === 'not_found' && (
-                  <p className="text-sm text-red-600 flex items-center gap-2">
-                    <span>✗</span>
-                    מספר הטלפון לא נמצא במערכת
-                  </p>
-                )}
               </div>
-            </div>}
+            </>
+          ) : (
+            <>
+              <h1 className="text-3xl font-bold text-foreground">תשלום הרשמה</h1>
+              <p className="text-lg text-muted-foreground">דמי הרשמה: ₪{REGISTRATION_FEE} כולל מע"מ</p>
+              <p className="text-sm text-muted-foreground">הזן מספר טלפון של משתמש קיים במערכת</p>
+            </>
+          )}
+        </div>
 
-          {/* פרטי תשלום - Hosted Fields */}
-          <div className="bg-card p-6 rounded-lg border border-border space-y-4">
-            <h2 className="text-xl font-semibold text-card-foreground">פרטי תשלום</h2>
-            
+        {/* Phone number input - Hidden if payment link */}
+        {!isPaymentLink && (
+          <div className="bg-card p-6 rounded-lg border border-border space-y-4 mb-8">
+            <h2 className="text-xl font-semibold text-card-foreground">מספר טלפון</h2>
+
             <div className="space-y-2">
-              <Label>מספר כרטיס *</Label>
-              <div id="hosted-card-number" className="h-10 w-full rounded-md border border-input bg-background px-3 py-2" />
+              <Label htmlFor="phone">טלפון *</Label>
+              <Input
+                id="phone"
+                type="tel"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="050-1234567"
+                dir="ltr"
+                required
+                maxLength={10}
+              />
+
+              {/* Phone check status indicator */}
+              {phoneCheckStatus === 'checking' && (
+                <p className="text-sm text-muted-foreground flex items-center gap-2">
+                  <span className="animate-spin">⏳</span>
+                  בודק מספר טלפון...
+                </p>
+              )}
+              {phoneCheckStatus === 'found' && professionalData && (
+                <p className="text-sm text-green-600 flex items-center gap-2">
+                  <span>✓</span>
+                  נמצא משתמש: {professionalData.name}
+                </p>
+              )}
+              {phoneCheckStatus === 'not_found' && (
+                <p className="text-sm text-red-600 flex items-center gap-2">
+                  <span>✗</span>
+                  מספר הטלפון לא נמצא במערכת
+                </p>
+              )}
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>תוקף (MM/YY) *</Label>
-                <div id="hosted-expiry" className="h-10 w-full rounded-md border border-input bg-background px-3 py-2" />
-              </div>
-
-              <div className="space-y-2">
-                <Label>CVV *</Label>
-                <div id="hosted-cvv" className="h-10 w-full rounded-md border border-input bg-background px-3 py-2" />
-              </div>
-            </div>
           </div>
+        )}
 
-          {/* שמירת כרטיס לשימוש עתידי */}
-          <div className="flex items-center gap-2 rtl:gap-x-reverse">
-            <Checkbox id="save-card" checked={saveCard} onCheckedChange={checked => setSaveCard(checked as boolean)} disabled={isSubmitting} />
-            <Label htmlFor="save-card" className="text-sm font-normal cursor-pointer leading-tight">
-              שמור את פרטי הכרטיס לשימוש עתידי באפליקציה
-            </Label>
-          </div>
+        {/* Payment Button */}
+        <Button
+          onClick={handleOpenPayment}
+          disabled={phoneCheckStatus !== 'found' || !professionalData}
+          className="w-full h-12 text-lg"
+          size="lg"
+        >
+          {phoneCheckStatus === 'found'
+            ? `המשך לתשלום ₪${REGISTRATION_FEE}`
+            : 'הזן מספר טלפון תקין'}
+        </Button>
 
-          {/* הודעת אבטחה */}
-          <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 p-3 rounded-md">
-            <span className="text-lg">🔒</span>
-            <p>פרטי הכרטיס מוצפנים ומאובטחים על ידי Tranzila</p>
-          </div>
-
-          {/* כפתור שליחה */}
-          <Button type="submit" disabled={!fieldsReady || isSubmitting} className="w-full h-12 text-lg" size="lg">
-            {isSubmitting ? <span className="flex items-center gap-2">
-                <span className="animate-spin">⏳</span>
-                מעבד תשלום...
-              </span> : `שלם ₪${REGISTRATION_FEE} והירשם`}
-          </Button>
-
-          {/* סטטוס */}
-          <div className="text-center text-sm text-muted-foreground">
-            {!sdkLoaded && <p>טוען מערכת תשלום...</p>}
-            {sdkLoaded && !fieldsReady && <p>מכין שדות תשלום...</p>}
-            {fieldsReady && <p className="text-green-600">✓ מערכת התשלום מוכנה</p>}
-          </div>
-        </form>
+        {/* Payment Dialog - Opens when button clicked */}
+        {professionalData && (
+          <TranzilaPaymentDialog
+            open={showPaymentDialog}
+            onClose={() => setShowPaymentDialog(false)}
+            onSuccess={handlePaymentSuccess}
+            userDetails={{
+              name: professionalData.name,
+              idNumber: professionalData.business_license_number || '000000000',
+              phone: phoneNumber,
+              email: professionalData.email,
+              city: professionalData.city,
+              companyName: professionalData.company_name
+            }}
+          />
+        )}
       </div>
-    </div>;
+    </div>
+  );
 }
