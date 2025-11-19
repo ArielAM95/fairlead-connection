@@ -206,6 +206,24 @@ Deno.serve(async (req) => {
       console.log('Registration payment status updated to completed');
     }
 
+    // Update professional_leads_crm paid status
+    console.log('Updating professional_leads_crm paid status...');
+    const { error: crmUpdateError } = await supabase
+      .from('professional_leads_crm')
+      .update({
+        paid: true,
+        paid_at: new Date().toISOString(),
+        payment_amount: amount || 413
+      })
+      .eq('professional_id', professional.id);
+
+    if (crmUpdateError) {
+      console.error('Failed to update CRM paid status:', crmUpdateError);
+      // Non-critical - don't fail the request
+    } else {
+      console.log('CRM paid status updated to true');
+    }
+
     // Log successful transaction
     const { data: transactionLog } = await supabase.from('transaction_logs').insert({
       professional_id: professional.id,

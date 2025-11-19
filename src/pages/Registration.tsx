@@ -153,6 +153,19 @@ export default function Registration() {
         // User chose NOT to save card - just update payment status
         console.log('User chose not to save card, updating payment status only');
 
+        // First get the professional_id
+        const { data: prof, error: profError } = await supabase
+          .from('professionals')
+          .select('id')
+          .eq('phone_number', phoneNumber)
+          .single();
+
+        if (profError || !prof) {
+          console.error('Error finding professional:', profError);
+          toast.error('שגיאה בעדכון סטטוס התשלום');
+          return;
+        }
+
         const { error } = await supabase
           .from('professionals')
           .update({
@@ -166,6 +179,21 @@ export default function Registration() {
           console.error('Error updating payment status:', error);
           toast.error('שגיאה בעדכון סטטוס התשלום');
           return;
+        }
+
+        // Update professional_leads_crm paid status
+        const { error: crmError } = await supabase
+          .from('professional_leads_crm')
+          .update({
+            paid: true,
+            paid_at: new Date().toISOString(),
+            payment_amount: REGISTRATION_FEE
+          })
+          .eq('professional_id', prof.id);
+
+        if (crmError) {
+          console.error('Error updating CRM paid status:', crmError);
+          // Non-critical - don't fail
         }
 
         console.log('Registration successful without saving card');
