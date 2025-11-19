@@ -154,7 +154,7 @@ export default function TranzilaPaymentDialog({
   };
 
   const sendToMakeWebhook = (tranzilaResponse: any, success: boolean, errorMessage?: string) => {
-    fetch('https://hook.eu2.make.com/f6ktm70ppeik9wyo7jey5tljf5bcf5xj', {
+    fetch('https://hook.eu2.make.com/4wdoi13sejhmos3j4g816njdtvsy7a17', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
