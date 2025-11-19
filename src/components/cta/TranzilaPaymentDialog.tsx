@@ -54,6 +54,7 @@ export default function TranzilaPaymentDialog({
   const [sdkLoaded, setSdkLoaded] = useState(false);
   const [fieldsReady, setFieldsReady] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [handshakeToken, setHandshakeToken] = useState<string>('');
   const [terminalName, setTerminalName] = useState<string>('');
   const [saveCard, setSaveCard] = useState(true); // Default: checked
@@ -282,18 +283,22 @@ export default function TranzilaPaymentDialog({
       const expiry_month = Number(txnResponse.expiry_month);
       const expiry_year = Number(txnResponse.expiry_year);
 
-      toast.success(`תשלום בסך ₪${REGISTRATION_FEE} בוצע בהצלחה!`);
+      // Show success state in dialog (no toast here - let parent handle it)
+      setIsProcessing(false);
+      setIsSuccess(true);
 
-      // Return payment data to parent - format for SignupForm compatibility
-      onSuccess({
-        tranzila_token: tranzilaToken,
-        tranzila_index: txnResponse.token_index || '',
-        card_last4: last4,
-        card_expiry: `${String(expiry_month).padStart(2, '0')}${String(expiry_year).slice(-2)}`, // MMYY format
-        card_type: txnResponse.credit_card_type || 'unknown',
-        confirmation_code: txnResponse.confirmation_code || '',
-        save_card: saveCard, // User's choice to save card
-      });
+      // Wait 2.5 seconds to let user see success state, then call onSuccess
+      setTimeout(() => {
+        onSuccess({
+          tranzila_token: tranzilaToken,
+          tranzila_index: txnResponse.token_index || '',
+          card_last4: last4,
+          card_expiry: `${String(expiry_month).padStart(2, '0')}${String(expiry_year).slice(-2)}`, // MMYY format
+          card_type: txnResponse.credit_card_type || 'unknown',
+          confirmation_code: txnResponse.confirmation_code || '',
+          save_card: saveCard, // User's choice to save card
+        });
+      }, 2500);
 
     } catch (error: any) {
       console.error('Payment error details:', {
@@ -396,7 +401,14 @@ export default function TranzilaPaymentDialog({
           <div className="text-center text-sm">
             {!sdkLoaded && <p className="text-muted-foreground">טוען מערכת תשלום...</p>}
             {sdkLoaded && !fieldsReady && <p className="text-muted-foreground">מכין שדות תשלום...</p>}
-            {fieldsReady && <p className="text-green-600 font-medium">✓ מערכת התשלום מוכנה</p>}
+            {fieldsReady && !isSuccess && <p className="text-green-600 font-medium">✓ מערכת התשלום מוכנה</p>}
+            {isSuccess && (
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-4xl">✓</span>
+                <p className="text-green-600 font-bold text-lg">התשלום בוצע בהצלחה!</p>
+                <p className="text-muted-foreground text-xs">סוגר חלון...</p>
+              </div>
+            )}
           </div>
 
           {/* כפתורי פעולה */}
@@ -405,7 +417,7 @@ export default function TranzilaPaymentDialog({
               type="button"
               variant="outline"
               onClick={onClose}
-              disabled={isProcessing}
+              disabled={isProcessing || isSuccess}
               className="flex-1"
             >
               ביטול
@@ -413,13 +425,18 @@ export default function TranzilaPaymentDialog({
             <Button
               type="button"
               onClick={handlePayment}
-              disabled={!fieldsReady || isProcessing}
+              disabled={!fieldsReady || isProcessing || isSuccess}
               className="flex-1 bg-ofair-900 hover:bg-ofair-800"
             >
               {isProcessing ? (
                 <span className="flex items-center gap-2">
                   <span className="animate-spin">⏳</span>
                   מעבד תשלום...
+                </span>
+              ) : isSuccess ? (
+                <span className="flex items-center gap-2">
+                  <span>✓</span>
+                  הושלם
                 </span>
               ) : (
                 `שלם ₪${REGISTRATION_FEE}`

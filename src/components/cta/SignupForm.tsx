@@ -81,14 +81,9 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
       return;
     }
 
-    // Close payment dialog
-    setShowPaymentDialog(false);
-
     try {
       // Check if user wants to save the card
       if (paymentData.save_card) {
-        toast.info('שומר פרטי תשלום...');
-
         // Parse expiry from Tranzila format (MMYY)
         const expdate = paymentData.card_expiry; // e.g., "0431" = April 2031
         const expiry_month = parseInt(expdate.substring(0, 2), 10);
@@ -113,11 +108,14 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
         if (error) {
           console.error('Save token error:', error);
           toast.error('שגיאה בשמירת פרטי התשלום');
+          setShowPaymentDialog(false);
           return;
         }
 
         console.log('Payment method saved successfully:', data);
-        toast.success('ההרשמה והתשלום הושלמו בהצלחה!');
+        toast.success('ההרשמה והתשלום הושלמו בהצלחה!', {
+          duration: 5000 // Show for 5 seconds
+        });
       } else {
         // User chose NOT to save card - just update payment status
         console.log('User chose not to save card, updating payment status only');
@@ -184,15 +182,21 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           }
         });
 
-        toast.success('התשלום בוצע בהצלחה!');
+        toast.success('ההרשמה והתשלום הושלמו בהצלחה!', {
+          duration: 5000 // Show for 5 seconds
+        });
         console.log('Payment completed without saving card');
       }
+
+      // Close dialog after all async operations complete
+      setShowPaymentDialog(false);
 
       // Payment complete - no need to call onSubmit again (already created)
 
     } catch (error) {
       console.error('Payment completion error:', error);
       toast.error('שגיאה בסיום התהליך');
+      setShowPaymentDialog(false);
     }
   };
 

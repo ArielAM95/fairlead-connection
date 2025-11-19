@@ -148,7 +148,9 @@ export default function Registration() {
         }
 
         console.log('Registration successful with saved card:', data);
-        toast.success(`ההרשמה הושלמה בהצלחה! ₪${REGISTRATION_FEE} חוייבו`);
+        toast.success(`ההרשמה הושלמה בהצלחה! ₪${REGISTRATION_FEE} חוייבו`, {
+          duration: 4000 // Show for 4 seconds
+        });
       } else {
         // User chose NOT to save card - just update payment status
         console.log('User chose not to save card, updating payment status only');
@@ -216,15 +218,17 @@ export default function Registration() {
         });
 
         console.log('Registration successful without saving card');
-        toast.success(`התשלום בוצע בהצלחה! ₪${REGISTRATION_FEE} חוייבו`);
+        toast.success(`ההרשמה הושלמה בהצלחה! ₪${REGISTRATION_FEE} חוייבו`, {
+          duration: 4000 // Show for 4 seconds
+        });
       }
 
       setShowPaymentDialog(false);
 
-      // Navigate to success page
+      // Navigate to success page - wait 4 seconds for user to read message
       setTimeout(() => {
         navigate('/');
-      }, 2000);
+      }, 4000);
     } catch (error: any) {
       console.error('Post-payment error:', error);
       toast.error(error.message || 'שגיאה בשמירת הנתונים');
