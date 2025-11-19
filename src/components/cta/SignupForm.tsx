@@ -105,7 +105,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
               expiry_month,
               expiry_year,
               confirmation_code: paymentData.confirmation_code,
-              amount: 1 // FOR TESTING - Change back to 413 for production
+              amount: 413 // Production registration fee
             }
           }
         );
