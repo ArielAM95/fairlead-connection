@@ -196,6 +196,25 @@ export default function Registration() {
           // Non-critical - don't fail
         }
 
+        // Log transaction (card not saved)
+        await supabase.from('transaction_logs').insert({
+          professional_id: prof.id,
+          action: 'charge',
+          request: {
+            source: 'registration',
+            amount: REGISTRATION_FEE,
+            card_last4: paymentData.card_last4,
+            phone_number: phoneNumber,
+            save_card: false
+          },
+          response: {
+            success: true,
+            code: '000',
+            confirmation_code: paymentData.confirmation_code || null,
+            message: 'Payment completed without saving card'
+          }
+        });
+
         console.log('Registration successful without saving card');
         toast.success(`התשלום בוצע בהצלחה! ₪${REGISTRATION_FEE} חוייבו`);
       }

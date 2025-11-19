@@ -165,6 +165,25 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           // Non-critical - don't fail
         }
 
+        // Log transaction (card not saved)
+        await supabase.from('transaction_logs').insert({
+          professional_id: prof.id,
+          action: 'charge',
+          request: {
+            source: 'signup_form',
+            amount: 413,
+            card_last4: paymentData.card_last4,
+            phone_number: pendingFormData.phone,
+            save_card: false
+          },
+          response: {
+            success: true,
+            code: '000',
+            confirmation_code: paymentData.confirmation_code || null,
+            message: 'Payment completed without saving card'
+          }
+        });
+
         toast.success('התשלום בוצע בהצלחה!');
         console.log('Payment completed without saving card');
       }
