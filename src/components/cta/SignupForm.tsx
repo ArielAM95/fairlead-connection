@@ -191,6 +191,11 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
       // Close dialog after all async operations complete
       setShowPaymentDialog(false);
 
+      // Redirect to thank-you page after payment success
+      setTimeout(() => {
+        window.location.href = 'https://biz.ofair.co.il/thank-you';
+      }, 4000);
+
       // Payment complete - no need to call onSubmit again (already created)
 
     } catch (error) {

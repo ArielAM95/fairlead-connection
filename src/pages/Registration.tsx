@@ -225,9 +225,9 @@ export default function Registration() {
 
       setShowPaymentDialog(false);
 
-      // Navigate to thank you page - wait 4 seconds for user to read message
+      // Redirect to thank-you page after payment success
       setTimeout(() => {
-        navigate('/thank-you');
+        window.location.href = 'https://biz.ofair.co.il/thank-you';
       }, 4000);
     } catch (error: any) {
       console.error('Post-payment error:', error);
