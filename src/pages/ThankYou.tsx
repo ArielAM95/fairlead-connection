@@ -3,26 +3,24 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle2, FileText, Star, Clock, Phone } from 'lucide-react';
-
 const ThankYou = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-
   useEffect(() => {
     // Track conversion if needed
     const amount = searchParams.get('amount');
     const phone = searchParams.get('phone');
-    
     if (amount || phone) {
-      console.log('Registration completed:', { amount, phone });
+      console.log('Registration completed:', {
+        amount,
+        phone
+      });
       // Add conversion tracking here (Google Analytics, Facebook Pixel, etc.)
     }
   }, [searchParams]);
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-[hsl(var(--hero-bg-start))] to-[hsl(var(--hero-bg-end))] relative overflow-hidden">
+  return <div className="min-h-screen bg-gradient-to-br from-[hsl(var(--hero-bg-start))] to-[hsl(var(--hero-bg-end))] relative overflow-hidden">
       {/* Background decorative elements */}
-      <div className="absolute inset-0 opacity-20">
+      <div className="absolute inset-0 opacity-20 bg-">
         <div className="absolute top-20 right-10 w-72 h-72 bg-primary/30 rounded-full blur-3xl"></div>
         <div className="absolute bottom-20 left-10 w-96 h-96 bg-accent/30 rounded-full blur-3xl"></div>
       </div>
@@ -31,21 +29,17 @@ const ThankYou = () => {
       <div className="relative z-10 container mx-auto px-4 py-12 max-w-4xl">
         {/* Logo */}
         <div className="text-center mb-8 animate-fade-in">
-          <img 
-            src="/lovable-uploads/ofair-logo.png" 
-            alt="oFair Logo" 
-            className="h-20 mx-auto mb-6"
-          />
+          <img src="/lovable-uploads/ofair-logo.png" alt="oFair Logo" className="h-20 mx-auto mb-6" />
         </div>
 
         {/* Main Title */}
-        <div className="text-center mb-12 space-y-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+        <div className="text-center mb-12 space-y-4 animate-fade-in" style={{
+        animationDelay: '0.1s'
+      }}>
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/20 mb-4">
             <CheckCircle2 className="w-12 h-12 text-accent" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white">
-            תודה על האמון, ביחד בעז"ה נגדל ביחד
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-white">אתה בדרך להצטרף אלינו.. !            </h1>
           <p className="text-2xl md:text-3xl font-semibold text-accent">
             תזכרו - אתם מרוויחים, אנחנו מרוויחים oFAIR
           </p>
@@ -54,7 +48,9 @@ const ThankYou = () => {
         {/* Cards Grid */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           {/* Card 1 - Next Steps */}
-          <Card className="glass-card border-primary/20 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <Card className="glass-card border-primary/20 animate-fade-in" style={{
+          animationDelay: '0.2s'
+        }}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-2xl text-primary">
                 <FileText className="w-6 h-6" />
@@ -85,11 +81,7 @@ const ThankYou = () => {
                 </p>
               </div>
 
-              <Button 
-                size="lg" 
-                className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-lg py-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                onClick={() => window.open('https://docs.ofair.co.il', '_blank')}
-              >
+              <Button size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-lg py-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105" onClick={() => window.open('https://docs.ofair.co.il', '_blank')}>
                 <FileText className="w-5 h-5 ml-2" />
                 העלו חשבוניות עכשיו
               </Button>
@@ -97,7 +89,9 @@ const ThankYou = () => {
           </Card>
 
           {/* Card 2 - What's Next */}
-          <Card className="glass-card border-primary/20 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+          <Card className="glass-card border-primary/20 animate-fade-in" style={{
+          animationDelay: '0.3s'
+        }}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-2xl text-primary">
                 <Star className="w-6 h-6" />
@@ -131,7 +125,7 @@ const ThankYou = () => {
                   </div>
                   <div>
                     <p className="text-foreground">חשבונית נשלחה למייל שהזנתם</p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-muted-foreground mt-1 text-sm">
                       (לא הזנתם מייל? פנו אלינו בוואטסאפ 📱)
                     </p>
                   </div>
@@ -148,7 +142,7 @@ const ThankYou = () => {
               <div className="bg-primary/10 border border-primary/30 rounded-lg p-3 flex items-center gap-2">
                 <Clock className="w-5 h-5 text-primary flex-shrink-0" />
                 <p className="text-sm text-foreground">
-                  <strong>התהליך לוקח עד שבועיים</strong>
+                  <strong className="text-lg">התהליך לוקח עד שבועיים</strong>
                 </p>
               </div>
             </CardContent>
@@ -156,29 +150,19 @@ const ThankYou = () => {
         </div>
 
         {/* Bottom Actions */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
-          <Button
-            size="lg"
-            variant="outline"
-            className="bg-card/80 backdrop-blur-md border-primary/30 hover:bg-card hover:border-primary/50 text-foreground"
-            onClick={() => window.open('https://wa.me/972505577565', '_blank')}
-          >
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in" style={{
+        animationDelay: '0.4s'
+      }}>
+          <Button size="lg" variant="outline" className="bg-card/80 backdrop-blur-md border-primary/30 hover:bg-card hover:border-primary/50 text-foreground" onClick={() => window.open('https://wa.me/972505577565', '_blank')}>
             <Phone className="w-5 h-5 ml-2" />
             יש שאלות? דברו איתנו
           </Button>
 
-          <Button
-            size="lg"
-            variant="ghost"
-            className="text-white hover:text-primary hover:bg-white/10"
-            onClick={() => navigate('/')}
-          >
+          <Button size="lg" variant="ghost" onClick={() => navigate('/')} className="text-white hover:text-primary bg-blue-600 hover:bg-blue-500">
             חזרה לעמוד הבית
           </Button>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default ThankYou;
