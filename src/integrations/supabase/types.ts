@@ -3029,6 +3029,10 @@ export type Database = {
         Args: { lat1: number; lat2: number; lon1: number; lon2: number }
         Returns: number
       }
+      calculate_lead_assignment_stats: { Args: never; Returns: Json }
+      calculate_lead_contact_stats: { Args: never; Returns: Json }
+      calculate_lead_payment_stats: { Args: never; Returns: Json }
+      calculate_lead_type_stats: { Args: never; Returns: Json }
       calculate_profile_completion: {
         Args: { prof_id: string }
         Returns: number

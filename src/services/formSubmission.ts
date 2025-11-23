@@ -203,7 +203,7 @@ export const submitSignupForm = async (
       sub_specializations: allSpecLabels,
       profession: primaryProfessionLabel ?? (specialtiesFallback[0] || "לא צוין"),
       specialties: allSpecLabels.length > 0 ? allSpecLabels : specialtiesFallback,
-      email: formData.email.toLowerCase().trim(),
+      email: formData.email ? formData.email.toLowerCase().trim() : null,
       phone_number: formData.phone ? formData.phone.trim() : null,
       company_name: formData.companyName || null,
       business_license_number: formData.businessLicenseNumber || null,
@@ -222,14 +222,18 @@ export const submitSignupForm = async (
     console.log("Prepared professional data for Supabase:", professionalData);
     
     // First check if the professional already exists with this email or phone
-    const { data: existingByEmail, error: checkEmailError } = await supabase
-      .from('professionals')
-      .select('id, email, phone_number')
-      .eq('email', professionalData.email)
-      .maybeSingle();
-      
-    if (checkEmailError) {
-      console.error("Error checking existing professional by email:", checkEmailError);
+    let existingByEmail = null;
+    if (professionalData.email) {
+      const { data, error: checkEmailError } = await supabase
+        .from('professionals')
+        .select('id, email, phone_number')
+        .eq('email', professionalData.email)
+        .maybeSingle();
+        
+      if (checkEmailError) {
+        console.error("Error checking existing professional by email:", checkEmailError);
+      }
+      existingByEmail = data;
     }
 
     const { data: existingByPhone, error: checkPhoneError } = await supabase
@@ -265,7 +269,7 @@ export const submitSignupForm = async (
       if (result.error.code === '23505') { // unique constraint violation
         if (result.error.message.includes('phone')) {
           throw new Error("היי! נראה שנרשמתם כבר בעבר 😊 המספר טלפון הזה כבר מופיע במערכת שלנו. בדקו את המייל שלכם (גם בספאם) או צרו איתנו קשר בוואטסאפ אם אתם זקוקים לעזרה נוספת.");
-        } else if (result.error.message.includes('email')) {
+        } else if (result.error.message.includes('email') && professionalData.email) {
           throw new Error("היי! נראה שנרשמתם כבר בעבר 😊 המייל הזה כבר מופיע במערכת שלנו. בדקו את המייל שלכם (גם בספאם) או צרו איתנו קשר בוואטסאפ אם אתם זקוקים לעזרה נוספת.");
         } else {
           throw new Error("היי! נראה שנרשמתם כבר בעבר 😊 הפרטים שלכם כבר מופיעים במערכת שלנו. בדקו את המייל שלכם (גם בספאם) או צרו איתנו קשר בוואטסאפ אם אתם זקוקים לעזרה נוספת.");
