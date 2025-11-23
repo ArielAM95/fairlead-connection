@@ -24,8 +24,14 @@ const CitySelector = ({ value, onChange, required }: CitySelectorProps) => {
     
     if (!searchTerm.trim()) return cities.slice(0, 50);
     
+    // Normalize search: remove extra spaces for flexible matching
+    const normalizedSearch = searchTerm.trim().replace(/\s+/g, ' ');
+    
     return cities
-      .filter(city => city.settlement_name.includes(searchTerm.trim()))
+      .filter(city => {
+        const normalizedCity = city.settlement_name.replace(/\s+/g, ' ');
+        return normalizedCity.includes(normalizedSearch);
+      })
       .slice(0, 50);
   }, [cities, searchTerm]);
 
