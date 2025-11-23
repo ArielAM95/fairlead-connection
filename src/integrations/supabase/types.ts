@@ -3584,6 +3584,7 @@ export type Database = {
       is_internal_user_check: { Args: never; Returns: boolean }
       is_super_admin_check: { Args: never; Returns: boolean }
       is_super_admin_safe: { Args: never; Returns: boolean }
+      normalize_phone: { Args: { phone: string }; Returns: string }
       sanitize_phone_number: { Args: { phone_input: string }; Returns: string }
       submit_lead: {
         Args: {

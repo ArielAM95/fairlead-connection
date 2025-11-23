@@ -13,6 +13,7 @@ interface OccupationDetailsSectionProps {
   otherProfessionError?: string;
   selectedRegions: string[];
   onToggleRegion: (id: string) => void;
+  onToggleMainRegion: (mainRegionId: string) => void;
   experience: string;
   onExperienceChange: (value: string) => void;
   experienceError?: string;
@@ -29,6 +30,7 @@ export const OccupationDetailsSection = ({
   otherProfessionError,
   selectedRegions,
   onToggleRegion,
+  onToggleMainRegion,
   experience,
   onExperienceChange,
   experienceError,
@@ -58,6 +60,7 @@ export const OccupationDetailsSection = ({
       <WorkRegionsSection
         selectedRegions={selectedRegions}
         onToggleRegion={onToggleRegion}
+        onToggleMainRegion={onToggleMainRegion}
       />
       
       <ExperienceSection

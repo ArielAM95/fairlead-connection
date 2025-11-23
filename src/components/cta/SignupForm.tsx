@@ -30,6 +30,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
     handleChange,
     handleWorkFieldToggle,
     handleWorkRegionToggle,
+    handleMainRegionToggle,
     handleExperienceChange,
     handleProfessionToggle,
     handleSubSpecializationToggle,
@@ -252,6 +253,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           otherProfessionError={errors.otherProfession}
           selectedRegions={formData.workRegions}
           onToggleRegion={handleWorkRegionToggle}
+          onToggleMainRegion={handleMainRegionToggle}
           experience={formData.experience}
           onExperienceChange={handleExperienceChange}
           experienceError={errors.experience}
