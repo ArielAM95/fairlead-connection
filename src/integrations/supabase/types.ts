@@ -740,6 +740,69 @@ export type Database = {
           },
         ]
       }
+      israeli_settlements: {
+        Row: {
+          area: string
+          coordinates_verified: boolean | null
+          created_at: string | null
+          district_code: string | null
+          district_name: string | null
+          geocoded_at: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          regional_council_code: string | null
+          regional_council_name: string | null
+          settlement_code: string
+          settlement_name: string
+          settlement_name_latin: string | null
+          sub_area: string | null
+          sub_district_code: string | null
+          sub_district_name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          area: string
+          coordinates_verified?: boolean | null
+          created_at?: string | null
+          district_code?: string | null
+          district_name?: string | null
+          geocoded_at?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          regional_council_code?: string | null
+          regional_council_name?: string | null
+          settlement_code: string
+          settlement_name: string
+          settlement_name_latin?: string | null
+          sub_area?: string | null
+          sub_district_code?: string | null
+          sub_district_name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          area?: string
+          coordinates_verified?: boolean | null
+          created_at?: string | null
+          district_code?: string | null
+          district_name?: string | null
+          geocoded_at?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          regional_council_code?: string | null
+          regional_council_name?: string | null
+          settlement_code?: string
+          settlement_name?: string
+          settlement_name_latin?: string | null
+          sub_area?: string | null
+          sub_district_code?: string | null
+          sub_district_name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       issue_reports: {
         Row: {
           admin_response: string | null
@@ -3088,6 +3151,13 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      get_city_coordinates: {
+        Args: { city_name: string }
+        Returns: {
+          latitude: number
+          longitude: number
+        }[]
+      }
       get_client_details_for_proposal:
         | {
             Args: {
@@ -3466,6 +3536,25 @@ export type Database = {
           status: string
         }[]
       }
+      get_received_proposals_secure: {
+        Args: { token_param?: string }
+        Returns: {
+          created_at: string
+          description: string
+          estimated_completion: string
+          id: string
+          lead_id: string
+          price: number
+          professional_id: string
+          professional_location: string
+          professional_name: string
+          professional_profession: string
+          professional_rating: number
+          professional_verified: boolean
+          share_percentage: number
+          status: string
+        }[]
+      }
       get_security_status: { Args: never; Returns: Json }
       insert_lead: {
         Args: {
@@ -3547,6 +3636,15 @@ export type Database = {
           new_status: string
           referral_id_param: string
           token_param?: string
+        }
+        Returns: boolean
+      }
+      validate_coordinates_match_city: {
+        Args: {
+          check_lat: number
+          check_lng: number
+          city_name: string
+          max_distance_km?: number
         }
         Returns: boolean
       }

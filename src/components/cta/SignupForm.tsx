@@ -219,6 +219,9 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           phone={formData.phone}
           city={formData.city}
           onChange={handleChange}
+          onCityChange={(city) => {
+            setFormData(prev => ({ ...prev, city }));
+          }}
           phoneError={errors.phone}
         />
       </div>

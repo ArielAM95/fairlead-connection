@@ -1,5 +1,6 @@
 
 import { Input } from "@/components/ui/input";
+import CitySelector from "@/components/cta/CitySelector";
 
 interface PersonalInfoSectionProps {
   firstName: string;
@@ -7,6 +8,7 @@ interface PersonalInfoSectionProps {
   phone: string;
   city: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onCityChange: (city: string) => void;
   phoneError?: string;
 }
 
@@ -16,6 +18,7 @@ export const PersonalInfoSection = ({
   phone,
   city,
   onChange,
+  onCityChange,
   phoneError
 }: PersonalInfoSectionProps) => {
   return (
@@ -74,14 +77,10 @@ export const PersonalInfoSection = ({
         <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
           עיר *
         </label>
-        <Input
-          id="city"
-          name="city"
+        <CitySelector
           value={city}
-          onChange={onChange}
+          onChange={onCityChange}
           required
-          className="bg-gray-50 border-gray-200"
-          placeholder="שם העיר"
         />
       </div>
     </div>
