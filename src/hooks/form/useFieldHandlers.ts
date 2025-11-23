@@ -1,5 +1,6 @@
 
 import { SignupFormData, SignupFormErrors } from "@/types/signupForm";
+import { workRegionsHierarchy } from "@/components/cta/data/workRegionsHierarchy";
 
 export const useFieldHandlers = (
   formData: SignupFormData,
@@ -28,6 +29,29 @@ export const useFieldHandlers = (
         ? formData.workRegions.filter(region => region !== id)
         : [...formData.workRegions, id]
     });
+  };
+
+  const handleMainRegionToggle = (mainRegionId: string) => {
+    const region = workRegionsHierarchy.find(r => r.id === mainRegionId);
+    if (!region) return;
+    
+    const subAreaIds = region.subAreas.map(sa => sa.id);
+    const allSelected = subAreaIds.every(id => formData.workRegions.includes(id));
+    
+    if (allSelected) {
+      // הסר את כל התתי-אזורים
+      setFormData({
+        ...formData,
+        workRegions: formData.workRegions.filter(id => !subAreaIds.includes(id))
+      });
+    } else {
+      // הוסף את כל התתי-אזורים
+      const existingOtherRegions = formData.workRegions.filter(id => !subAreaIds.includes(id));
+      setFormData({
+        ...formData,
+        workRegions: [...existingOtherRegions, ...subAreaIds]
+      });
+    }
   };
 
   const handleExperienceChange = (value: string) => {
@@ -114,6 +138,7 @@ export const useFieldHandlers = (
   return {
     handleWorkFieldToggle,
     handleWorkRegionToggle,
+    handleMainRegionToggle,
     handleExperienceChange,
     handleProfessionToggle,
     handleSubSpecializationToggle,

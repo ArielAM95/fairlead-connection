@@ -1,22 +1,21 @@
-
-import FieldSelector from "../FieldSelector";
-import { workRegions } from "../data/workFields";
+import { HierarchicalRegionSelector } from "../HierarchicalRegionSelector";
 
 interface WorkRegionsSectionProps {
   selectedRegions: string[];
   onToggleRegion: (id: string) => void;
+  onToggleMainRegion: (mainRegionId: string) => void;
 }
 
 export const WorkRegionsSection = ({
   selectedRegions,
-  onToggleRegion
+  onToggleRegion,
+  onToggleMainRegion
 }: WorkRegionsSectionProps) => {
   return (
-    <FieldSelector
-      fields={workRegions}
-      selectedFields={selectedRegions}
-      onToggleField={onToggleRegion}
-      label="באיזה אזורים אתה מעוניין לעבוד *"
+    <HierarchicalRegionSelector
+      selectedRegions={selectedRegions}
+      onToggleRegion={onToggleRegion}
+      onToggleMainRegion={onToggleMainRegion}
       showError={selectedRegions.length === 0}
     />
   );
