@@ -13,7 +13,8 @@ export const useCities = () => {
       const { data, error } = await supabase
         .from("israeli_settlements")
         .select("id, settlement_name")
-        .order("settlement_name");
+        .order("settlement_name")
+        .range(0, 2000); // Fetch all cities (1275 total)
 
       if (error) throw error;
       return data as City[];
