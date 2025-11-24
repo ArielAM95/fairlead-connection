@@ -1,1 +1,19 @@
 project_id = "erlfsougrkzbgonumhoa"
+
+[functions.find-professional]
+verify_jwt = false
+
+[functions.tranzila-create-invoice]
+verify_jwt = false
+
+[functions.tranzila-handshake-public]
+verify_jwt = false
+
+[functions.tranzila-registration-payment]
+verify_jwt = false
+
+[functions.send-registration-webhook]
+verify_jwt = false
+
+[functions.retry-failed-invoices]
+verify_jwt = false
