@@ -119,7 +119,7 @@ const PrePaymentDialog = ({ open, onClose, onProceedToPayment }: PrePaymentDialo
               {/* Social Icons */}
               <div className="flex justify-center gap-4 pt-2">
                 <a
-                  href="https://www.tiktok.com/@ofair"
+                  href="https://www.tiktok.com/@ofair_professionals?_r=1&_t=ZS-91fxlEC2pnk"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-12 h-12 bg-black rounded-full flex items-center justify-center hover:opacity-80 transition-opacity"

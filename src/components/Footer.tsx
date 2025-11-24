@@ -69,7 +69,7 @@ const Footer = () => {
                 <a href="https://www.instagram.com/ofair_il?fbclid=IwZXh0bgNhZW0CMTAAAR1Hdq28l9YzB4sHU41YXjS5UYVD_LihmktdeE0cqacfrxkIm1ryJ6_Y3qQ_aem_uZmC0wj1Asq9SbLb9ZLcWg" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors">
                   <Instagram className="w-6 h-6" />
                 </a>
-                <a href="https://www.tiktok.com/@ofair.co.il?_t=ZS-8xQd5lF74xL&_r=1" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors">
+                <a href="https://www.tiktok.com/@ofair_professionals?_r=1&_t=ZS-91fxlEC2pnk" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors">
                   <TikTokIcon className="w-6 h-6" />
                 </a>
               </div>

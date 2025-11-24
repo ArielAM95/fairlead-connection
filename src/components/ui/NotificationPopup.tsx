@@ -153,7 +153,7 @@ const NotificationPopup = ({
                   <Instagram size={18} />
                 </a>
                 <a 
-                  href="https://www.tiktok.com/@ofair.co.il?_t=ZS-8xQd5lF74xL&_r=1" 
+                  href="https://www.tiktok.com/@ofair_professionals?_r=1&_t=ZS-91fxlEC2pnk" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="bg-black text-white p-2 rounded-full hover:bg-gray-800 transition-colors"
