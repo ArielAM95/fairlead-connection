@@ -8,7 +8,7 @@ import { useSignupForm } from "@/hooks/useSignupForm";
 import { SignupFormData } from "@/types/signupForm";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TranzilaPaymentDialog from "./TranzilaPaymentDialog";
 import PrePaymentDialog from "./PrePaymentDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,9 +16,17 @@ import { toast } from "sonner";
 
 interface SignupFormProps {
   onSubmit: (formData: SignupFormData) => Promise<void>;
+  initialPhone?: string;
+  submitButtonText?: string;
+  disablePhoneInput?: boolean;
 }
 
-const SignupForm = ({ onSubmit }: SignupFormProps) => {
+const SignupForm = ({ 
+  onSubmit, 
+  initialPhone,
+  submitButtonText = "הירשמו כעת",
+  disablePhoneInput = false
+}: SignupFormProps) => {
   const [showPrePaymentDialog, setShowPrePaymentDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [pendingFormData, setPendingFormData] = useState<SignupFormData | null>(null);
@@ -38,6 +46,13 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
     handleSubmit,
     setFormData
   } = useSignupForm(onSubmit);
+
+  // Set initial phone if provided
+  useEffect(() => {
+    if (initialPhone && !formData.phone) {
+      setFormData(prev => ({ ...prev, phone: initialPhone }));
+    }
+  }, [initialPhone, formData.phone, setFormData]);
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -224,6 +239,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
             setFormData(prev => ({ ...prev, city }));
           }}
           phoneError={errors.phone}
+          disablePhone={disablePhoneInput}
         />
       </div>
 
@@ -351,7 +367,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
             !!errors.otherProfession
           }
         >
-          {isSubmitting ? "מבצע רישום..." : "הירשמו כעת"}
+          {isSubmitting ? "מבצע רישום..." : submitButtonText}
         </Button>
         
         {(errors.email || errors.phone || errors.experience || errors.acceptTerms || errors.businessLicenseNumber || errors.professions || errors.otherProfession) && (
