@@ -326,53 +326,74 @@ export type Database = {
       commissions: {
         Row: {
           amount: number
+          amount_before_vat: number | null
           commission_date: string
           created_at: string
           failure_reason: string | null
+          final_amount: number | null
           id: string
           last_attempt_at: string | null
           lead_owner_commission: number
+          lead_owner_commission_percentage: number | null
+          net_professional_earnings: number | null
           ofair_commission: number
           paid_at: string | null
-          payment_method_id: string
+          payment_id: string | null
+          payment_method_id: string | null
+          payment_type: string | null
           professional_id: string
           retry_count: number
           status: string
           transaction_reference: string | null
+          transaction_type: string
           updated_at: string
         }
         Insert: {
           amount: number
+          amount_before_vat?: number | null
           commission_date: string
           created_at?: string
           failure_reason?: string | null
+          final_amount?: number | null
           id?: string
           last_attempt_at?: string | null
           lead_owner_commission?: number
+          lead_owner_commission_percentage?: number | null
+          net_professional_earnings?: number | null
           ofair_commission?: number
           paid_at?: string | null
-          payment_method_id: string
+          payment_id?: string | null
+          payment_method_id?: string | null
+          payment_type?: string | null
           professional_id: string
           retry_count?: number
           status?: string
           transaction_reference?: string | null
+          transaction_type?: string
           updated_at?: string
         }
         Update: {
           amount?: number
+          amount_before_vat?: number | null
           commission_date?: string
           created_at?: string
           failure_reason?: string | null
+          final_amount?: number | null
           id?: string
           last_attempt_at?: string | null
           lead_owner_commission?: number
+          lead_owner_commission_percentage?: number | null
+          net_professional_earnings?: number | null
           ofair_commission?: number
           paid_at?: string | null
-          payment_method_id?: string
+          payment_id?: string | null
+          payment_method_id?: string | null
+          payment_type?: string | null
           professional_id?: string
           retry_count?: number
           status?: string
           transaction_reference?: string | null
+          transaction_type?: string
           updated_at?: string
         }
         Relationships: [
@@ -955,46 +976,55 @@ export type Database = {
       }
       lead_payments: {
         Row: {
-          commission_amount: number
+          amount_before_vat: number
           created_at: string
           final_amount: number
           id: string
           includes_vat: boolean
           invoice_url: string | null
           lead_id: string
+          lead_owner_commission: number
+          lead_owner_commission_percentage: number
           notes: string | null
+          ofair_commission: number
           payment_method: string
           professional_id: string
+          professional_net_earnings: number
           proposal_id: string
-          share_percentage: number
         }
         Insert: {
-          commission_amount?: number
+          amount_before_vat?: number
           created_at?: string
           final_amount: number
           id?: string
           includes_vat?: boolean
           invoice_url?: string | null
           lead_id: string
+          lead_owner_commission?: number
+          lead_owner_commission_percentage?: number
           notes?: string | null
+          ofair_commission?: number
           payment_method: string
           professional_id: string
+          professional_net_earnings?: number
           proposal_id: string
-          share_percentage?: number
         }
         Update: {
-          commission_amount?: number
+          amount_before_vat?: number
           created_at?: string
           final_amount?: number
           id?: string
           includes_vat?: boolean
           invoice_url?: string | null
           lead_id?: string
+          lead_owner_commission?: number
+          lead_owner_commission_percentage?: number
           notes?: string | null
+          ofair_commission?: number
           payment_method?: string
           professional_id?: string
+          professional_net_earnings?: number
           proposal_id?: string
-          share_percentage?: number
         }
         Relationships: [
           {
@@ -2032,43 +2062,49 @@ export type Database = {
       }
       quote_payments: {
         Row: {
-          commission_amount: number
+          amount_before_vat: number
           created_at: string
           final_amount: number
           id: string
           includes_vat: boolean
           invoice_url: string | null
           notes: string | null
+          ofair_commission: number
           payment_method: string
           professional_id: string
+          professional_net_earnings: number
           quote_id: string | null
           request_id: string
           share_percentage: number
         }
         Insert: {
-          commission_amount?: number
+          amount_before_vat?: number
           created_at?: string
           final_amount: number
           id?: string
           includes_vat?: boolean
           invoice_url?: string | null
           notes?: string | null
+          ofair_commission?: number
           payment_method: string
           professional_id: string
+          professional_net_earnings?: number
           quote_id?: string | null
           request_id: string
           share_percentage?: number
         }
         Update: {
-          commission_amount?: number
+          amount_before_vat?: number
           created_at?: string
           final_amount?: number
           id?: string
           includes_vat?: boolean
           invoice_url?: string | null
           notes?: string | null
+          ofair_commission?: number
           payment_method?: string
           professional_id?: string
+          professional_net_earnings?: number
           quote_id?: string | null
           request_id?: string
           share_percentage?: number
@@ -2734,14 +2770,18 @@ export type Database = {
       }
       work_completions: {
         Row: {
+          amount_before_vat: number
           created_at: string
           final_amount: number | null
           id: string
+          includes_vat: boolean
           invoice_url: string | null
           notes: string | null
           ocr_detected_amount: number | null
+          ofair_commission: number
           payment_method: string | null
           professional_id: string
+          professional_net_earnings: number
           proposal_id: string | null
           proposal_type: string | null
           referral_id: string | null
@@ -2751,14 +2791,18 @@ export type Database = {
           work_title: string
         }
         Insert: {
+          amount_before_vat?: number
           created_at?: string
           final_amount?: number | null
           id?: string
+          includes_vat?: boolean
           invoice_url?: string | null
           notes?: string | null
           ocr_detected_amount?: number | null
+          ofair_commission?: number
           payment_method?: string | null
           professional_id: string
+          professional_net_earnings?: number
           proposal_id?: string | null
           proposal_type?: string | null
           referral_id?: string | null
@@ -2768,14 +2812,18 @@ export type Database = {
           work_title: string
         }
         Update: {
+          amount_before_vat?: number
           created_at?: string
           final_amount?: number | null
           id?: string
+          includes_vat?: boolean
           invoice_url?: string | null
           notes?: string | null
           ocr_detected_amount?: number | null
+          ofair_commission?: number
           payment_method?: string | null
           professional_id?: string
+          professional_net_earnings?: number
           proposal_id?: string | null
           proposal_type?: string | null
           referral_id?: string | null
@@ -3206,14 +3254,16 @@ export type Database = {
       get_my_payments_secure: {
         Args: { token_param?: string }
         Returns: {
-          commission_amount: number
+          amount_before_vat: number
           created_at: string
           final_amount: number
           id: string
+          includes_vat: boolean
           invoice_url: string
           lead_description: string
           lead_id: string
           lead_owner_commission: number
+          lead_owner_commission_percentage: number
           lead_title: string
           net_professional_earnings: number
           notes: string
@@ -3221,8 +3271,8 @@ export type Database = {
           payment_method: string
           payment_type: string
           professional_id: string
+          professional_net_earnings: number
           proposal_id: string
-          share_percentage: number
         }[]
       }
       get_my_professional_ratings: {
