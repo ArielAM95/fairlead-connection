@@ -6,6 +6,12 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import TranzilaPaymentDialog from '@/components/cta/TranzilaPaymentDialog';
+import SignupForm from '@/components/cta/SignupForm';
+import { SignupFormData } from '@/types/signupForm';
+import { submitSignupForm } from '@/services/formSubmission';
+import { useUtmParams } from '@/hooks/useUtmParams';
+import { workFields } from '@/components/cta/data/workFields';
+import { workRegionsHierarchy } from '@/components/cta/data/workRegionsHierarchy';
 
 const REGISTRATION_FEE = 413; // ₪ Production registration fee
 
@@ -25,6 +31,14 @@ export default function Registration() {
   const [professionalData, setProfessionalData] = useState<ProfessionalData | null>(null);
   const [phoneCheckStatus, setPhoneCheckStatus] = useState<'idle' | 'checking' | 'found' | 'not_found'>('idle');
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+  const [showSignupForm, setShowSignupForm] = useState(false);
+  
+  const utmParams = useUtmParams();
+
+  // Flatten work regions for submitSignupForm
+  const workRegions = workRegionsHierarchy.flatMap(region => 
+    region.subAreas.map(area => ({ id: area.id, label: area.label }))
+  );
 
   // 📱 Check for phone URL parameter (payment link feature)
   useEffect(() => {
@@ -235,6 +249,21 @@ export default function Registration() {
     }
   };
 
+  // Handle signup form submission (for new users)
+  const handleSignupSubmit = async (formData: SignupFormData) => {
+    try {
+      // Submit to webhook and Supabase
+      await submitSignupForm(formData, workFields, workRegions, utmParams);
+      
+      // After successful submission, professional is created, continue to payment dialogs
+      // (payment dialogs are handled by SignupForm internally)
+    } catch (error: any) {
+      console.error('Signup submission error:', error);
+      toast.error(error.message || 'שגיאה ברישום');
+      throw error;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background py-12 px-4">
       <div className="max-w-2xl mx-auto">
@@ -302,20 +331,51 @@ export default function Registration() {
                 </p>
               )}
             </div>
+
+            {/* Show registration button when phone not found */}
+            {phoneCheckStatus === 'not_found' && !showSignupForm && (
+              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-blue-800 font-medium mb-3">
+                  מספר הטלפון לא נמצא במערכת. רוצים להירשם?
+                </p>
+                <Button
+                  onClick={() => setShowSignupForm(true)}
+                  className="w-full"
+                  variant="default"
+                >
+                  הירשמו כמשתמש חדש
+                </Button>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Payment Button */}
-        <Button
-          onClick={handleOpenPayment}
-          disabled={phoneCheckStatus !== 'found' || !professionalData}
-          className="w-full h-12 text-lg"
-          size="lg"
-        >
-          {phoneCheckStatus === 'found'
-            ? `המשך לתשלום ₪${REGISTRATION_FEE}`
-            : 'הזן מספר טלפון תקין'}
-        </Button>
+        {/* Show full signup form when user clicks "Register as new user" */}
+        {!isPaymentLink && showSignupForm && phoneCheckStatus === 'not_found' && (
+          <div className="bg-card p-6 rounded-lg border border-border">
+            <h2 className="text-2xl font-bold text-card-foreground mb-6">טופס הרשמה</h2>
+            <SignupForm 
+              onSubmit={handleSignupSubmit}
+              initialPhone={phoneNumber}
+              submitButtonText="בצע הרשמה והמשך לתשלום"
+              disablePhoneInput={true}
+            />
+          </div>
+        )}
+
+        {/* Payment Button - Only show for existing users */}
+        {!showSignupForm && (
+          <Button
+            onClick={handleOpenPayment}
+            disabled={phoneCheckStatus !== 'found' || !professionalData}
+            className="w-full h-12 text-lg"
+            size="lg"
+          >
+            {phoneCheckStatus === 'found'
+              ? `המשך לתשלום ₪${REGISTRATION_FEE}`
+              : 'הזן מספר טלפון תקין'}
+          </Button>
+        )}
 
         {/* Payment Dialog - Opens when button clicked */}
         {professionalData && (

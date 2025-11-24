@@ -10,6 +10,7 @@ interface PersonalInfoSectionProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onCityChange: (city: string) => void;
   phoneError?: string;
+  disablePhone?: boolean;
 }
 
 export const PersonalInfoSection = ({
@@ -19,7 +20,8 @@ export const PersonalInfoSection = ({
   city,
   onChange,
   onCityChange,
-  phoneError
+  phoneError,
+  disablePhone = false
 }: PersonalInfoSectionProps) => {
   return (
     <div className="space-y-4">
@@ -70,6 +72,7 @@ export const PersonalInfoSection = ({
           maxLength={10}
           error={!!phoneError}
           errorMessage={phoneError}
+          disabled={disablePhone}
         />
       </div>
 
