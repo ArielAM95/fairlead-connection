@@ -138,104 +138,33 @@ export default function Registration() {
       const expiry_month = parseInt(expdate.substring(0, 2), 10);
       const expiry_year = 2000 + parseInt(expdate.substring(2, 4), 10);
 
-      if (paymentData.save_card) {
-        // Save payment token
-        const { data, error } = await supabase.functions.invoke(
-          'tranzila-registration-payment',
-          {
-            body: {
-              phone_number: phoneNumber,
-              tranzila_token: paymentData.tranzila_token,
-              card_last4: paymentData.card_last4,
-              expiry_month,
-              expiry_year,
-              confirmation_code: paymentData.confirmation_code,
-              amount: 413 // Production registration fee
-            }
-          }
-        );
-
-        if (error) {
-          console.error('Save token error:', error);
-          toast.error('שגיאה בשמירת פרטי התשלום');
-          return;
-        }
-
-        console.log('Registration successful with saved card:', data);
-        toast.success(`ההרשמה הושלמה בהצלחה! ₪${REGISTRATION_FEE} חוייבו`, {
-          duration: 4000 // Show for 4 seconds
-        });
-      } else {
-        // User chose NOT to save card - just update payment status
-        console.log('User chose not to save card, updating payment status only');
-
-        // First get the professional_id
-        const { data: prof, error: profError } = await supabase
-          .from('professionals')
-          .select('id')
-          .eq('phone_number', phoneNumber)
-          .single();
-
-        if (profError || !prof) {
-          console.error('Error finding professional:', profError);
-          toast.error('שגיאה בעדכון סטטוס התשלום');
-          return;
-        }
-
-        const { error } = await supabase
-          .from('professionals')
-          .update({
-            registration_payment_status: 'completed',
-            registration_paid_at: new Date().toISOString(),
-            registration_amount: REGISTRATION_FEE
-          })
-          .eq('phone_number', phoneNumber);
-
-        if (error) {
-          console.error('Error updating payment status:', error);
-          toast.error('שגיאה בעדכון סטטוס התשלום');
-          return;
-        }
-
-        // Update professional_leads_crm paid status
-        const { error: crmError } = await supabase
-          .from('professional_leads_crm')
-          .update({
-            paid: true,
-            paid_at: new Date().toISOString(),
-            payment_amount: REGISTRATION_FEE
-          })
-          .eq('professional_id', prof.id);
-
-        if (crmError) {
-          console.error('Error updating CRM paid status:', crmError);
-          // Non-critical - don't fail
-        }
-
-        // Log transaction (card not saved)
-        await supabase.from('transaction_logs').insert({
-          professional_id: prof.id,
-          action: 'charge',
-          request: {
-            source: 'registration',
-            amount: REGISTRATION_FEE,
-            card_last4: paymentData.card_last4,
+      // ALWAYS call edge function (handles both save_card=true and save_card=false)
+      const { data, error } = await supabase.functions.invoke(
+        'tranzila-registration-payment',
+        {
+          body: {
             phone_number: phoneNumber,
-            save_card: false
-          },
-          response: {
-            success: true,
-            code: '000',
-            confirmation_code: paymentData.confirmation_code || null,
-            message: 'Payment completed without saving card'
+            tranzila_token: paymentData.tranzila_token,
+            card_last4: paymentData.card_last4,
+            expiry_month,
+            expiry_year,
+            confirmation_code: paymentData.confirmation_code,
+            amount: 413, // Production registration fee
+            save_card: paymentData.save_card // Pass user's choice
           }
-        });
+        }
+      );
 
-        console.log('Registration successful without saving card');
-        toast.success(`ההרשמה הושלמה בהצלחה! ₪${REGISTRATION_FEE} חוייבו`, {
-          duration: 4000 // Show for 4 seconds
-        });
+      if (error) {
+        console.error('Payment completion error:', error);
+        toast.error('שגיאה בשמירת פרטי התשלום');
+        return;
       }
+
+      console.log('Registration successful:', data);
+      toast.success(`ההרשמה הושלמה בהצלחה! ₪${REGISTRATION_FEE} חוייבו`, {
+        duration: 4000 // Show for 4 seconds
+      });
 
       setShowPaymentDialog(false);
 

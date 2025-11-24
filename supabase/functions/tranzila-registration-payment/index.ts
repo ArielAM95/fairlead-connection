@@ -61,7 +61,8 @@ Deno.serve(async (req) => {
       expiry_month,
       expiry_year,
       confirmation_code,
-      amount
+      amount,
+      save_card = true  // Default to true for backward compatibility
     } = body;
 
     console.log('Extracted values:', {
@@ -140,53 +141,62 @@ Deno.serve(async (req) => {
     }
 
     console.log('Found professional:', professional.id, professional.name);
+    console.log('save_card parameter:', save_card);
 
-    // Encrypt token
-    console.log('Encrypting Tranzila token...');
-    const encryptedToken = await encryptToken(tranzila_token);
+    let paymentMethodId = null;
 
-    // Check if this is the first card → set as default
-    const { data: existingCards } = await supabase
-      .from('payment_methods')
-      .select('id')
-      .eq('professional_id', professional.id);
+    // Only save token if save_card=true
+    if (save_card) {
+      // Encrypt token
+      console.log('Encrypting Tranzila token...');
+      const encryptedToken = await encryptToken(tranzila_token);
 
-    const isDefault = (existingCards?.length || 0) === 0;
+      // Check if this is the first card → set as default
+      const { data: existingCards } = await supabase
+        .from('payment_methods')
+        .select('id')
+        .eq('professional_id', professional.id);
 
-    console.log('Saving payment method to database, is_default:', isDefault);
+      const isDefault = (existingCards?.length || 0) === 0;
 
-    // Save to payment_methods table
-    const { data: paymentMethod, error: insertError } = await supabase
-      .from('payment_methods')
-      .insert({
-        professional_id: professional.id,
-        token_encrypted: encryptedToken,
-        card_last4,
-        expiry_month,
-        expiry_year,
-        is_default: isDefault
-      })
-      .select('id')
-      .single();
+      console.log('Saving payment method to database, is_default:', isDefault);
 
-    if (insertError) {
-      console.error('Failed to save payment method:', insertError);
+      // Save to payment_methods table
+      const { data: paymentMethod, error: insertError } = await supabase
+        .from('payment_methods')
+        .insert({
+          professional_id: professional.id,
+          token_encrypted: encryptedToken,
+          card_last4,
+          expiry_month,
+          expiry_year,
+          is_default: isDefault
+        })
+        .select('id')
+        .single();
 
-      // Log error
-      await supabase.from('transaction_logs').insert({
-        professional_id: professional.id,
-        action: 'error',
-        request: { action: 'registration_payment', phone_number },
-        response: { error: insertError.message }
-      });
+      if (insertError) {
+        console.error('Failed to save payment method:', insertError);
 
-      return new Response(
-        JSON.stringify({ error: 'שגיאה בשמירת כרטיס האשראי', details: insertError.message }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+        // Log error
+        await supabase.from('transaction_logs').insert({
+          professional_id: professional.id,
+          action: 'error',
+          request: { action: 'registration_payment', phone_number, save_card },
+          response: { error: insertError.message }
+        });
+
+        return new Response(
+          JSON.stringify({ error: 'שגיאה בשמירת כרטיס האשראי', details: insertError.message }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      paymentMethodId = paymentMethod.id;
+      console.log('Payment method saved successfully, ID:', paymentMethodId);
+    } else {
+      console.log('Skipping token save (save_card=false)');
     }
-
-    console.log('Payment method saved successfully, ID:', paymentMethod.id);
 
     // Update professional registration payment status
     console.log('Updating professional registration payment status...');
@@ -227,18 +237,19 @@ Deno.serve(async (req) => {
     // Log successful transaction
     const { data: transactionLog } = await supabase.from('transaction_logs').insert({
       professional_id: professional.id,
-      action: 'tokenize',
+      action: save_card ? 'tokenize' : 'charge',
       request: {
         source: 'registration',
         amount: amount || 413,
         card_last4,
-        phone_number
+        phone_number,
+        save_card
       },
       response: {
         success: true,
         code: '000',
         confirmation_code: confirmation_code || null,
-        payment_method_id: paymentMethod.id
+        payment_method_id: paymentMethodId
       }
     }).select('id').single();
 
@@ -252,8 +263,8 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        payment_method_id: paymentMethod.id,
-        message: 'כרטיס נשמר בהצלחה'
+        payment_method_id: paymentMethodId,
+        message: save_card ? 'כרטיס נשמר בהצלחה' : 'תשלום בוצע בהצלחה'
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

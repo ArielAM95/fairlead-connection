@@ -98,111 +98,39 @@ const SignupForm = ({
     }
 
     try {
-      // Check if user wants to save the card
-      if (paymentData.save_card) {
-        // Parse expiry from Tranzila format (MMYY)
-        const expdate = paymentData.card_expiry; // e.g., "0431" = April 2031
-        const expiry_month = parseInt(expdate.substring(0, 2), 10);
-        const expiry_year = 2000 + parseInt(expdate.substring(2, 4), 10);
+      // Parse expiry from Tranzila format (MMYY)
+      const expdate = paymentData.card_expiry; // e.g., "0431" = April 2031
+      const expiry_month = parseInt(expdate.substring(0, 2), 10);
+      const expiry_year = 2000 + parseInt(expdate.substring(2, 4), 10);
 
-        // Save payment token (professional already exists in DB)
-        const { data, error } = await supabase.functions.invoke(
-          'tranzila-registration-payment',
-          {
-            body: {
-              phone_number: pendingFormData.phone,
-              tranzila_token: paymentData.tranzila_token,
-              card_last4: paymentData.card_last4,
-              expiry_month,
-              expiry_year,
-              confirmation_code: paymentData.confirmation_code,
-              amount: 413 // Production registration fee
-            }
-          }
-        );
-
-        if (error) {
-          console.error('Save token error:', error);
-          toast.error('שגיאה בשמירת פרטי התשלום');
-          setShowPaymentDialog(false);
-          return;
-        }
-
-        console.log('Payment method saved successfully:', data);
-        toast.success('ההרשמה והתשלום הושלמו בהצלחה!', {
-          duration: 5000 // Show for 5 seconds
-        });
-      } else {
-        // User chose NOT to save card - just update payment status
-        console.log('User chose not to save card, updating payment status only');
-
-        // First get the professional_id
-        const { data: prof, error: profError } = await supabase
-          .from('professionals')
-          .select('id')
-          .eq('phone_number', pendingFormData.phone)
-          .single();
-
-        if (profError || !prof) {
-          console.error('Error finding professional:', profError);
-          toast.error('שגיאה בעדכון סטטוס התשלום');
-          return;
-        }
-
-        const { error } = await supabase
-          .from('professionals')
-          .update({
-            registration_payment_status: 'completed',
-            registration_paid_at: new Date().toISOString(),
-            registration_amount: 413 // Production registration fee
-          })
-          .eq('phone_number', pendingFormData.phone);
-
-        if (error) {
-          console.error('Error updating payment status:', error);
-          toast.error('שגיאה בעדכון סטטוס התשלום');
-          return;
-        }
-
-        // Update professional_leads_crm paid status
-        const { error: crmError } = await supabase
-          .from('professional_leads_crm')
-          .update({
-            paid: true,
-            paid_at: new Date().toISOString(),
-            payment_amount: 413
-          })
-          .eq('professional_id', prof.id);
-
-        if (crmError) {
-          console.error('Error updating CRM paid status:', crmError);
-          // Non-critical - don't fail
-        }
-
-        // Log transaction (card not saved)
-        await supabase.from('transaction_logs').insert({
-          professional_id: prof.id,
-          action: 'charge',
-          request: {
-            source: 'signup_form',
-            amount: 413,
-            card_last4: paymentData.card_last4,
+      // ALWAYS call edge function (handles both save_card=true and save_card=false)
+      const { data, error } = await supabase.functions.invoke(
+        'tranzila-registration-payment',
+        {
+          body: {
             phone_number: pendingFormData.phone,
-            save_card: false
-          },
-          response: {
-            success: true,
-            code: '000',
-            confirmation_code: paymentData.confirmation_code || null,
-            message: 'Payment completed without saving card'
+            tranzila_token: paymentData.tranzila_token,
+            card_last4: paymentData.card_last4,
+            expiry_month,
+            expiry_year,
+            confirmation_code: paymentData.confirmation_code,
+            amount: 413, // Production registration fee
+            save_card: paymentData.save_card // Pass user's choice
           }
-        });
+        }
+      );
 
-        toast.success('ההרשמה והתשלום הושלמו בהצלחה!', {
-          duration: 5000 // Show for 5 seconds
-        });
-        console.log('Payment completed without saving card');
+      if (error) {
+        console.error('Payment completion error:', error);
+        toast.error('שגיאה בשמירת פרטי התשלום');
+        setShowPaymentDialog(false);
+        return;
       }
+
+      console.log('Payment processed successfully:', data);
+      toast.success('ההרשמה והתשלום הושלמו בהצלחה!', {
+        duration: 5000 // Show for 5 seconds
+      });
 
       // Close dialog after all async operations complete
       setShowPaymentDialog(false);
