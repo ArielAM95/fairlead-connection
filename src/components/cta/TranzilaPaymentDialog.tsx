@@ -21,7 +21,7 @@ declare global {
   }
 }
 
-const REGISTRATION_FEE = 413; // ₪ Production registration fee
+const REGISTRATION_FEE = 295; // Cyber Monday special (250₪ + VAT)
 
 interface TranzilaPaymentDialogProps {
   open: boolean;

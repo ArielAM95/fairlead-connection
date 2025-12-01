@@ -19,6 +19,14 @@ const PrePaymentDialog = ({ open, onClose, onProceedToPayment }: PrePaymentDialo
         </DialogHeader>
 
         <div className="space-y-6 py-4">
+          {/* Cyber Monday Promo Banner */}
+          <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white p-4 rounded-lg text-center">
+            <p className="text-2xl font-bold">🔥 מבצע Cyber Monday!</p>
+            <p className="text-lg mt-1">
+              250₪+מע״מ במקום 350₪!
+            </p>
+          </div>
+
           {/* Header Section */}
           <div className="text-center space-y-2">
             <h3 className="text-xl font-bold text-gray-900">
@@ -34,7 +42,7 @@ const PrePaymentDialog = ({ open, onClose, onProceedToPayment }: PrePaymentDialo
             <div className="flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-green-500 mt-0.5 flex-shrink-0" />
               <p className="text-base text-gray-800">
-                בצעו תשלום חד־פעמי של <span className="font-bold">350 ₪</span> בלבד
+                בצעו תשלום חד־פעמי של <span className="font-bold line-through text-gray-500">350 ₪</span> <span className="font-bold text-blue-600">250 ₪ + מע״מ</span> בלבד! 🎉
               </p>
             </div>
             
