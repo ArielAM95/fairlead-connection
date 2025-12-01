@@ -222,6 +222,7 @@ export default function TranzilaPaymentDialog({
         currency_code: 'ILS',
         tran_mode: 'A', // Authorization + Capture
         tokenize: true,  // Enable tokenization
+        pdesc: 'דמי הקמה - Ofair', // Product description for invoice
         // ✅ AUTO-INVOICE GENERATION FIELDS
         // Including these fields triggers Tranzila to auto-generate and email invoice
         contact: userDetails.name,
