@@ -12,8 +12,9 @@ import { submitSignupForm } from '@/services/formSubmission';
 import { useUtmParams } from '@/hooks/useUtmParams';
 import { workFields } from '@/components/cta/data/workFields';
 import { workRegionsHierarchy } from '@/components/cta/data/workRegionsHierarchy';
+import CyberMondayBanner from '@/components/CyberMondayBanner';
 
-const REGISTRATION_FEE = 413; // ₪ Production registration fee
+const REGISTRATION_FEE = 295; // ₪ Cyber Monday special (250₪ + VAT)
 
 interface ProfessionalData {
   name: string;
@@ -149,7 +150,7 @@ export default function Registration() {
             expiry_month,
             expiry_year,
             confirmation_code: paymentData.confirmation_code,
-            amount: 413, // Production registration fee
+            amount: 295, // Cyber Monday registration fee
             save_card: paymentData.save_card // Pass user's choice
           }
         }
@@ -194,10 +195,12 @@ export default function Registration() {
   };
 
   return (
-    <div className="min-h-screen bg-background py-12 px-4">
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="text-center space-y-2 mb-8">
+    <div className="min-h-screen bg-background">
+      <CyberMondayBanner />
+      <div className="py-12 px-4">
+        <div className="max-w-2xl mx-auto">
+          {/* Header */}
+          <div className="text-center space-y-2 mb-8">
           {isPaymentLink ? (
             <>
               <h1 className="text-3xl font-bold text-foreground">השלמת תשלום הרשמה</h1>
@@ -322,6 +325,7 @@ export default function Registration() {
             }}
           />
         )}
+        </div>
       </div>
     </div>
   );

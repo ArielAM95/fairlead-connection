@@ -420,6 +420,48 @@ export type Database = {
           },
         ]
       }
+      consumer_notifications: {
+        Row: {
+          action_label: string | null
+          action_url: string | null
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          related_id: string | null
+          related_type: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          action_label?: string | null
+          action_url?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          related_id?: string | null
+          related_type?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          action_label?: string | null
+          action_url?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          related_id?: string | null
+          related_type?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       contact_access_logs: {
         Row: {
           access_granted: boolean
@@ -1059,6 +1101,7 @@ export type Database = {
       }
       leads: {
         Row: {
+          amount_before_vat: number | null
           budget: number | null
           category: string | null
           client_address: string | null
@@ -1085,6 +1128,7 @@ export type Database = {
           work_timeframe: string | null
         }
         Insert: {
+          amount_before_vat?: number | null
           budget?: number | null
           category?: string | null
           client_address?: string | null
@@ -1111,6 +1155,7 @@ export type Database = {
           work_timeframe?: string | null
         }
         Update: {
+          amount_before_vat?: number | null
           budget?: number | null
           category?: string | null
           client_address?: string | null
@@ -1983,6 +2028,7 @@ export type Database = {
       }
       proposals: {
         Row: {
+          amount_before_vat: number | null
           created_at: string
           description: string
           estimated_completion: string | null
@@ -1990,6 +2036,7 @@ export type Database = {
           id: string
           includes_vat: boolean
           lead_id: string | null
+          lower_price_includes_vat: boolean | null
           lower_price_value: number | null
           lower_price_willing: boolean | null
           media_urls: string[] | null
@@ -2001,6 +2048,7 @@ export type Database = {
           status: string
         }
         Insert: {
+          amount_before_vat?: number | null
           created_at?: string
           description: string
           estimated_completion?: string | null
@@ -2008,6 +2056,7 @@ export type Database = {
           id?: string
           includes_vat?: boolean
           lead_id?: string | null
+          lower_price_includes_vat?: boolean | null
           lower_price_value?: number | null
           lower_price_willing?: boolean | null
           media_urls?: string[] | null
@@ -2019,6 +2068,7 @@ export type Database = {
           status?: string
         }
         Update: {
+          amount_before_vat?: number | null
           created_at?: string
           description?: string
           estimated_completion?: string | null
@@ -2026,6 +2076,7 @@ export type Database = {
           id?: string
           includes_vat?: boolean
           lead_id?: string | null
+          lower_price_includes_vat?: boolean | null
           lower_price_value?: number | null
           lower_price_willing?: boolean | null
           media_urls?: string[] | null
@@ -2128,6 +2179,7 @@ export type Database = {
       }
       quotes: {
         Row: {
+          amount_before_vat: number | null
           created_at: string
           description: string
           estimated_time: string | null
@@ -2146,6 +2198,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          amount_before_vat?: number | null
           created_at?: string
           description: string
           estimated_time?: string | null
@@ -2164,6 +2217,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          amount_before_vat?: number | null
           created_at?: string
           description?: string
           estimated_time?: string | null
@@ -2946,13 +3000,23 @@ export type Database = {
       professionals_public_view: {
         Row: {
           about: string | null
+          areas: string | null
+          certifications: string[] | null
+          city: string | null
+          company_name: string | null
           created_at: string | null
           email: string | null
           experience_range: string | null
+          experience_years: string | null
+          facebook_url: string | null
           id: string | null
           image: string | null
+          image_url: string | null
+          instagram_url: string | null
           is_verified: boolean | null
+          languages: string[] | null
           location: string | null
+          main_profession: string | null
           name: string | null
           phone_number: string | null
           profession: string | null
@@ -2961,18 +3025,31 @@ export type Database = {
           specialties: string[] | null
           status: string | null
           sub_specializations: string[] | null
+          tiktok_url: string | null
           updated_at: string | null
           user_id: string | null
+          work_hours: string | null
+          working_hours: string | null
         }
         Insert: {
           about?: string | null
+          areas?: string | null
+          certifications?: string[] | null
+          city?: string | null
+          company_name?: string | null
           created_at?: string | null
           email?: string | null
           experience_range?: string | null
+          experience_years?: string | null
+          facebook_url?: string | null
           id?: string | null
           image?: string | null
+          image_url?: string | null
+          instagram_url?: string | null
           is_verified?: boolean | null
+          languages?: string[] | null
           location?: string | null
+          main_profession?: string | null
           name?: string | null
           phone_number?: string | null
           profession?: string | null
@@ -2981,18 +3058,31 @@ export type Database = {
           specialties?: string[] | null
           status?: string | null
           sub_specializations?: string[] | null
+          tiktok_url?: string | null
           updated_at?: string | null
           user_id?: string | null
+          work_hours?: string | null
+          working_hours?: string | null
         }
         Update: {
           about?: string | null
+          areas?: string | null
+          certifications?: string[] | null
+          city?: string | null
+          company_name?: string | null
           created_at?: string | null
           email?: string | null
           experience_range?: string | null
+          experience_years?: string | null
+          facebook_url?: string | null
           id?: string | null
           image?: string | null
+          image_url?: string | null
+          instagram_url?: string | null
           is_verified?: boolean | null
+          languages?: string[] | null
           location?: string | null
+          main_profession?: string | null
           name?: string | null
           phone_number?: string | null
           profession?: string | null
@@ -3001,8 +3091,11 @@ export type Database = {
           specialties?: string[] | null
           status?: string | null
           sub_specializations?: string[] | null
+          tiktok_url?: string | null
           updated_at?: string | null
           user_id?: string | null
+          work_hours?: string | null
+          working_hours?: string | null
         }
         Relationships: []
       }
@@ -3136,6 +3229,7 @@ export type Database = {
       fetch_active_leads: {
         Args: never
         Returns: {
+          amount_before_vat: number | null
           budget: number | null
           category: string | null
           client_address: string | null
@@ -3171,6 +3265,7 @@ export type Database = {
       get_active_leads: {
         Args: never
         Returns: {
+          amount_before_vat: number | null
           budget: number | null
           category: string | null
           client_address: string | null
@@ -3249,6 +3344,15 @@ export type Database = {
           client_address: string
           client_name: string
           client_phone: string
+        }[]
+      }
+      get_monthly_earnings_secure: {
+        Args: { token_param?: string }
+        Returns: {
+          credit_earnings: number
+          lead_earnings: number
+          quote_earnings: number
+          referral_earnings: number
         }[]
       }
       get_my_payments_secure: {
@@ -3468,12 +3572,15 @@ export type Database = {
               estimated_completion: string
               id: string
               lead_id: string
+              lead_profession: string
+              lead_title: string
               price: number
               professional_id: string
               professional_location: string
               professional_name: string
               professional_profession: string
               professional_rating: number
+              professional_review_count: number
               professional_verified: boolean
               share_percentage: number
               status: string
@@ -3585,8 +3692,10 @@ export type Database = {
           id: string
           price: string
           professional_id: string
+          request_category: string
           request_id: string
           request_status: string
+          request_title: string
           status: string
         }[]
       }
@@ -3598,12 +3707,15 @@ export type Database = {
           estimated_completion: string
           id: string
           lead_id: string
+          lead_profession: string
+          lead_title: string
           price: number
           professional_id: string
           professional_location: string
           professional_name: string
           professional_profession: string
           professional_rating: number
+          professional_review_count: number
           professional_verified: boolean
           share_percentage: number
           status: string
