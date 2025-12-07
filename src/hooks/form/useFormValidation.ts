@@ -1,7 +1,5 @@
-
 import { validateEmail, validatePhone, validateBusinessLicense } from "@/utils/formValidation";
 import { SignupFormData, SignupFormErrors } from "@/types/signupForm";
-import { getSpecializationsByProfession } from '@/components/cta/data/professionsAndSpecializations';
 
 export const useFormValidation = () => {
   const validateForm = (formData: SignupFormData): { 
