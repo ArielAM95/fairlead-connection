@@ -25,6 +25,7 @@ export interface NotificationState {
   userPhone?: string;
   showWelcomeMessage?: boolean;
 }
+
 export const useNotification = () => {
   const [notification, setNotification] = useState<NotificationState>({
     isOpen: false,
@@ -32,42 +33,47 @@ export const useNotification = () => {
     description: "",
     userName: "",
     userPhone: "",
-    showWelcomeMessage: false
+    showWelcomeMessage: false,
   });
-  const showNotification = (title: string, description: string, userName?: string, userPhone?: string, showWelcomeMessage?: boolean) => {
+
+  const showNotification = (
+    title: string, 
+    description: string,
+    userName?: string,
+    userPhone?: string,
+    showWelcomeMessage?: boolean
+  ) => {
     setNotification({
       isOpen: true,
       title,
       description,
       userName,
       userPhone,
-      showWelcomeMessage
+      showWelcomeMessage,
     });
   };
+
   const hideNotification = () => {
-    setNotification(prev => ({
-      ...prev,
-      isOpen: false
-    }));
+    setNotification(prev => ({ ...prev, isOpen: false }));
   };
+
   return {
     notification,
     showNotification,
-    hideNotification
+    hideNotification,
   };
 };
+
 const Index = () => {
-  const {
-    notification,
-    showNotification,
-    hideNotification
-  } = useNotification();
+  const { notification, showNotification, hideNotification } = useNotification();
+  
   useEffect(() => {
     document.title = "oFair - מהפכת שיתוף הלידים לבעלי מקצוע";
-
+    
     // Log UTM parameters for debugging
     const urlParams = new URLSearchParams(window.location.search);
     const utmParams: Record<string, string> = {};
+    
     for (const [key, value] of urlParams.entries()) {
       if (key.startsWith('utm_')) {
         utmParams[key] = value;
@@ -75,8 +81,10 @@ const Index = () => {
       }
     }
   }, []);
-  return <div className="overflow-x-hidden">
-      
+
+  return (
+    <div className="overflow-x-hidden">
+      <CyberMondayBanner />
       <Navbar />
       <HeroSection />
       <ProblemsSection />
@@ -91,7 +99,17 @@ const Index = () => {
       <Footer />
       <ScrollToTop />
       <FloatingCTAButton />
-      <NotificationPopup title={notification.title} description={notification.description} isOpen={notification.isOpen} onClose={hideNotification} userName={notification.userName} userPhone={notification.userPhone} showWelcomeMessage={notification.showWelcomeMessage} />
-    </div>;
+      <NotificationPopup
+        title={notification.title}
+        description={notification.description}
+        isOpen={notification.isOpen}
+        onClose={hideNotification}
+        userName={notification.userName}
+        userPhone={notification.userPhone}
+        showWelcomeMessage={notification.showWelcomeMessage}
+      />
+    </div>
+  );
 };
+
 export default Index;
