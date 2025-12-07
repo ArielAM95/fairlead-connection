@@ -1580,6 +1580,7 @@ export type Database = {
           updated_at: string
           uploaded_invoice: boolean | null
           uploaded_invoice_at: string | null
+          utm_params: Json | null
         }
         Insert: {
           assigned_to?: string | null
@@ -1609,6 +1610,7 @@ export type Database = {
           updated_at?: string
           uploaded_invoice?: boolean | null
           uploaded_invoice_at?: string | null
+          utm_params?: Json | null
         }
         Update: {
           assigned_to?: string | null
@@ -1638,6 +1640,7 @@ export type Database = {
           updated_at?: string
           uploaded_invoice?: boolean | null
           uploaded_invoice_at?: string | null
+          utm_params?: Json | null
         }
         Relationships: [
           {
@@ -1712,6 +1715,7 @@ export type Database = {
           created_at: string
           customer_name: string
           customer_phone: string
+          final_price: number | null
           id: string
           professional_name: string
           professional_phone: string
@@ -1722,6 +1726,7 @@ export type Database = {
           rating_timing: number
           rating_value: number
           recommendation: string | null
+          request_id: string | null
           weighted_average: number
         }
         Insert: {
@@ -1729,6 +1734,7 @@ export type Database = {
           created_at?: string
           customer_name: string
           customer_phone: string
+          final_price?: number | null
           id?: string
           professional_name: string
           professional_phone: string
@@ -1739,6 +1745,7 @@ export type Database = {
           rating_timing: number
           rating_value: number
           recommendation?: string | null
+          request_id?: string | null
           weighted_average: number
         }
         Update: {
@@ -1746,6 +1753,7 @@ export type Database = {
           created_at?: string
           customer_name?: string
           customer_phone?: string
+          final_price?: number | null
           id?: string
           professional_name?: string
           professional_phone?: string
@@ -1756,6 +1764,7 @@ export type Database = {
           rating_timing?: number
           rating_value?: number
           recommendation?: string | null
+          request_id?: string | null
           weighted_average?: number
         }
         Relationships: []
@@ -1939,7 +1948,7 @@ export type Database = {
           client: string
           created_at: string | null
           description: string | null
-          end_date: string
+          end_date: string | null
           id: string
           image_url: string | null
           location: string | null
@@ -1956,7 +1965,7 @@ export type Database = {
           client: string
           created_at?: string | null
           description?: string | null
-          end_date: string
+          end_date?: string | null
           id?: string
           image_url?: string | null
           location?: string | null
@@ -1973,7 +1982,7 @@ export type Database = {
           client?: string
           created_at?: string | null
           description?: string | null
-          end_date?: string
+          end_date?: string | null
           id?: string
           image_url?: string | null
           location?: string | null
@@ -2036,6 +2045,7 @@ export type Database = {
           id: string
           includes_vat: boolean
           lead_id: string | null
+          lower_price_amount_before_vat: number | null
           lower_price_includes_vat: boolean | null
           lower_price_value: number | null
           lower_price_willing: boolean | null
@@ -2056,6 +2066,7 @@ export type Database = {
           id?: string
           includes_vat?: boolean
           lead_id?: string | null
+          lower_price_amount_before_vat?: number | null
           lower_price_includes_vat?: boolean | null
           lower_price_value?: number | null
           lower_price_willing?: boolean | null
@@ -2076,6 +2087,7 @@ export type Database = {
           id?: string
           includes_vat?: boolean
           lead_id?: string | null
+          lower_price_amount_before_vat?: number | null
           lower_price_includes_vat?: boolean | null
           lower_price_value?: number | null
           lower_price_willing?: boolean | null
@@ -3409,6 +3421,21 @@ export type Database = {
           status: string
         }[]
       }
+      get_notifications_secure: {
+        Args: { limit_count?: number; token_param?: string }
+        Returns: {
+          client_details: Json
+          created_at: string
+          description: string
+          id: string
+          is_read: boolean
+          professional_id: string
+          related_id: string
+          related_type: string
+          title: string
+          type: string
+        }[]
+      }
       get_professional_by_identifier: {
         Args: { identifier_param: string; is_email_param: boolean }
         Returns: {
@@ -3543,7 +3570,7 @@ export type Database = {
           client: string
           created_at: string | null
           description: string | null
-          end_date: string
+          end_date: string | null
           id: string
           image_url: string | null
           location: string | null
@@ -3702,13 +3729,19 @@ export type Database = {
       get_received_proposals_secure: {
         Args: { token_param?: string }
         Returns: {
+          amount_before_vat: number
           created_at: string
           description: string
           estimated_completion: string
           id: string
+          includes_vat: boolean
           lead_id: string
           lead_profession: string
           lead_title: string
+          lower_price_amount_before_vat: number
+          lower_price_includes_vat: boolean
+          lower_price_value: number
+          lower_price_willing: boolean
           price: number
           professional_id: string
           professional_location: string
@@ -3717,6 +3750,7 @@ export type Database = {
           professional_rating: number
           professional_review_count: number
           professional_verified: boolean
+          sample_image_url: string
           share_percentage: number
           status: string
         }[]
@@ -3773,19 +3807,34 @@ export type Database = {
         }
         Returns: boolean
       }
-      submit_proposal_secure: {
-        Args: {
-          p_description: string
-          p_estimated_completion?: string
-          p_lead_id: string
-          p_lower_price_value?: number
-          p_lower_price_willing?: boolean
-          p_price: number
-          p_sample_image_url?: string
-          token_param?: string
-        }
-        Returns: string
-      }
+      submit_proposal_secure:
+        | {
+            Args: {
+              p_description: string
+              p_estimated_completion?: string
+              p_lead_id: string
+              p_lower_price_value?: number
+              p_lower_price_willing?: boolean
+              p_price: number
+              p_sample_image_url?: string
+              token_param?: string
+            }
+            Returns: string
+          }
+        | {
+            Args: {
+              p_description: string
+              p_estimated_completion?: string
+              p_lead_id: string
+              p_lower_price_includes_vat?: boolean
+              p_lower_price_value?: number
+              p_lower_price_willing?: boolean
+              p_price: number
+              p_sample_image_url?: string
+              token_param?: string
+            }
+            Returns: string
+          }
       update_professional_rating_secure: {
         Args: {
           new_rating: number
