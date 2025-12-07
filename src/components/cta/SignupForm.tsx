@@ -114,7 +114,7 @@ const SignupForm = ({
             expiry_month,
             expiry_year,
             confirmation_code: paymentData.confirmation_code,
-            amount: 295, // Cyber Monday registration fee
+            amount: 413, // Production registration fee
             save_card: paymentData.save_card // Pass user's choice
           }
         }

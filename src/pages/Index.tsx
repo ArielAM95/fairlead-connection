@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -14,7 +15,6 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import NotificationPopup from "@/components/ui/NotificationPopup";
 import FloatingCTAButton from "@/components/FloatingCTAButton";
-import CyberMondayBanner from "@/components/CyberMondayBanner";
 
 // Define the notification context to be used across components
 export interface NotificationState {
@@ -84,7 +84,6 @@ const Index = () => {
 
   return (
     <div className="overflow-x-hidden">
-      <CyberMondayBanner />
       <Navbar />
       <HeroSection />
       <ProblemsSection />

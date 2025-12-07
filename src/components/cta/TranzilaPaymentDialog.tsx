@@ -21,7 +21,7 @@ declare global {
   }
 }
 
-const REGISTRATION_FEE = 295; // Cyber Monday special (250₪ + VAT)
+const REGISTRATION_FEE = 413; // ₪ Production registration fee
 
 interface TranzilaPaymentDialogProps {
   open: boolean;
@@ -222,7 +222,6 @@ export default function TranzilaPaymentDialog({
         currency_code: 'ILS',
         tran_mode: 'A', // Authorization + Capture
         tokenize: true,  // Enable tokenization
-        pdesc: 'דמי הקמה - Ofair', // Product description for invoice
         // ✅ AUTO-INVOICE GENERATION FIELDS
         // Including these fields triggers Tranzila to auto-generate and email invoice
         contact: userDetails.name,

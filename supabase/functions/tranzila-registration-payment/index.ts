@@ -205,7 +205,7 @@ Deno.serve(async (req) => {
       .update({
         registration_payment_status: 'completed',
         registration_paid_at: new Date().toISOString(),
-        registration_amount: amount || 295
+        registration_amount: amount || 413
       })
       .eq('id', professional.id);
 
@@ -223,7 +223,7 @@ Deno.serve(async (req) => {
       .update({
         paid: true,
         paid_at: new Date().toISOString(),
-        payment_amount: amount || 295
+        payment_amount: amount || 413
       })
       .eq('professional_id', professional.id);
 
@@ -240,7 +240,7 @@ Deno.serve(async (req) => {
       action: save_card ? 'tokenize' : 'charge',
       request: {
         source: 'registration',
-        amount: amount || 295,
+        amount: amount || 413,
         card_last4,
         phone_number,
         save_card
