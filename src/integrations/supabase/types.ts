@@ -83,6 +83,84 @@ export type Database = {
         }
         Relationships: []
       }
+      affiliate_registrations: {
+        Row: {
+          affiliate_code_used: string
+          bonus_commission_id: string | null
+          created_at: string
+          credited_at: string | null
+          discount_given: number
+          id: string
+          referred_id: string
+          referrer_bonus: number
+          referrer_id: string
+          registration_amount: number
+          status: string
+        }
+        Insert: {
+          affiliate_code_used: string
+          bonus_commission_id?: string | null
+          created_at?: string
+          credited_at?: string | null
+          discount_given?: number
+          id?: string
+          referred_id: string
+          referrer_bonus?: number
+          referrer_id: string
+          registration_amount?: number
+          status?: string
+        }
+        Update: {
+          affiliate_code_used?: string
+          bonus_commission_id?: string | null
+          created_at?: string
+          credited_at?: string | null
+          discount_given?: number
+          id?: string
+          referred_id?: string
+          referrer_bonus?: number
+          referrer_id?: string
+          registration_amount?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_registrations_bonus_commission_id_fkey"
+            columns: ["bonus_commission_id"]
+            isOneToOne: false
+            referencedRelation: "commissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "affiliate_registrations_referred_id_fkey"
+            columns: ["referred_id"]
+            isOneToOne: true
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "affiliate_registrations_referred_id_fkey"
+            columns: ["referred_id"]
+            isOneToOne: true
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "affiliate_registrations_referrer_id_fkey"
+            columns: ["referrer_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "affiliate_registrations_referrer_id_fkey"
+            columns: ["referrer_id"]
+            isOneToOne: false
+            referencedRelation: "professionals_public_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       articles: {
         Row: {
           author: string | null
@@ -1772,6 +1850,7 @@ export type Database = {
       professionals: {
         Row: {
           about: string | null
+          affiliate_code: string | null
           areas: string | null
           business_license_number: string | null
           certifications: string[] | null
@@ -1816,6 +1895,7 @@ export type Database = {
         }
         Insert: {
           about?: string | null
+          affiliate_code?: string | null
           areas?: string | null
           business_license_number?: string | null
           certifications?: string[] | null
@@ -1860,6 +1940,7 @@ export type Database = {
         }
         Update: {
           about?: string | null
+          affiliate_code?: string | null
           areas?: string | null
           business_license_number?: string | null
           certifications?: string[] | null
@@ -3274,6 +3355,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      generate_affiliate_code: { Args: never; Returns: string }
       get_active_leads: {
         Args: never
         Returns: {

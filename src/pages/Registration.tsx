@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import TranzilaPaymentDialog from '@/components/cta/TranzilaPaymentDialog';
 import SignupForm from '@/components/cta/SignupForm';
+import AffiliateCodeInput from '@/components/cta/AffiliateCodeInput';
 import { SignupFormData } from '@/types/signupForm';
 import { submitSignupForm } from '@/services/formSubmission';
 import { useUtmParams } from '@/hooks/useUtmParams';
@@ -23,6 +24,17 @@ interface ProfessionalData {
   city?: string;
 }
 
+// AffiliateData type is imported from TranzilaPaymentDialog via props
+interface AffiliateData {
+  valid: boolean;
+  referrer_id?: string;
+  referrer_name?: string;
+  original_price?: number;
+  discount_percent?: number;
+  discount_amount?: number;
+  discounted_price?: number;
+}
+
 export default function Registration() {
   const navigate = useNavigate();
 
@@ -32,8 +44,12 @@ export default function Registration() {
   const [phoneCheckStatus, setPhoneCheckStatus] = useState<'idle' | 'checking' | 'found' | 'not_found'>('idle');
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [showSignupForm, setShowSignupForm] = useState(false);
+  const [affiliateData, setAffiliateData] = useState<AffiliateData | null>(null);
   
   const utmParams = useUtmParams();
+  
+  // Calculate actual price based on affiliate discount
+  const actualPrice = affiliateData?.discounted_price || REGISTRATION_FEE;
 
   // Flatten work regions for submitSignupForm
   const workRegions = workRegionsHierarchy.flatMap(region => 
@@ -149,8 +165,9 @@ export default function Registration() {
             expiry_month,
             expiry_year,
             confirmation_code: paymentData.confirmation_code,
-            amount: 413, // Production registration fee
-            save_card: paymentData.save_card // Pass user's choice
+            amount: actualPrice, // Use discounted price if affiliate code applied
+            save_card: paymentData.save_card,
+            affiliate_code: paymentData.affiliate_code // Pass affiliate code if used
           }
         }
       );
@@ -162,7 +179,8 @@ export default function Registration() {
       }
 
       console.log('Registration successful:', data);
-      toast.success(`ההרשמה הושלמה בהצלחה! ₪${REGISTRATION_FEE} חוייבו`, {
+      const chargedAmount = data.final_amount || actualPrice;
+      toast.success(`ההרשמה הושלמה בהצלחה! ₪${chargedAmount.toFixed(0)} חוייבו`, {
         duration: 4000 // Show for 4 seconds
       });
 
@@ -205,7 +223,10 @@ export default function Registration() {
                 <p className="text-xl text-foreground">שלום {professionalData.name}!</p>
               )}
               <p className="text-lg text-muted-foreground">
-                נא להשלים את תשלום דמי ההרשמה בסך ₪{REGISTRATION_FEE}
+                נא להשלים את תשלום דמי ההרשמה בסך ₪{actualPrice.toFixed(0)}
+                {affiliateData && (
+                  <span className="text-green-600 mr-2">(כולל הנחת הפניה!)</span>
+                )}
               </p>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
                 <p className="text-sm text-blue-800">
@@ -216,7 +237,12 @@ export default function Registration() {
           ) : (
             <>
               <h1 className="text-3xl font-bold text-foreground">תשלום הרשמה</h1>
-              <p className="text-lg text-muted-foreground">דמי הרשמה: ₪{REGISTRATION_FEE} כולל מע"מ</p>
+              <p className="text-lg text-muted-foreground">
+                דמי הרשמה: ₪{REGISTRATION_FEE} כולל מע"מ
+                {affiliateData && (
+                  <span className="text-green-600 mr-2"> → ₪{actualPrice.toFixed(0)} עם הנחה!</span>
+                )}
+              </p>
               <p className="text-sm text-muted-foreground">הזן מספר טלפון של משתמש קיים במערכת</p>
             </>
           )}
@@ -276,6 +302,13 @@ export default function Registration() {
                 </Button>
               </div>
             )}
+
+            {/* Affiliate Code Input - Show when phone not found but not showing signup form yet */}
+            {phoneCheckStatus !== 'not_found' && (
+              <div className="mt-4 pt-4 border-t border-border">
+                <AffiliateCodeInput onValidCode={setAffiliateData} />
+              </div>
+            )}
           </div>
         )}
 
@@ -301,7 +334,9 @@ export default function Registration() {
             size="lg"
           >
             {phoneCheckStatus === 'found'
-              ? `המשך לתשלום ₪${REGISTRATION_FEE}`
+              ? affiliateData 
+                ? `המשך לתשלום ₪${actualPrice.toFixed(0)} (כולל הנחה!)`
+                : `המשך לתשלום ₪${REGISTRATION_FEE}`
               : 'הזן מספר טלפון תקין'}
           </Button>
         )}
@@ -320,6 +355,7 @@ export default function Registration() {
               city: professionalData.city,
               companyName: professionalData.company_name
             }}
+            affiliateData={affiliateData}
           />
         )}
       </div>

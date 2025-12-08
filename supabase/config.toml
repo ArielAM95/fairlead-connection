@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.retry-failed-invoices]
 verify_jwt = false
+
+[functions.validate-affiliate-code]
+verify_jwt = false
