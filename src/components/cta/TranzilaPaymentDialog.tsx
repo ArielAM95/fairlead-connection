@@ -23,7 +23,7 @@ declare global {
 
 const REGISTRATION_FEE = 413; // ₪ Production registration fee
 
-interface AffiliateData {
+export interface AffiliateData {
   valid: boolean;
   referrer_id?: string;
   referrer_name?: string;
