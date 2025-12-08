@@ -29,6 +29,7 @@ interface AffiliateData {
   valid: boolean;
   referrer_id?: string;
   referrer_name?: string;
+  affiliate_code_used?: string; // The actual affiliate code used
   original_price?: number;
   discount_percent?: number;
   discount_amount?: number;
