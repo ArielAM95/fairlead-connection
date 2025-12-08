@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,12 +18,23 @@ interface AffiliateValidation {
 
 interface AffiliateCodeInputProps {
   onValidCode: (data: AffiliateValidation | null) => void;
+  initialCode?: string;
 }
 
-export default function AffiliateCodeInput({ onValidCode }: AffiliateCodeInputProps) {
+export default function AffiliateCodeInput({ onValidCode, initialCode }: AffiliateCodeInputProps) {
+  const [searchParams] = useSearchParams();
   const [code, setCode] = useState('');
   const [status, setStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid'>('idle');
   const [validation, setValidation] = useState<AffiliateValidation | null>(null);
+
+  // Read affiliate code from URL on mount
+  useEffect(() => {
+    const urlCode = searchParams.get('ref') || searchParams.get('affiliate') || initialCode;
+    if (urlCode) {
+      const formattedCode = urlCode.toUpperCase().replace(/\s/g, '');
+      setCode(formattedCode);
+    }
+  }, [searchParams, initialCode]);
 
   const validateCode = useCallback(async (affiliateCode: string) => {
     if (!affiliateCode || affiliateCode.length < 5) {
