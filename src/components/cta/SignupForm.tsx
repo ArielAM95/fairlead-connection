@@ -19,6 +19,7 @@ interface AffiliateData {
   valid: boolean;
   referrer_id?: string;
   referrer_name?: string;
+  affiliate_code_used?: string; // The actual affiliate code used
   original_price?: number;
   discount_percent?: number;
   discount_amount?: number;
@@ -131,7 +132,7 @@ const SignupForm = ({
             confirmation_code: paymentData.confirmation_code,
             amount: actualPrice,
             save_card: paymentData.save_card,
-            affiliate_code: affiliateData?.referrer_id ? paymentData.affiliate_code : undefined
+            affiliate_code: affiliateData?.affiliate_code_used || undefined
           }
         }
       );

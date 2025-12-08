@@ -85,6 +85,7 @@ serve(async (req) => {
         valid: true,
         referrer_id: professional.id,
         referrer_name: professional.name,
+        affiliate_code: professional.affiliate_code, // Return the actual affiliate code
         original_price: REGISTRATION_FEE,
         discount_percent: DISCOUNT_PERCENT,
         discount_amount: discountAmount,
