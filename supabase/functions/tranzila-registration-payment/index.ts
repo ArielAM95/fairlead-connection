@@ -284,8 +284,8 @@ Deno.serve(async (req) => {
         .from('commissions')
         .insert({
           professional_id: referrerId,
-          amount: -referrerBonus, // Negative = credit to the professional
-          amount_before_vat: -(referrerBonus / 1.17), // Remove VAT
+          amount: referrerBonus, // Positive amount - transaction_type defines it as credit
+          amount_before_vat: referrerBonus / 1.18, // Remove VAT (18%)
           commission_date: new Date().toISOString().split('T')[0],
           transaction_type: 'credit',
           payment_type: 'affiliate_bonus',

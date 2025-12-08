@@ -250,11 +250,12 @@ ${referralLink}`;
 
               {/* Info */}
               <div className="bg-green-100/50 border border-green-200 rounded-lg p-3 text-center">
-                <p className="text-sm text-green-700">
+              <p className="text-sm text-green-700">
                   🎁 החבר שלך מקבל <strong>10% הנחה</strong> על ההרשמה
                   <br />
-                  💸 ואתה מקבל <strong>10% קרדיט</strong> (₪41.3) לחשבון שלך!
+                  💸 ואתה מקבל <strong>10% קרדיט</strong> (₪41.3*) לחשבון שלך!
                 </p>
+                <p className="text-xs text-green-600 mt-1">* הסכום כולל מע"מ כדין</p>
               </div>
             </CardContent>
           </Card>
