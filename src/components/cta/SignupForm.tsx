@@ -13,6 +13,17 @@ import TranzilaPaymentDialog from "./TranzilaPaymentDialog";
 import PrePaymentDialog from "./PrePaymentDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import AffiliateCodeInput from "./AffiliateCodeInput";
+
+interface AffiliateData {
+  valid: boolean;
+  referrer_id?: string;
+  referrer_name?: string;
+  original_price?: number;
+  discount_percent?: number;
+  discount_amount?: number;
+  discounted_price?: number;
+}
 
 interface SignupFormProps {
   onSubmit: (formData: SignupFormData) => Promise<void>;
@@ -30,6 +41,10 @@ const SignupForm = ({
   const [showPrePaymentDialog, setShowPrePaymentDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [pendingFormData, setPendingFormData] = useState<SignupFormData | null>(null);
+  const [affiliateData, setAffiliateData] = useState<AffiliateData | null>(null);
+
+  // Calculate actual price based on affiliate discount
+  const actualPrice = affiliateData?.discounted_price || 413;
   
   const {
     formData,
@@ -114,8 +129,9 @@ const SignupForm = ({
             expiry_month,
             expiry_year,
             confirmation_code: paymentData.confirmation_code,
-            amount: 413, // Production registration fee
-            save_card: paymentData.save_card // Pass user's choice
+            amount: actualPrice,
+            save_card: paymentData.save_card,
+            affiliate_code: affiliateData?.referrer_id ? paymentData.affiliate_code : undefined
           }
         }
       );
@@ -223,6 +239,11 @@ const SignupForm = ({
           error={!!errors.email}
           errorMessage={errors.email}
         />
+      </div>
+
+      {/* Affiliate Code Section */}
+      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4">
+        <AffiliateCodeInput onValidCode={setAffiliateData} />
       </div>
 
       <div className="flex items-start gap-2 rtl:space-x-reverse">
@@ -333,6 +354,7 @@ const SignupForm = ({
         city: formData.city,
         companyName: formData.companyName,
       }}
+      affiliateData={affiliateData}
     />
     </>
   );
