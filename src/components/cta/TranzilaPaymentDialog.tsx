@@ -27,6 +27,7 @@ export interface AffiliateData {
   valid: boolean;
   referrer_id?: string;
   referrer_name?: string;
+  affiliate_code_used?: string; // The actual affiliate code used
   original_price?: number;
   discount_percent?: number;
   discount_amount?: number;
@@ -74,8 +75,8 @@ export default function TranzilaPaymentDialog({
   
   // Calculate actual price based on affiliate discount
   const actualPrice = affiliateData?.discounted_price || REGISTRATION_FEE;
-  const affiliateCode = affiliateData?.valid ? 
-    `OFAIR-${affiliateData.referrer_id?.slice(0, 6).toUpperCase()}` : undefined;
+  // Use the actual affiliate code from validation, not a generated one
+  const affiliateCode = affiliateData?.valid ? affiliateData.affiliate_code_used : undefined;
   // 🔒 Disconnect Supabase realtime (למניעת שגיאת JSON.parse)
   useEffect(() => {
     if (open) {
@@ -277,9 +278,9 @@ export default function TranzilaPaymentDialog({
             }
           );
         }),
-        // Timeout after 30 seconds
+        // Timeout after 90 seconds (some payments take longer)
         new Promise<any>((_, reject) =>
-          setTimeout(() => reject(new Error('התשלום לקח זמן רב מדי. אנא נסה שוב')), 30000)
+          setTimeout(() => reject(new Error('התשלום לקח זמן רב מדי. אנא נסה שוב')), 90000)
         )
       ]);
 

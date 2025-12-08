@@ -9,6 +9,7 @@ interface AffiliateValidation {
   valid: boolean;
   referrer_id?: string;
   referrer_name?: string;
+  affiliate_code?: string; // The actual affiliate code used
   original_price?: number;
   discount_percent?: number;
   discount_amount?: number;
@@ -55,8 +56,10 @@ export default function AffiliateCodeInput({ onValidCode, initialCode }: Affilia
 
       if (data.valid) {
         setStatus('valid');
-        setValidation(data);
-        onValidCode(data);
+        // Include the actual code used in the validation data
+        const validationData = { ...data, affiliate_code_used: code };
+        setValidation(validationData);
+        onValidCode(validationData);
       } else {
         setStatus('invalid');
         setValidation(null);

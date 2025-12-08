@@ -351,13 +351,23 @@ Deno.serve(async (req) => {
 
     console.log('Registration payment completed successfully');
 
+    // Fetch the newly generated affiliate code for the new user
+    const { data: updatedProfessional } = await supabase
+      .from('professionals')
+      .select('affiliate_code')
+      .eq('id', professional.id)
+      .single();
+
+    console.log('New user affiliate code:', updatedProfessional?.affiliate_code);
+
     return new Response(
       JSON.stringify({
         success: true,
         payment_method_id: paymentMethodId,
         message: save_card ? 'כרטיס נשמר בהצלחה' : 'תשלום בוצע בהצלחה',
         affiliate_discount: affiliateDiscount,
-        final_amount: finalAmount
+        final_amount: finalAmount,
+        affiliate_code: updatedProfessional?.affiliate_code // Return the new user's affiliate code
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
