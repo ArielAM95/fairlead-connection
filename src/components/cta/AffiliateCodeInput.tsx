@@ -57,7 +57,8 @@ export default function AffiliateCodeInput({ onValidCode, initialCode }: Affilia
       if (data.valid) {
         setStatus('valid');
         // Include the actual code used in the validation data
-        const validationData = { ...data, affiliate_code_used: code };
+        const validationData = { ...data, affiliate_code_used: affiliateCode };
+        console.log('✅ Affiliate validation complete:', validationData);
         setValidation(validationData);
         onValidCode(validationData);
       } else {

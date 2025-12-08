@@ -13,7 +13,7 @@ const ThankYou = () => {
   // Get affiliate code from URL params
   const affiliateCode = searchParams.get('affiliate_code');
   const referralLink = affiliateCode 
-    ? `https://ofair.co.il/registration?ref=${affiliateCode}`
+    ? `https://biz.ofair.co.il/registration?ref=${affiliateCode}`
     : null;
 
   useEffect(() => {

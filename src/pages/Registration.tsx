@@ -181,17 +181,11 @@ export default function Registration() {
 
       console.log('Registration successful:', data);
       const chargedAmount = data.final_amount || actualPrice;
-      toast.success(`ההרשמה הושלמה בהצלחה! ₪${chargedAmount.toFixed(0)} חוייבו`, {
-        duration: 4000 // Show for 4 seconds
-      });
+      toast.success(`ההרשמה הושלמה בהצלחה! ₪${chargedAmount.toFixed(0)} חוייבו`);
 
-      setShowPaymentDialog(false);
-
-      // Redirect to thank-you page after payment success with affiliate code
-      setTimeout(() => {
-        const affiliateCodeParam = data?.affiliate_code ? `&affiliate_code=${data.affiliate_code}` : '';
-        window.location.href = `https://biz.ofair.co.il/thank-you?amount=${actualPrice}&phone=${phoneNumber}${affiliateCodeParam}`;
-      }, 4000);
+      // Redirect immediately to thank-you page (don't close dialog first)
+      const affiliateCodeParam = data?.affiliate_code ? `&affiliate_code=${data.affiliate_code}` : '';
+      window.location.href = `https://biz.ofair.co.il/thank-you?amount=${actualPrice}&phone=${phoneNumber}${affiliateCodeParam}`;
     } catch (error: any) {
       console.error('Post-payment error:', error);
       toast.error(error.message || 'שגיאה בשמירת הנתונים');
