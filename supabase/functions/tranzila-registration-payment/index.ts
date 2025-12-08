@@ -289,7 +289,7 @@ Deno.serve(async (req) => {
           commission_date: new Date().toISOString().split('T')[0],
           transaction_type: 'credit',
           payment_type: 'affiliate_bonus',
-          status: 'credited',
+          status: 'payable',
           paid_at: new Date().toISOString(),
           ofair_commission: 0,
           lead_owner_commission: 0
