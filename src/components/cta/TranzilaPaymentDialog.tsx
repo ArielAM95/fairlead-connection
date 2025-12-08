@@ -85,6 +85,27 @@ export default function TranzilaPaymentDialog({
     }
   }, [open]);
 
+  // 📨 Listen for postMessage from Tranzila iframe (fallback mechanism)
+  useEffect(() => {
+    if (!open) return;
+
+    const handleMessage = (event: MessageEvent) => {
+      // Only accept messages from Tranzila domains
+      if (!event.origin.includes('tranzila.com')) return;
+      
+      console.log('📨 Tranzila postMessage received:', event.data);
+      
+      // Store the response for fallback use
+      if (event.data?.transaction_response || event.data?.success) {
+        console.log('📨 Storing postMessage result as fallback');
+        (window as any).tranzilaChargeResult = event.data;
+      }
+    };
+    
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [open]);
+
   // 📦 Load Tranzila SDK when dialog opens
   useEffect(() => {
     if (open && !sdkLoaded) {
@@ -141,6 +162,9 @@ export default function TranzilaPaymentDialog({
     }
 
     try {
+      // Clear any previous charge result
+      (window as any).tranzilaChargeResult = null;
+
       const hostedFieldsInstance = window.TzlaHostedFields.create({
         sandbox: false,
         terminal_name: terminal,
@@ -159,6 +183,21 @@ export default function TranzilaPaymentDialog({
 
       hostedFieldsInstance.onEvent('validityChange', (event: any) => {
         console.log('Field validity changed:', event);
+      });
+
+      // 🔧 Additional event listeners to catch charge result
+      hostedFieldsInstance.onEvent('chargeComplete', (response: any) => {
+        console.log('📨 chargeComplete event received:', response);
+        (window as any).tranzilaChargeResult = response;
+      });
+
+      hostedFieldsInstance.onEvent('chargeError', (error: any) => {
+        console.log('📨 chargeError event received:', error);
+        (window as any).tranzilaChargeError = error;
+      });
+
+      hostedFieldsInstance.onEvent('tokenizationComplete', (data: any) => {
+        console.log('📨 tokenizationComplete event received:', data);
       });
 
       // Store for charge
@@ -262,12 +301,20 @@ export default function TranzilaPaymentDialog({
         affiliateDiscount: affiliateData?.discount_amount || 0
       });
 
-      // ✅ FIX 2: Add timeout to prevent hanging
+      // Clear previous results
+      (window as any).tranzilaChargeResult = null;
+      (window as any).tranzilaChargeError = null;
+
+      console.log('⏱️ Starting charge at:', new Date().toISOString());
+
+      // ✅ FIX 2: Add timeout with fallback to check window.tranzilaChargeResult
       chargeResult = await Promise.race([
+        // Main promise: wait for callback
         new Promise<any>((resolve, reject) => {
           tranzilaInstance.charge(
             chargeParams,
             (err: any, response: any) => {
+              console.log('📞 Charge callback received at:', new Date().toISOString());
               if (err) {
                 console.error('Charge error from Tranzila:', err);
                 reject(err);
@@ -278,10 +325,41 @@ export default function TranzilaPaymentDialog({
             }
           );
         }),
-        // Timeout after 90 seconds (some payments take longer)
-        new Promise<any>((_, reject) =>
-          setTimeout(() => reject(new Error('התשלום לקח זמן רב מדי. אנא נסה שוב')), 90000)
-        )
+        // Timeout with fallback: check if result came via event listener
+        new Promise<any>(async (resolve, reject) => {
+          // Wait 30 seconds first
+          await new Promise(r => setTimeout(r, 30000));
+          console.log('⏱️ 30s timeout reached, checking for fallback result...');
+          
+          // Check if we got a result via event listener or postMessage
+          const fallbackResult = (window as any).tranzilaChargeResult;
+          if (fallbackResult?.transaction_response?.success) {
+            console.log('✅ Using fallback result from event listener:', fallbackResult);
+            resolve(fallbackResult);
+            return;
+          }
+
+          // Check for error from event listener
+          const fallbackError = (window as any).tranzilaChargeError;
+          if (fallbackError) {
+            console.log('❌ Found fallback error:', fallbackError);
+            reject(fallbackError);
+            return;
+          }
+
+          // Wait another 60 seconds (total 90s) before giving up
+          await new Promise(r => setTimeout(r, 60000));
+          console.log('⏱️ 90s timeout reached, final fallback check...');
+
+          const finalResult = (window as any).tranzilaChargeResult;
+          if (finalResult?.transaction_response?.success) {
+            console.log('✅ Using final fallback result:', finalResult);
+            resolve(finalResult);
+            return;
+          }
+
+          reject(new Error('התשלום לקח זמן רב מדי. אנא נסה שוב'));
+        })
       ]);
 
       console.log('Tranzila charge result:', chargeResult);
