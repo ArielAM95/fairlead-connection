@@ -2,13 +2,29 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Phone } from "lucide-react";
 
+interface AffiliateData {
+  valid: boolean;
+  referrer_id?: string;
+  referrer_name?: string;
+  original_price?: number;
+  discount_percent?: number;
+  discount_amount?: number;
+  discounted_price?: number;
+}
+
 interface PrePaymentDialogProps {
   open: boolean;
   onClose: () => void;
   onProceedToPayment: () => void;
+  affiliateData?: AffiliateData | null;
 }
 
-const PrePaymentDialog = ({ open, onClose, onProceedToPayment }: PrePaymentDialogProps) => {
+const REGISTRATION_FEE = 413;
+
+const PrePaymentDialog = ({ open, onClose, onProceedToPayment, affiliateData }: PrePaymentDialogProps) => {
+  const actualPrice = affiliateData?.discounted_price || REGISTRATION_FEE;
+  const hasDiscount = affiliateData?.valid && affiliateData?.discounted_price;
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -29,12 +45,34 @@ const PrePaymentDialog = ({ open, onClose, onProceedToPayment }: PrePaymentDialo
             </p>
           </div>
 
+          {/* Affiliate Discount Banner */}
+          {hasDiscount && (
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 p-4 rounded-lg">
+              <p className="text-center text-green-800 font-bold text-lg flex items-center justify-center gap-2">
+                <span>🎉</span>
+                קיבלת 10% הנחה בזכות ההפניה של {affiliateData?.referrer_name}!
+              </p>
+            </div>
+          )}
+
           {/* Checklist */}
           <div className="space-y-3">
             <div className="flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-green-500 mt-0.5 flex-shrink-0" />
               <p className="text-base text-gray-800">
-                בצעו תשלום חד־פעמי של <span className="font-bold">350 ₪</span> בלבד
+                בצעו תשלום חד־פעמי של{' '}
+                {hasDiscount ? (
+                  <>
+                    <span className="line-through text-muted-foreground">₪{REGISTRATION_FEE}</span>
+                    {' '}
+                    <span className="font-bold text-green-600">₪{actualPrice.toFixed(0)}</span>
+                    {' '}
+                    <span className="text-green-600">(הנחת חבר מביא חבר!)</span>
+                  </>
+                ) : (
+                  <span className="font-bold">₪{REGISTRATION_FEE}</span>
+                )}
+                {' '}בלבד
               </p>
             </div>
             
@@ -80,7 +118,10 @@ const PrePaymentDialog = ({ open, onClose, onProceedToPayment }: PrePaymentDialo
               onClick={onProceedToPayment}
               className="w-full bg-blue-900 hover:bg-blue-800 text-white py-6 text-lg font-bold rounded-xl"
             >
-              🔵 בצע תשלום עכשיו
+              {hasDiscount 
+                ? `🔵 בצע תשלום עכשיו - ₪${actualPrice.toFixed(0)}`
+                : `🔵 בצע תשלום עכשיו - ₪${REGISTRATION_FEE}`
+              }
             </Button>
             
             <Button

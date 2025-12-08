@@ -186,9 +186,10 @@ export default function Registration() {
 
       setShowPaymentDialog(false);
 
-      // Redirect to thank-you page after payment success
+      // Redirect to thank-you page after payment success with affiliate code
       setTimeout(() => {
-        window.location.href = 'https://biz.ofair.co.il/thank-you';
+        const affiliateCodeParam = data?.affiliate_code ? `&affiliate_code=${data.affiliate_code}` : '';
+        window.location.href = `https://biz.ofair.co.il/thank-you?amount=${actualPrice}&phone=${phoneNumber}${affiliateCodeParam}`;
       }, 4000);
     } catch (error: any) {
       console.error('Post-payment error:', error);

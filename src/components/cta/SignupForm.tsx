@@ -151,9 +151,10 @@ const SignupForm = ({
       // Close dialog after all async operations complete
       setShowPaymentDialog(false);
 
-      // Redirect to thank-you page after payment success
+      // Redirect to thank-you page after payment success with affiliate code
       setTimeout(() => {
-        window.location.href = 'https://biz.ofair.co.il/thank-you';
+        const affiliateCodeParam = data?.affiliate_code ? `&affiliate_code=${data.affiliate_code}` : '';
+        window.location.href = `https://biz.ofair.co.il/thank-you?amount=${actualPrice}&phone=${pendingFormData.phone}${affiliateCodeParam}`;
       }, 4000);
 
       // Payment complete - no need to call onSubmit again (already created)
@@ -340,6 +341,7 @@ const SignupForm = ({
       open={showPrePaymentDialog}
       onClose={() => setShowPrePaymentDialog(false)}
       onProceedToPayment={handleProceedToPayment}
+      affiliateData={affiliateData}
     />
 
     <TranzilaPaymentDialog
