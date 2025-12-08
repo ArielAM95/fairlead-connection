@@ -23,6 +23,16 @@ declare global {
 
 const REGISTRATION_FEE = 413; // ₪ Production registration fee
 
+interface AffiliateData {
+  valid: boolean;
+  referrer_id?: string;
+  referrer_name?: string;
+  original_price?: number;
+  discount_percent?: number;
+  discount_amount?: number;
+  discounted_price?: number;
+}
+
 interface TranzilaPaymentDialogProps {
   open: boolean;
   onClose: () => void;
@@ -34,6 +44,7 @@ interface TranzilaPaymentDialogProps {
     card_type: string;
     confirmation_code: string;
     save_card?: boolean;
+    affiliate_code?: string;
   }) => void;
   userDetails: {
     name: string;
@@ -43,6 +54,7 @@ interface TranzilaPaymentDialogProps {
     city?: string;
     companyName?: string;
   };
+  affiliateData?: AffiliateData | null;
 }
 
 export default function TranzilaPaymentDialog({
@@ -50,6 +62,7 @@ export default function TranzilaPaymentDialog({
   onClose,
   onSuccess,
   userDetails,
+  affiliateData,
 }: TranzilaPaymentDialogProps) {
   const [sdkLoaded, setSdkLoaded] = useState(false);
   const [fieldsReady, setFieldsReady] = useState(false);
@@ -58,7 +71,11 @@ export default function TranzilaPaymentDialog({
   const [handshakeToken, setHandshakeToken] = useState<string>('');
   const [terminalName, setTerminalName] = useState<string>('');
   const [saveCard, setSaveCard] = useState(true); // Default: checked
-
+  
+  // Calculate actual price based on affiliate discount
+  const actualPrice = affiliateData?.discounted_price || REGISTRATION_FEE;
+  const affiliateCode = affiliateData?.valid ? 
+    `OFAIR-${affiliateData.referrer_id?.slice(0, 6).toUpperCase()}` : undefined;
   // 🔒 Disconnect Supabase realtime (למניעת שגיאת JSON.parse)
   useEffect(() => {
     if (open) {
@@ -76,12 +93,12 @@ export default function TranzilaPaymentDialog({
 
   const loadTranzilaSDK = async () => {
     try {
-      console.log('Getting handshake token for amount:', REGISTRATION_FEE);
+      console.log('Getting handshake token for amount:', actualPrice);
 
       // Use public handshake (no auth required for registration)
       // IMPORTANT: Pass the exact amount that will be charged
       const { data, error } = await supabase.functions.invoke('tranzila-handshake-public', {
-        body: { amount: REGISTRATION_FEE.toFixed(2) }
+        body: { amount: actualPrice.toFixed(2) }
       });
 
       if (error) {
@@ -90,7 +107,7 @@ export default function TranzilaPaymentDialog({
       }
 
       const { handshakeToken: token, terminal } = data;
-      console.log('Handshake token received for', REGISTRATION_FEE, 'ILS, terminal:', terminal);
+      console.log('Handshake token received for', actualPrice, 'ILS, terminal:', terminal);
 
       setHandshakeToken(token);
       setTerminalName(terminal);
@@ -164,7 +181,10 @@ export default function TranzilaPaymentDialog({
         tranzila_response: tranzilaResponse,
         user_details: userDetails,
         timestamp: new Date().toISOString(),
-        amount: REGISTRATION_FEE,
+        amount: actualPrice,
+        original_amount: REGISTRATION_FEE,
+        affiliate_discount: affiliateData?.discount_amount || 0,
+        affiliate_code: affiliateCode || null,
         success: success,
         error_message: errorMessage || null,
         source: 'payment_dialog'
@@ -218,7 +238,7 @@ export default function TranzilaPaymentDialog({
       const chargeParams = {
         terminal_name: terminal,
         thtk: token, // Use same token that initialized the Hosted Fields
-        amount: REGISTRATION_FEE.toFixed(2),
+        amount: actualPrice.toFixed(2), // Use discounted price if affiliate applied
         currency_code: 'ILS',
         tran_mode: 'A', // Authorization + Capture
         tokenize: true,  // Enable tokenization
@@ -230,14 +250,15 @@ export default function TranzilaPaymentDialog({
         id: userDetails.idNumber || '' // Business license number for Israeli tax compliance
       };
 
-      console.log('Charging with params (amount, terminal, invoice):', {
+      console.log('Charging with params (amount, terminal, invoice, affiliate):', {
         amount: chargeParams.amount,
         terminal: chargeParams.terminal_name,
         tokenPrefix: chargeParams.thtk.substring(0, 10),
         contact: chargeParams.contact,
         email: chargeParams.email,
         company: chargeParams.company,
-        hasBusinessLicense: !!chargeParams.id
+        hasBusinessLicense: !!chargeParams.id,
+        affiliateDiscount: affiliateData?.discount_amount || 0
       });
 
       // ✅ FIX 2: Add timeout to prevent hanging
@@ -297,6 +318,7 @@ export default function TranzilaPaymentDialog({
           card_type: txnResponse.credit_card_type || 'unknown',
           confirmation_code: txnResponse.confirmation_code || '',
           save_card: saveCard, // User's choice to save card
+          affiliate_code: affiliateCode, // Pass affiliate code if used
         });
       }, 2500);
 
@@ -341,7 +363,17 @@ export default function TranzilaPaymentDialog({
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-ofair-900">ביצוע תשלום</DialogTitle>
           <DialogDescription className="text-lg">
-            דמי הרשמה: ₪{REGISTRATION_FEE} כולל מע"מ
+            {affiliateData ? (
+              <span>
+                דמי הרשמה: <span className="line-through text-muted-foreground">₪{REGISTRATION_FEE}</span>
+                {' '}
+                <span className="text-green-600 font-semibold">₪{actualPrice.toFixed(0)}</span>
+                {' '}
+                <span className="text-green-600">(הנחת הפניה {affiliateData.discount_percent}%)</span>
+              </span>
+            ) : (
+              <span>דמי הרשמה: ₪{REGISTRATION_FEE} כולל מע"מ</span>
+            )}
           </DialogDescription>
         </DialogHeader>
 
@@ -438,6 +470,8 @@ export default function TranzilaPaymentDialog({
                   <span>✓</span>
                   הושלם
                 </span>
+              ) : affiliateData ? (
+                `שלם ₪${actualPrice.toFixed(0)}`
               ) : (
                 `שלם ₪${REGISTRATION_FEE}`
               )}

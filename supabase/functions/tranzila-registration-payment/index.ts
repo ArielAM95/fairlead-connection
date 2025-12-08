@@ -62,7 +62,8 @@ Deno.serve(async (req) => {
       expiry_year,
       confirmation_code,
       amount,
-      save_card = true  // Default to true for backward compatibility
+      save_card = true,
+      affiliate_code // NEW: Optional affiliate code
     } = body;
 
     console.log('Extracted values:', {
@@ -73,7 +74,8 @@ Deno.serve(async (req) => {
       expiry_month,
       expiry_year,
       confirmation_code,
-      amount
+      amount,
+      affiliate_code: affiliate_code || 'none'
     });
 
     // Validate required fields
@@ -143,6 +145,41 @@ Deno.serve(async (req) => {
     console.log('Found professional:', professional.id, professional.name);
     console.log('save_card parameter:', save_card);
 
+    // ============================================================
+    // AFFILIATE CODE HANDLING
+    // ============================================================
+    let referrerId: string | null = null;
+    let affiliateDiscount = 0;
+    let referrerBonus = 0;
+    const REGISTRATION_FEE = 413;
+    const DISCOUNT_PERCENT = 10;
+
+    if (affiliate_code) {
+      console.log('Processing affiliate code:', affiliate_code);
+      
+      // Find the referrer by affiliate code
+      const { data: referrer, error: referrerError } = await supabase
+        .from('professionals')
+        .select('id, name, affiliate_code')
+        .eq('affiliate_code', affiliate_code.toUpperCase().trim())
+        .eq('registration_payment_status', 'completed')
+        .maybeSingle();
+
+      if (referrerError) {
+        console.error('Error looking up affiliate code:', referrerError);
+      } else if (referrer) {
+        console.log('Valid affiliate code, referrer:', referrer.name);
+        referrerId = referrer.id;
+        affiliateDiscount = REGISTRATION_FEE * (DISCOUNT_PERCENT / 100); // 41.3₪
+        referrerBonus = REGISTRATION_FEE * (DISCOUNT_PERCENT / 100); // 41.3₪
+      } else {
+        console.log('Affiliate code not found or invalid:', affiliate_code);
+      }
+    }
+
+    const finalAmount = amount || (REGISTRATION_FEE - affiliateDiscount);
+    console.log('Final registration amount:', finalAmount, 'Discount:', affiliateDiscount);
+
     let paymentMethodId = null;
 
     // Only save token if save_card=true
@@ -205,7 +242,7 @@ Deno.serve(async (req) => {
       .update({
         registration_payment_status: 'completed',
         registration_paid_at: new Date().toISOString(),
-        registration_amount: amount || 413
+        registration_amount: finalAmount
       })
       .eq('id', professional.id);
 
@@ -223,7 +260,7 @@ Deno.serve(async (req) => {
       .update({
         paid: true,
         paid_at: new Date().toISOString(),
-        payment_amount: amount || 413
+        payment_amount: finalAmount
       })
       .eq('professional_id', professional.id);
 
@@ -234,37 +271,93 @@ Deno.serve(async (req) => {
       console.log('CRM paid status updated to true');
     }
 
+    // ============================================================
+    // AFFILIATE BONUS PROCESSING
+    // ============================================================
+    let bonusCommissionId: string | null = null;
+
+    if (referrerId && referrerBonus > 0) {
+      console.log('Processing affiliate bonus for referrer:', referrerId, 'Amount:', referrerBonus);
+
+      // Create credit commission for the referrer
+      const { data: commission, error: commissionError } = await supabase
+        .from('commissions')
+        .insert({
+          professional_id: referrerId,
+          amount: -referrerBonus, // Negative = credit to the professional
+          amount_before_vat: -(referrerBonus / 1.17), // Remove VAT
+          commission_date: new Date().toISOString().split('T')[0],
+          transaction_type: 'credit',
+          payment_type: 'affiliate_bonus',
+          status: 'credited',
+          paid_at: new Date().toISOString(),
+          ofair_commission: 0,
+          lead_owner_commission: 0
+        })
+        .select('id')
+        .single();
+
+      if (commissionError) {
+        console.error('Failed to create affiliate bonus commission:', commissionError);
+        // Non-critical - don't fail the request, but log it
+      } else {
+        bonusCommissionId = commission.id;
+        console.log('Affiliate bonus commission created:', bonusCommissionId);
+      }
+
+      // Create affiliate registration record
+      const { error: affiliateError } = await supabase
+        .from('affiliate_registrations')
+        .insert({
+          referrer_id: referrerId,
+          referred_id: professional.id,
+          affiliate_code_used: affiliate_code.toUpperCase().trim(),
+          registration_amount: REGISTRATION_FEE,
+          discount_given: affiliateDiscount,
+          referrer_bonus: referrerBonus,
+          bonus_commission_id: bonusCommissionId,
+          status: bonusCommissionId ? 'credited' : 'completed'
+        });
+
+      if (affiliateError) {
+        console.error('Failed to create affiliate registration record:', affiliateError);
+        // Non-critical - don't fail the request
+      } else {
+        console.log('Affiliate registration record created');
+      }
+    }
+
     // Log successful transaction
     const { data: transactionLog } = await supabase.from('transaction_logs').insert({
       professional_id: professional.id,
       action: save_card ? 'tokenize' : 'charge',
       request: {
         source: 'registration',
-        amount: amount || 413,
+        amount: finalAmount,
         card_last4,
         phone_number,
-        save_card
+        save_card,
+        affiliate_code: affiliate_code || null,
+        affiliate_discount: affiliateDiscount
       },
       response: {
         success: true,
         code: '000',
         confirmation_code: confirmation_code || null,
-        payment_method_id: paymentMethodId
+        payment_method_id: paymentMethodId,
+        bonus_commission_id: bonusCommissionId
       }
     }).select('id').single();
 
     console.log('Registration payment completed successfully');
 
-    // ✅ REMOVED: Invoice generation via Billing API
-    // Invoices are now auto-generated during charge when customer fields are included
-    // See TranzilaPaymentDialog.tsx - chargeParams includes: contact, email, company, id
-    // This triggers automatic invoice creation and email delivery by Tranzila
-
     return new Response(
       JSON.stringify({
         success: true,
         payment_method_id: paymentMethodId,
-        message: save_card ? 'כרטיס נשמר בהצלחה' : 'תשלום בוצע בהצלחה'
+        message: save_card ? 'כרטיס נשמר בהצלחה' : 'תשלום בוצע בהצלחה',
+        affiliate_discount: affiliateDiscount,
+        final_amount: finalAmount
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
