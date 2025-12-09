@@ -19,6 +19,7 @@ export type Database = {
           created_at: string
           date: string
           description: string
+          discount_amount: number | null
           id: string
           payment_method: string | null
           price: string
@@ -33,6 +34,7 @@ export type Database = {
           created_at?: string
           date: string
           description: string
+          discount_amount?: number | null
           id?: string
           payment_method?: string | null
           price: string
@@ -47,6 +49,7 @@ export type Database = {
           created_at?: string
           date?: string
           description?: string
+          discount_amount?: number | null
           id?: string
           payment_method?: string | null
           price?: string
@@ -2423,11 +2426,13 @@ export type Database = {
           created_at: string
           date: string
           description: string
+          description_original: string | null
           id: string
           latitude: number | null
           location: string
           longitude: number | null
           media_urls: string[] | null
+          original_language: string | null
           status: string
           timing: string | null
           title: string
@@ -2440,11 +2445,13 @@ export type Database = {
           created_at?: string
           date?: string
           description: string
+          description_original?: string | null
           id?: string
           latitude?: number | null
           location: string
           longitude?: number | null
           media_urls?: string[] | null
+          original_language?: string | null
           status?: string
           timing?: string | null
           title: string
@@ -2457,11 +2464,13 @@ export type Database = {
           created_at?: string
           date?: string
           description?: string
+          description_original?: string | null
           id?: string
           latitude?: number | null
           location?: string
           longitude?: number | null
           media_urls?: string[] | null
+          original_language?: string | null
           status?: string
           timing?: string | null
           title?: string
@@ -3198,9 +3207,13 @@ export type Database = {
           created_at: string | null
           date: string | null
           description: string | null
+          description_original: string | null
           id: string | null
+          latitude: number | null
           location: string | null
+          longitude: number | null
           media_urls: string[] | null
+          original_language: string | null
           status: string | null
           timing: string | null
           title: string | null
@@ -3210,9 +3223,13 @@ export type Database = {
           created_at?: string | null
           date?: string | null
           description?: string | null
+          description_original?: string | null
           id?: string | null
+          latitude?: number | null
           location?: string | null
+          longitude?: number | null
           media_urls?: string[] | null
+          original_language?: string | null
           status?: string | null
           timing?: string | null
           title?: string | null
@@ -3222,9 +3239,13 @@ export type Database = {
           created_at?: string | null
           date?: string | null
           description?: string | null
+          description_original?: string | null
           id?: string | null
+          latitude?: number | null
           location?: string | null
+          longitude?: number | null
           media_urls?: string[] | null
+          original_language?: string | null
           status?: string | null
           timing?: string | null
           title?: string | null
@@ -3409,15 +3430,15 @@ export type Database = {
       }
       get_client_details_for_proposal:
         | {
+            Args: { proposal_id_param: string; proposal_type_param: string }
+            Returns: Json
+          }
+        | {
             Args: {
               proposal_id_param: string
               proposal_type_param: string
               token_param?: string
             }
-            Returns: Json
-          }
-        | {
-            Args: { proposal_id_param: string; proposal_type_param: string }
             Returns: Json
           }
       get_clients_history_secure: {
@@ -3682,6 +3703,25 @@ export type Database = {
       }
       get_proposals_secure:
         | {
+            Args: { lead_id_param?: string; professional_id_param?: string }
+            Returns: {
+              created_at: string
+              description: string
+              estimated_completion: string
+              id: string
+              lead_id: string
+              price: number
+              professional_id: string
+              professional_location: string
+              professional_name: string
+              professional_profession: string
+              professional_rating: number
+              professional_verified: boolean
+              share_percentage: number
+              status: string
+            }[]
+          }
+        | {
             Args: { token_param?: string }
             Returns: {
               created_at: string
@@ -3698,25 +3738,6 @@ export type Database = {
               professional_profession: string
               professional_rating: number
               professional_review_count: number
-              professional_verified: boolean
-              share_percentage: number
-              status: string
-            }[]
-          }
-        | {
-            Args: { lead_id_param?: string; professional_id_param?: string }
-            Returns: {
-              created_at: string
-              description: string
-              estimated_completion: string
-              id: string
-              lead_id: string
-              price: number
-              professional_id: string
-              professional_location: string
-              professional_name: string
-              professional_profession: string
-              professional_rating: number
               professional_verified: boolean
               share_percentage: number
               status: string
@@ -3903,6 +3924,7 @@ export type Database = {
               p_description: string
               p_estimated_completion?: string
               p_lead_id: string
+              p_lower_price_includes_vat?: boolean
               p_lower_price_value?: number
               p_lower_price_willing?: boolean
               p_price: number
@@ -3916,7 +3938,6 @@ export type Database = {
               p_description: string
               p_estimated_completion?: string
               p_lead_id: string
-              p_lower_price_includes_vat?: boolean
               p_lower_price_value?: number
               p_lower_price_willing?: boolean
               p_price: number
