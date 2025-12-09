@@ -40,8 +40,14 @@ const Footer = () => {
               <a href="#how-it-works" className="text-white/80 hover:text-white transition-colors">
                 איך זה עובד?
               </a>
-              <Link to="/terms" className="text-white/90 hover:text-white underline font-medium">
-                תקנון ותנאי פרטיות
+              <Link to="/terms" target="_blank" rel="noopener noreferrer" className="text-white/90 hover:text-white underline font-medium">
+                תנאי שימוש
+              </Link>
+              <Link to="/privacy" target="_blank" rel="noopener noreferrer" className="text-white/90 hover:text-white underline font-medium">
+                מדיניות פרטיות
+              </Link>
+              <Link to="/accessibility" target="_blank" rel="noopener noreferrer" className="text-white/90 hover:text-white underline font-medium">
+                הצהרת נגישות
               </Link>
             </nav>
           </div>

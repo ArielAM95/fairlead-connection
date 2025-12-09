@@ -5,6 +5,7 @@ import Index from './pages/Index';
 import NotFound from './pages/NotFound';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
+import Accessibility from './pages/Accessibility';
 import Registration from './pages/Registration';
 import CommissionCalculator from './pages/CommissionCalculator';
 import ThankYou from './pages/ThankYou';
@@ -24,6 +25,7 @@ function App() {
           <Route path="/" element={<Index />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/accessibility" element={<Accessibility />} />
           <Route path="/registration" element={<Registration />} />
           <Route path="/commission-calculator" element={<CommissionCalculator />} />
           <Route path="/thank-you" element={<ThankYou />} />
