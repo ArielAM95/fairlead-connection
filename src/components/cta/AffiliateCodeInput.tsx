@@ -144,6 +144,9 @@ export default function AffiliateCodeInput({ onValidCode, initialCode }: Affilia
               <span className="font-bold text-green-800">₪{validation.discounted_price?.toFixed(0)}</span>
             </span>
           </div>
+          <p className="text-xs text-green-600/80 mt-2">
+            * המחיר כולל מע״מ. ללא מע״מ: ₪350, לאחר הנחה ₪315 + מע״מ
+          </p>
         </div>
       )}
 
