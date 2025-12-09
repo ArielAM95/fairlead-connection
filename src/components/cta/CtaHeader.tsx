@@ -7,7 +7,7 @@ const CtaHeader = () => {
         <p className="text-white font-bold text-lg">  משלמים רק כשסוגרים עסקה !</p>
         <p className="text-white/90">ללא תשלום על פניות שלא מבשילות לכדי עסקה</p>
       </div>
-      <div className="bg-white/10 p-4 rounded-lg inline-block mb-6 scroll-fade">
+      <div className="bg-white/10 p-4 rounded-lg inline-block mb-6 scroll-fade mx-[18px]">
         <p className="text-white font-bold text-lg">👥 חבר מביא חבר!</p>
         <p className="text-white/90">הזמינו חברים והרוויחו 10% קרדיט על כל מצטרף</p>
         <p className="text-white/90">גם מי שנרשם מקישור שלכם מקבל 10% הנחה!</p>
