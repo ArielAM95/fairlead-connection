@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Index from './pages/Index';
 import NotFound from './pages/NotFound';
 import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
 import Registration from './pages/Registration';
 import CommissionCalculator from './pages/CommissionCalculator';
 import ThankYou from './pages/ThankYou';
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/registration" element={<Registration />} />
           <Route path="/commission-calculator" element={<CommissionCalculator />} />
           <Route path="/thank-you" element={<ThankYou />} />

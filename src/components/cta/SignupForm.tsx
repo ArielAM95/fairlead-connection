@@ -268,11 +268,11 @@ const SignupForm = ({
           className="text-sm text-gray-700 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
         >
           אני מאשר/ת את{" "}
-          <a href="/terms" className="text-ofair-900 hover:underline">
+          <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-ofair-900 hover:underline">
             תנאי השימוש
           </a>
           {" "}ואת{" "}
-          <a href="/terms" className="text-ofair-900 hover:underline">
+          <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-ofair-900 hover:underline">
             מדיניות הפרטיות
           </a>
           {" *"}
