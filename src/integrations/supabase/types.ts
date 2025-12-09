@@ -3392,6 +3392,14 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      get_affiliate_stats_secure: {
+        Args: { token_param?: string }
+        Returns: {
+          affiliate_code: string
+          referral_count: number
+          total_credit: number
+        }[]
+      }
       get_city_coordinates: {
         Args: { city_name: string }
         Returns: {

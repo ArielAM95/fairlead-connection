@@ -290,7 +290,7 @@ Deno.serve(async (req) => {
           transaction_type: 'credit',
           payment_type: 'affiliate_bonus',
           status: 'payable',
-          paid_at: new Date().toISOString(),
+          // paid_at remains null - will be set when actually paid
           ofair_commission: 0,
           lead_owner_commission: 0
         })
