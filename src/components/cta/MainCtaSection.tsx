@@ -51,17 +51,6 @@ const MainCtaSection = ({ showNotification }: MainCtaSectionProps) => {
         return Promise.reject(new Error("חסרים שדות חובה"));
       }
       
-      if (!formData.email) {
-        const errorMsg = "נא למלא את שדה האימייל";
-        if (showNotification) {
-          showNotification("שגיאה בהרשמה", errorMsg);
-        } else {
-          toast.error(errorMsg);
-        }
-        setFormError(errorMsg);
-        return Promise.reject(new Error("חסר שדה אימייל"));
-      }
-      
       if (formData.workRegions.length === 0) {
         const errorMsg = "נא לבחור לפחות אזור עבודה אחד";
         if (showNotification) {
