@@ -13,6 +13,8 @@ interface MainProfessionSelectorProps {
   otherProfessionError?: string;
 }
 
+const MAX_PROFESSIONS = 2;
+
 export const MainProfessionSelector = ({
   selectedProfessions,
   onProfessionToggle,
@@ -26,6 +28,8 @@ export const MainProfessionSelector = ({
   const wrapperRef = useRef<HTMLDivElement>(null);
   
   const { data: professions = [], isLoading } = useProfessions();
+  
+  const canAddMore = selectedProfessions.length < MAX_PROFESSIONS;
   
   const filteredProfessions = professions.filter(p =>
     p.label.includes(searchTerm)
@@ -50,11 +54,16 @@ export const MainProfessionSelector = ({
   
   const handleSelectProfession = (professionPk: string) => {
     const profession = professions.find(p => p.id === professionPk);
-    if (profession) {
-      onProfessionToggle(profession.profession_id);
-      setSearchTerm("");
-      setIsOpen(false);
-    }
+    if (!profession) return;
+    
+    const isSelected = selectedProfessions.some(p => p.professionId === profession.profession_id);
+    
+    // Block adding if already at max and not removing
+    if (!isSelected && !canAddMore) return;
+    
+    onProfessionToggle(profession.profession_id);
+    setSearchTerm("");
+    setIsOpen(false);
   };
   
   const handleRemoveProfession = (professionId: string) => {
@@ -64,7 +73,7 @@ export const MainProfessionSelector = ({
   return (
     <div className="space-y-3">
       <label className="block text-sm font-medium text-foreground mb-2">
-        מה המקצועות שלך? * (ניתן לבחור מספר)
+        מה המקצועות שלך? * (ניתן לבחור עד 2)
       </label>
       
       {selectedProfessions.length > 0 && (
@@ -105,6 +114,12 @@ export const MainProfessionSelector = ({
         </div>
       )}
       
+      {!canAddMore && (
+        <div className="text-sm text-amber-600 bg-amber-50 border border-amber-200 rounded-lg p-2 text-center">
+          ✅ בחרת {MAX_PROFESSIONS} מקצועות - זה המקסימום
+        </div>
+      )}
+      
       <div className="relative" ref={wrapperRef}>
         <div className="relative">
           <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={16} />
@@ -116,8 +131,9 @@ export const MainProfessionSelector = ({
               setIsOpen(true);
             }}
             onFocus={() => setIsOpen(true)}
-            placeholder="חפש מקצוע להוספה..."
+            placeholder={canAddMore ? "חפש מקצוע להוספה..." : "הגעת למקסימום מקצועות"}
             className="pr-10"
+            disabled={!canAddMore}
           />
         </div>
         

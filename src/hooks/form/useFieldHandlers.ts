@@ -67,6 +67,8 @@ export const useFieldHandlers = (
     });
   };
 
+  const MAX_PROFESSIONS = 2;
+  
   const handleProfessionToggle = (professionId: string) => {
     // Clear professions and otherProfession errors when changed
     setErrors(prev => ({
@@ -90,7 +92,11 @@ export const useFieldHandlers = (
       
       setFormData(updatedFormData);
     } else {
-      // Add profession with empty specializations
+      // Add profession with empty specializations - only if under max
+      if (formData.professions.length >= MAX_PROFESSIONS) {
+        return; // Don't add more than MAX_PROFESSIONS
+      }
+      
       setFormData({
         ...formData,
         professions: [...formData.professions, { professionId, specializations: [] }]

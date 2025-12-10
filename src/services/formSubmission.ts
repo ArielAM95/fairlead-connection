@@ -80,16 +80,19 @@ export const submitSignupForm = async (
     const { data: specRows, error: specFetchError } = professionPks.length
       ? await supabase
           .from('profession_specializations')
-          .select('profession_id, specialization_id, label')
+          .select('id, profession_id, specialization_id, label')
           .in('profession_id', professionPks)
           .eq('is_active', true)
       : ({ data: [], error: null } as any);
     if (specFetchError) throw specFetchError as any;
 
     const specsMap = new Map<string, Map<string, string>>();
+    const specIdToUuid = new Map<string, string>(); // Map specialization_id to UUID (id)
     (specRows as any[]).forEach((s: any) => {
       if (!specsMap.has(s.profession_id)) specsMap.set(s.profession_id, new Map());
       specsMap.get(s.profession_id)!.set(s.specialization_id, s.label);
+      // Store mapping from "professionPk:specId" to UUID for later lookup
+      specIdToUuid.set(`${s.profession_id}:${s.specialization_id}`, s.id);
     });
 
     const getProfessionLabelDb = (professionId: string) =>
@@ -197,12 +200,30 @@ export const submitSignupForm = async (
       return field ? field.label : fieldId;
     });
 
+    // Build profession_ids array (UUIDs from professions table)
+    const professionUuids = formData.professions
+      .map(p => profIdToPk.get(p.professionId))
+      .filter((uuid): uuid is string => Boolean(uuid));
+
+    // Build specialization_ids array (UUIDs from profession_specializations table)
+    const specializationUuids = formData.professions.flatMap(prof => {
+      const profPk = profIdToPk.get(prof.professionId);
+      if (!profPk) return [];
+      
+      return prof.specializations
+        .filter(specId => specId !== 'other') // Skip 'other' - those are custom text entries
+        .map(specId => specIdToUuid.get(`${profPk}:${specId}`))
+        .filter((uuid): uuid is string => Boolean(uuid));
+    });
+
     const professionalData = {
       name: `${formData.firstName} ${formData.lastName}`.trim(),
       main_profession: primaryProfessionLabel,
       sub_specializations: allSpecLabels,
       profession: primaryProfessionLabel ?? (specialtiesFallback[0] || "לא צוין"),
       specialties: allSpecLabels.length > 0 ? allSpecLabels : specialtiesFallback,
+      profession_ids: professionUuids.length > 0 ? professionUuids : null, // NEW: Array of profession UUIDs
+      specialization_ids: specializationUuids.length > 0 ? specializationUuids : null, // NEW: Array of specialization UUIDs
       email: formData.email ? formData.email.toLowerCase().trim() : null,
       phone_number: formData.phone ? formData.phone.trim() : null,
       company_name: formData.companyName || null,
